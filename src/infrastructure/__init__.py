@@ -11,7 +11,14 @@ from infrastructure.llm import (
     get_router_llm,
 )
 from infrastructure.log import setup_logging
-from infrastructure.observability import flush, observe
+from infrastructure.observability import (
+    fetch_prompt,
+    flush,
+    get_langfuse,
+    langfuse_prompts_enabled,
+    observe,
+    prefetch_prompts,
+)
 from infrastructure.session_store import SessionStore
 
 __all__ = [
@@ -23,5 +30,9 @@ __all__ = [
     "get_extractor_llm",
     "observe",
     "flush",
+    "fetch_prompt",
+    "prefetch_prompts",
+    "langfuse_prompts_enabled",
+    "get_langfuse",
     "SessionStore",
 ]

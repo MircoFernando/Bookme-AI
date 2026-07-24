@@ -124,6 +124,12 @@ SESSION_HISTORY_WINDOW: int = _get_nested(_PARAMS, "session", "history_window", 
 # ── Logging / observability ───────────────────────────────────────────────────
 LOG_LEVEL: str = _get_nested(_PARAMS, "logging", "level", default="INFO")
 OBSERVABILITY_ENABLED: bool = _get_nested(_PARAMS, "observability", "enabled", default=False)
+OBSERVABILITY_PROMPTS_ENABLED: bool = _get_nested(
+    _PARAMS, "observability", "prompts_enabled", default=False
+)
+PROMPT_CACHE_TTL_SECONDS: int = _get_nested(
+    _PARAMS, "observability", "prompt_cache_ttl_seconds", default=300
+)
 
 
 # ── Secrets (from .env only) ──────────────────────────────────────────────────
@@ -177,6 +183,12 @@ def dump() -> None:
     logger.info("  flights service : {}", FLIGHTS_BASE_URL)
     logger.info("  mcp transport   : {}", MCP_TRANSPORT)
     logger.info("  observability   : {}", OBSERVABILITY_ENABLED)
+    try:
+        from infrastructure.observability import langfuse_prompts_enabled
+
+        logger.info("  langfuse prompts: {}", langfuse_prompts_enabled())
+    except Exception:
+        logger.info("  langfuse prompts: {} (yaml)", OBSERVABILITY_PROMPTS_ENABLED)
     logger.info("  api key present : {}", "yes" if get_api_key() else "NO")
     logger.info("──────────────────────────────────────────────────────")
 

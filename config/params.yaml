@@ -56,6 +56,10 @@ session:
 logging:
   level: INFO             # DEBUG, INFO, WARNING, ERROR
 
-# ── Observability (LangFuse tracing) ──────────────────────────────────────────
+# ── Observability (LangFuse) ──────────────────────────────────────────────────
 observability:
-  enabled: false          # set true + add LANGFUSE_* keys in .env to trace
+  enabled: false          # tracing (@observe spans) — set true + LANGFUSE_* in .env
+  # Prompt Management: also set LANGFUSE_PROMPTS=true in .env (or enable below).
+  # When on, prompts load from LangFuse dashboard; local fallbacks if missing.
+  prompts_enabled: false
+  prompt_cache_ttl_seconds: 300   # client-side cache; bump prompt version in LangFuse to refresh
