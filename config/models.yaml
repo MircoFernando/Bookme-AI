@@ -1,0 +1,56 @@
+# =============================================================================
+# TripWeaver — Model Catalogue
+# =============================================================================
+# Model names per provider and tier. Which provider/tier is active is chosen
+# in config/params.yaml (provider.default + provider.tier). Swapping a model
+# here requires NO code change — infrastructure/config.py reads these names.
+#
+# Secrets (API keys) live ONLY in .env, never here.
+# =============================================================================
+
+# ── OpenAI (direct) — the default, runs with just OPENAI_API_KEY ─────────────
+openai:
+  # LLM used for user-facing synthesis / agent answers
+  chat:
+    general: gpt-4o-mini      # fast, cheap, good enough for travel synthesis
+    strong: gpt-4o            # higher quality itinerary composition
+  # LLM used for intent routing (structured JSON classification)
+  router:
+    general: gpt-4o-mini
+  # LLM used for the scope guardrail (binary in/out classification)
+  guardrail:
+    general: gpt-4o-mini
+  # LLM used for structured slot extraction (city, dates, ids, ...)
+  extractor:
+    general: gpt-4o-mini
+
+# ── OpenRouter (unified multi-provider access) ───────────────────────────────
+openrouter:
+  chat:
+    general: openai/gpt-4o-mini
+    strong: openai/gpt-4o
+  router:
+    general: openai/gpt-4o-mini
+  guardrail:
+    general: meta-llama/llama-3.1-8b-instruct
+  extractor:
+    general: openai/gpt-4o-mini
+
+# ── Groq (fast LPU inference, great for router/guardrail) ────────────────────
+groq:
+  chat:
+    general: llama-3.3-70b-versatile
+    strong: llama-3.3-70b-versatile
+  router:
+    general: llama-3.1-8b-instant
+  guardrail:
+    general: llama-3.1-8b-instant
+  extractor:
+    general: llama-3.1-8b-instant
+
+# =============================================================================
+# Base URLs (OpenAI-compatible endpoints). Keys are read from .env.
+# =============================================================================
+# openai       -> default OpenAI endpoint (no base_url needed)
+# openrouter   -> https://openrouter.ai/api/v1        (OPENROUTER_API_KEY)
+# groq         -> https://api.groq.com/openai/v1      (GROQ_API_KEY)

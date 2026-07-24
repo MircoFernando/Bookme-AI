@@ -1,0 +1,61 @@
+# =============================================================================
+# TripWeaver — Runtime Parameters
+# =============================================================================
+# Edit behaviour here WITHOUT touching code. Loaded by infrastructure/config.py.
+# Secrets (API keys, endpoints with credentials) live ONLY in .env.
+# =============================================================================
+
+# ── Provider selection ───────────────────────────────────────────────────────
+provider:
+  # Active provider: "openai" (default, only needs OPENAI_API_KEY),
+  # "openrouter", or "groq". Must match a top-level key in models.yaml.
+  default: openai
+  # Model tier to pull from models.yaml: "general" or "strong".
+  tier: general
+  # OpenAI-compatible base URLs per provider (keys come from .env).
+  openrouter_base_url: https://openrouter.ai/api/v1
+  groq_base_url: https://api.groq.com/openai/v1
+
+# ── LLM defaults ──────────────────────────────────────────────────────────────
+llm:
+  temperature: 0.0        # deterministic routing/extraction; synthesis may override
+  max_tokens: 1500
+  streaming: false
+  # Transient-error resilience (mirrors Week 13): the OpenAI-compatible client
+  # retries with exponential backoff before giving up.
+  max_retries: 2
+  request_timeout: 30     # seconds
+  # If true, get_chat_llm() wraps the primary model with a fallback model so a
+  # provider outage degrades gracefully instead of failing the request.
+  enable_fallback: true
+  # Fallback model tier used when enable_fallback is true.
+  fallback_tier: general
+
+# ── External travel services (the "third-party" the MCP servers bridge to) ────
+# These are the existing Convex endpoints the baseline already used. The MCP
+# hotel/flight servers call these; agents never touch them directly.
+services:
+  hotels_base_url: https://standing-fish-574.convex.site/hotels
+  flights_base_url: https://standing-fish-574.convex.site/flights
+  # Per-request HTTP settings for the tool layer (E3 resilience).
+  http_timeout: 15        # seconds
+  http_max_retries: 3     # tenacity retries on timeout / 5xx
+  http_backoff_seconds: 0.5
+
+# ── MCP configuration ─────────────────────────────────────────────────────────
+mcp:
+  # "stdio" launches each server as a subprocess (default, matches Week 13).
+  transport: stdio
+
+# ── Conversation memory (per-session, kills the global-history bug) ───────────
+session:
+  max_turns: 20           # rolling window kept per session_id
+  history_window: 3       # recent (user, assistant) pairs fed to the router
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+logging:
+  level: INFO             # DEBUG, INFO, WARNING, ERROR
+
+# ── Observability (LangFuse tracing) ──────────────────────────────────────────
+observability:
+  enabled: false          # set true + add LANGFUSE_* keys in .env to trace
