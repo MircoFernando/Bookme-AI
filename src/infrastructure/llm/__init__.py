@@ -1,4 +1,8 @@
-"""Backward-compatible re-export — prefer ``from infrastructure.llm import ...``."""
+"""
+LLM provider wrappers — Week 13 multi-provider layout.
+
+See ``llm_provider.py`` for role → provider mapping (``config/params.yaml``).
+"""
 
 from infrastructure.llm.llm_provider import (
     get_chat_llm,

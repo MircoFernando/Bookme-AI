@@ -9,6 +9,7 @@ sse-starlette
 langchain
 langchain-core
 langchain-openai
+langchain-google-genai
 langgraph
 
 # ── MCP (Model Context Protocol) ────────────────────────────────────────────────

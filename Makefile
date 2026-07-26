@@ -5,10 +5,11 @@
 # src/ layout (infrastructure.*, agents.*, mcp_servers.*, api.*).
 # =============================================================================
 
-PY := PYTHONPATH=src python
+PYTHON ?= .venv/bin/python
+PY := PYTHONPATH=src $(PYTHON)
 
 .PHONY: help install config check-config run-api run-ui \
-        inspect-hotel inspect-flight test-mcp test-decision test clean
+        inspect-hotel inspect-flight test-mcp test-decision test-orchestrator test clean
 
 # ── Help (default) ────────────────────────────────────────────────────────────
 help:
@@ -16,13 +17,14 @@ help:
 	@echo ""
 	@echo "  make install        Install Python dependencies"
 	@echo "  make config         Print active (non-secret) configuration"
-	@echo "  make check-config   Validate required API keys are present"
+	@echo "  make check-config   Validate OPENAI + GOOGLE keys for configured roles"
 	@echo "  make run-api        Run the FastAPI backend        (Day 5)"
 	@echo "  make run-ui         Run the Gradio frontend         (Day 6)"
 	@echo "  make inspect-hotel  Open MCP Inspector on hotel server"
 	@echo "  make inspect-flight Open MCP Inspector on flight server"
 	@echo "  make test-mcp       Smoke test MultiServerMCPClient + 6 tools"
-	@echo "  make test-decision  Decision subgraph + bridge (needs OPENAI_API_KEY)"
+	@echo "  make test-decision  Decision subgraph + bridge (OPENAI_API_KEY)"
+	@echo "  make test-orchestrator  Orchestrator E2E (OPENAI + GOOGLE + network)"
 	@echo "  make test           Run the test suite              (Day 7)"
 	@echo "  make clean          Remove caches and __pycache__"
 
@@ -56,6 +58,9 @@ test-mcp:
 
 test-decision:
 	PYTHONPATH=src .venv/bin/python scripts/test_decision_graph.py
+
+test-orchestrator:
+	PYTHONPATH=src .venv/bin/python scripts/test_orchestrator.py
 
 # ── Tests ─────────────────────────────────────────────────────────────────────────
 test:

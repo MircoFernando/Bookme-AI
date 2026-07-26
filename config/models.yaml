@@ -28,7 +28,7 @@ openai:
 openrouter:
   chat:
     general: openai/gpt-4o-mini
-    strong: openai/gpt-4o
+    strong: google/gemini-2.5-flash
   router:
     general: openai/gpt-4o-mini
   guardrail:
@@ -42,7 +42,7 @@ groq:
     general: llama-3.3-70b-versatile
     strong: llama-3.3-70b-versatile
   router:
-    general: llama-3.1-8b-instant
+    general: llama-3.3-70b-versatile
   guardrail:
     general: llama-3.1-8b-instant
   extractor:
@@ -53,4 +53,14 @@ groq:
 # =============================================================================
 # openai       -> default OpenAI endpoint (no base_url needed)
 # openrouter   -> https://openrouter.ai/api/v1        (OPENROUTER_API_KEY)
+# google       -> Gemini Developer API (GOOGLE_API_KEY) — merge role by default
 # groq         -> https://api.groq.com/openai/v1      (GROQ_API_KEY)
+
+# ── Google Gemini (multi-route merge synthesiser) ─────────────────────────────
+google:
+  merge:
+    general: gemini-3.1-flash-lite
+    strong: gemini-3.6-flash
+  chat:
+    general: gemini-3.1-flash-lite
+    strong: gemini-3.6-flash

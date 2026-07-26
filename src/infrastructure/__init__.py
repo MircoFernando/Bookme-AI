@@ -7,7 +7,9 @@ from infrastructure import config
 from infrastructure.llm import (
     get_chat_llm,
     get_extractor_llm,
+    get_fast_chat_llm,
     get_guardrail_llm,
+    get_merge_llm,
     get_router_llm,
 )
 from infrastructure.log import setup_logging
@@ -28,6 +30,8 @@ __all__ = [
     "get_router_llm",
     "get_guardrail_llm",
     "get_extractor_llm",
+    "get_fast_chat_llm",
+    "get_merge_llm",
     "observe",
     "flush",
     "fetch_prompt",

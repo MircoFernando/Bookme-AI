@@ -70,22 +70,90 @@ GROQ_BASE_URL: str = _get_nested(
 
 
 def _model_for(role: str, tier: Optional[str] = None, provider: Optional[str] = None) -> str:
-    """Resolve a model name for a role (chat|router|guardrail|extractor)."""
+    """Resolve a model name for a role (chat|router|guardrail|extractor|merge)."""
     provider = provider or PROVIDER
     tier = tier or MODEL_TIER
     # Fall back to the "general" tier, then a sane hardcoded default.
     return (
         _get_nested(_MODELS, provider, role, tier)
         or _get_nested(_MODELS, provider, role, "general")
+        or _get_nested(_MODELS, provider, "chat", tier)
+        or _get_nested(_MODELS, provider, "chat", "general")
         or "gpt-4o-mini"
     )
 
 
-# Active model names per role (recomputed on import from YAML).
-CHAT_MODEL: str = _model_for("chat")
-ROUTER_MODEL: str = _model_for("router")
-GUARDRAIL_MODEL: str = _model_for("guardrail")
-EXTRACTOR_MODEL: str = _model_for("extractor")
+def _role_yaml_spec(role: str) -> Optional[Dict[str, Any]]:
+    spec = _get_nested(_PARAMS, "llm", "roles", role)
+    return spec if isinstance(spec, dict) else None
+
+
+def resolve_role(
+    role: str,
+    *,
+    provider_override: Optional[str] = None,
+) -> tuple[str, str]:
+    """
+    Week 13-style per-role (model, provider).
+
+    Reads ``llm.roles.<role>`` from params.yaml; falls back to ``provider.default``
+    + models.yaml tier lookup.
+    """
+    spec = _role_yaml_spec(role)
+    if spec:
+        provider = provider_override or spec.get("provider") or PROVIDER
+        if spec.get("model"):
+            return str(spec["model"]), provider
+        tier = spec.get("tier", MODEL_TIER)
+        yaml_role = role
+        if role == "fast_chat":
+            yaml_role = "chat"
+        if role == "merge" and not _get_nested(_MODELS, provider, "merge", tier):
+            yaml_role = "chat"
+        return _model_for(yaml_role, tier=tier, provider=provider), provider
+
+    provider = provider_override or PROVIDER
+    if role == "fast_chat":
+        return _model_for("chat", provider="groq"), "groq"
+    yaml_role = "chat" if role == "merge" else role
+    return _model_for(yaml_role, provider=provider), provider
+
+
+def role_provider(role: str) -> str:
+    """Provider id for a role (after YAML resolution)."""
+    return resolve_role(role)[1]
+
+
+def required_llm_providers() -> list[str]:
+    """Distinct providers referenced by configured roles (for validate())."""
+    roles = _get_nested(_PARAMS, "llm", "roles", default={}) or {}
+    if isinstance(roles, dict) and roles:
+        providers = {resolve_role(r)[1] for r in roles}
+    else:
+        providers = {PROVIDER}
+    return sorted(providers)
+
+
+# Legacy single-provider view (default tier on PROVIDER).
+CHAT_MODEL: str = resolve_role("chat")[0]
+ROUTER_MODEL: str = resolve_role("router")[0]
+GUARDRAIL_MODEL: str = resolve_role("guardrail")[0]
+EXTRACTOR_MODEL: str = resolve_role("extractor")[0]
+MERGE_MODEL: str = resolve_role("merge")[0]
+
+CHAT_PROVIDER: str = resolve_role("chat")[1]
+ROUTER_PROVIDER: str = resolve_role("router")[1]
+GUARDRAIL_PROVIDER: str = resolve_role("guardrail")[1]
+EXTRACTOR_PROVIDER: str = resolve_role("extractor")[1]
+MERGE_PROVIDER: str = resolve_role("merge")[1]
+FAST_CHAT_MODEL: str = resolve_role("fast_chat")[0]
+FAST_CHAT_PROVIDER: str = resolve_role("fast_chat")[1]
+
+# Tier label for merge when resolved via models.yaml (logging only).
+MERGE_TIER: str = (
+    (_role_yaml_spec("merge") or {}).get("tier")
+    or MODEL_TIER
+)
 
 
 # ── LLM defaults ──────────────────────────────────────────────────────────────
@@ -162,12 +230,22 @@ def provider_base_url(provider: Optional[str] = None) -> Optional[str]:
 
 # ── Validation / debug ────────────────────────────────────────────────────────
 def validate() -> None:
-    """Fail fast if the active provider's API key is missing."""
-    if not get_api_key():
-        env_var = f"{PROVIDER.upper()}_API_KEY"
+    """Fail fast if any configured LLM role provider is missing its API key."""
+    missing = []
+    for prov in required_llm_providers():
+        if not get_api_key(prov):
+            key_map = {
+                "openai": "OPENAI_API_KEY",
+                "openrouter": "OPENROUTER_API_KEY",
+                "groq": "GROQ_API_KEY",
+                "google": "GOOGLE_API_KEY",
+            }
+            missing.append(key_map.get(prov, f"{prov.upper()}_API_KEY"))
+    if missing:
         raise ValueError(
-            f"Missing required secret: {env_var}. Add it to your .env file "
-            f"(see .env.example)."
+            "Missing required secret(s) for configured llm.roles providers: "
+            + ", ".join(sorted(set(missing)))
+            + ". Add them to .env (see .env.example)."
         )
 
 
@@ -176,11 +254,13 @@ def dump() -> None:
     from loguru import logger
 
     logger.info("── TripWeaver configuration ──────────────────────────")
-    logger.info("  provider        : {} (tier={})", PROVIDER, MODEL_TIER)
-    logger.info("  chat model      : {}", CHAT_MODEL)
-    logger.info("  router model    : {}", ROUTER_MODEL)
-    logger.info("  guardrail model : {}", GUARDRAIL_MODEL)
-    logger.info("  extractor model : {}", EXTRACTOR_MODEL)
+    logger.info("  provider default: {} (tier={})", PROVIDER, MODEL_TIER)
+    logger.info("  router          : {} @ {}", ROUTER_MODEL, ROUTER_PROVIDER)
+    logger.info("  guardrail       : {} @ {}", GUARDRAIL_MODEL, GUARDRAIL_PROVIDER)
+    logger.info("  extractor       : {} @ {}", EXTRACTOR_MODEL, EXTRACTOR_PROVIDER)
+    logger.info("  chat            : {} @ {}", CHAT_MODEL, CHAT_PROVIDER)
+    logger.info("  merge           : {} @ {}", MERGE_MODEL, MERGE_PROVIDER)
+    logger.info("  fast_chat       : {} @ {}", FAST_CHAT_MODEL, FAST_CHAT_PROVIDER)
     logger.info("  llm fallback    : {}", LLM_ENABLE_FALLBACK)
     logger.info("  hotels service  : {}", HOTELS_BASE_URL)
     logger.info("  flights service : {}", FLIGHTS_BASE_URL)
@@ -192,7 +272,9 @@ def dump() -> None:
         logger.info("  langfuse prompts: {}", langfuse_prompts_enabled())
     except Exception:
         logger.info("  langfuse prompts: {} (yaml)", OBSERVABILITY_PROMPTS_ENABLED)
-    logger.info("  api key present : {}", "yes" if get_api_key() else "NO")
+    logger.info("  api keys        : {}", ", ".join(
+        f"{p}={'yes' if get_api_key(p) else 'NO'}" for p in required_llm_providers()
+    ))
     logger.info("──────────────────────────────────────────────────────")
 
 

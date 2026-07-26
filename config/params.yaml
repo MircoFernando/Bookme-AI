@@ -16,20 +16,35 @@ provider:
   openrouter_base_url: https://openrouter.ai/api/v1
   groq_base_url: https://api.groq.com/openai/v1
 
-# ── LLM defaults ──────────────────────────────────────────────────────────────
+# ── LLM defaults (TripWeaver hybrid) ─────────────────────────────────────────
 llm:
-  temperature: 0.0        # deterministic routing/extraction; synthesis may override
+  temperature: 0.0
   max_tokens: 1500
   streaming: false
-  # Transient-error resilience (mirrors Week 13): the OpenAI-compatible client
-  # retries with exponential backoff before giving up.
   max_retries: 2
-  request_timeout: 30     # seconds
-  # If true, get_chat_llm() wraps the primary model with a fallback model so a
-  # provider outage degrades gracefully instead of failing the request.
+  request_timeout: 30
   enable_fallback: true
-  # Fallback model tier used when enable_fallback is true.
   fallback_tier: general
+  # OpenAI gpt-4o-mini for routing / guardrail / agents; native Gemini for multi-route merge.
+  roles:
+    router:
+      provider: openai
+      tier: general
+    guardrail:
+      provider: openai
+      tier: general
+    extractor:
+      provider: openai
+      tier: general
+    chat:
+      provider: openai
+      tier: general
+    merge:
+      provider: google
+      tier: general
+    fast_chat:
+      provider: openai
+      tier: general
 
 # ── External travel services (the "third-party" the MCP servers bridge to) ────
 # These are the existing Convex endpoints the baseline already used. The MCP
@@ -58,7 +73,7 @@ logging:
 
 # ── Observability (LangFuse) ──────────────────────────────────────────────────
 observability:
-  enabled: false          # tracing (@observe spans) — set true + LANGFUSE_* in .env
+  enabled: true         # tracing (@observe spans) — set true + LANGFUSE_* in .env
   # Prompt Management: also set LANGFUSE_PROMPTS=true in .env (or enable below).
   # When on, prompts load from LangFuse dashboard; local fallbacks if missing.
   prompts_enabled: false

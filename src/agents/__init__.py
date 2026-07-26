@@ -12,12 +12,17 @@ Week 13 layout:
 from agents.decision_bridge import map_decision_to_agent_state
 from agents.decision_graph import build_decision_graph, build_decision_input
 from agents.decision_state import DecisionState
+from agents.orchestrator import AgentOrchestrator, AgentResponse, build_agent_mcp, build_orchestrator
 from agents.state import AgentState
 
 __all__ = [
+    "AgentOrchestrator",
+    "AgentResponse",
     "AgentState",
     "DecisionState",
+    "build_agent_mcp",
     "build_decision_graph",
     "build_decision_input",
+    "build_orchestrator",
     "map_decision_to_agent_state",
 ]
