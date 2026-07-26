@@ -2,66 +2,49 @@
 Query Router — LLM-based intent classification.
 
 Takes a user message + memory context and returns a ``MultiRouteDecision``
-containing one or more ``RouteDecision`` objects. the router returns multiple
-routes so the orchestrator can fan out to parallel agent nodes.
+containing one or more ``RouteDecision`` objects. Multiple routes enable the
+orchestrator to fan out to parallel hotel / flight / general_qa agent nodes.
 """
 
+from __future__ import annotations
+
 import json
-from loguru import logger
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional
 
-from agents.prompts.agent_prompts import build_router_prompt
+from langchain_core.messages import HumanMessage, SystemMessage
+from loguru import logger
+
+from agents.prompts import build_router_prompt
+from agents.state import AgentState
+from infrastructure.llm import get_router_llm
 from infrastructure.observability import observe, update_current_observation
 
-# Valid routes
-VALID_ROUTES = {"hotel", "flight", "general_qa"}
-
-# Valid CRM sub-actions
-VALID_CRM_ACTIONS = {
-    "lookup_patient",
-    "search_doctors",
-    "create_booking",
-    "cancel_booking",
-    "reschedule_booking",
-    "list_specialties",
-    "list_locations",
-    "check_doctor_availability",
-}
-
-# Maximum routes per query (safety cap)
+VALID_ROUTES = frozenset({"hotel", "flight", "general_qa"})
+VALID_ACTIONS = frozenset({"search", "list_all", "book", "general"})
 MAX_ROUTES = 3
+
+_default_router: Optional["QueryRouter"] = None
 
 
 @dataclass
 class RouteDecision:
-    """
-    A single routing decision for one intent.
+    """One routed intent for a downstream agent node."""
 
-    Attributes:
-        route: Primary route.
-        confidence: Router's self-assessed confidence [0-1].
-        reasoning: One-line explanation of the routing decision.
-        action: (only when route == crm).
-        params: Extracted parameters for the tool.
-    """
-
-    route: str = "direct"
+    route: str = "general_qa"
     confidence: float = 0.0
     reasoning: str = ""
-    action: Optional[str] = None
+    action: Optional[str] = "general"
     params: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
 class MultiRouteDecision:
     """
-    Container for one or more RouteDecision objects.
+    One or more ``RouteDecision`` objects.
 
-    Single-intent queries produce ``decisions`` with one element.
-    Multi-intent queries (e.g. "book me an hotel AND tell me
-    about our location") produce multiple elements, enabling
-    LangGraph fan-out to parallel agent nodes.
+    Multi-intent queries (e.g. hotels in Colombo and a flight BOM→CMB) produce
+    multiple elements for LangGraph parallel fan-out.
     """
 
     decisions: List[RouteDecision] = field(default_factory=list)
@@ -72,23 +55,71 @@ class MultiRouteDecision:
 
     @property
     def primary(self) -> RouteDecision:
-        """First (or only) decision — backward compatibility."""
         return self.decisions[0] if self.decisions else RouteDecision()
 
 
-class QueryRouter:
-    """
-    Routes user queries to the appropriate tool path.
+def _normalize_action(route: str, action: Optional[str]) -> str:
+    """Map router LLM output to a valid action per route."""
+    if route == "general_qa":
+        return "general"
+    if action in VALID_ACTIONS:
+        return action
+    if route in ("hotel", "flight"):
+        logger.warning("Invalid action '{}' for route '{}'; defaulting to search.", action, route)
+        return "search"
+    return "general"
 
-    Uses an LLM call with structured JSON output to classify intent.
-    Falls back to ``direct`` on parse errors.
-    """
+
+def _normalize_params(raw: Any) -> Dict[str, Any]:
+    params = raw or {}
+    if not isinstance(params, dict):
+        return {}
+    return params
+
+
+def _fallback_multi(reasoning: str) -> MultiRouteDecision:
+    return MultiRouteDecision(
+        decisions=[
+            RouteDecision(
+                route="general_qa",
+                action="general",
+                confidence=0.0,
+                reasoning=reasoning,
+            )
+        ]
+    )
+
+
+def _last_user_text(state: AgentState) -> str:
+    messages = state.get("messages") or []
+    for msg in reversed(messages):
+        if isinstance(msg, HumanMessage):
+            content = msg.content
+            return content if isinstance(content, str) else str(content)
+        if isinstance(msg, dict) and msg.get("role") == "user":
+            return str(msg.get("content") or "")
+    return ""
+
+
+def get_query_router() -> QueryRouter:
+    global _default_router
+    if _default_router is None:
+        _default_router = QueryRouter(get_router_llm())
+    return _default_router
+
+
+def router_node(state: AgentState) -> dict:
+    """LangGraph node: classify intent → ``route_decisions`` on ``AgentState``."""
+    user_message = _last_user_text(state)
+    memory_context = state.get("memory_context") or ""
+    result = get_query_router().route(user_message, memory_context=memory_context)
+    return {"route_decisions": [asdict(d) for d in result.decisions]}
+
+
+class QueryRouter:
+    """Routes user queries via LLM JSON classification."""
 
     def __init__(self, llm: Any) -> None:
-        """
-        Args:
-            llm: A LangChain ``ChatOpenAI`` (or compatible) instance.
-        """
         self.llm = llm
 
     @observe(name="router", as_type="generation")
@@ -97,8 +128,7 @@ class QueryRouter:
         user_message: str,
         memory_context: str = "",
     ) -> MultiRouteDecision:
-        """Synchronous routing — kept for the LangGraph orchestrator path."""
-        return self._call(user_message, memory_context, async_call=False)
+        return self._call(user_message, memory_context)
 
     @observe(name="router", as_type="generation")
     async def aroute(
@@ -106,29 +136,19 @@ class QueryRouter:
         user_message: str,
         memory_context: str = "",
     ) -> MultiRouteDecision:
-        """
-        Async router — used by the API hot path so it can run concurrently
-        with CAG lookup and memory recall via ``asyncio.gather``.
-
-        Identical logic to ``route()`` but awaits ``llm.ainvoke`` instead
-        of blocking on ``llm.invoke``.
-        """
+        """Async routing for the API path (``llm.ainvoke``)."""
         return await self._acall(user_message, memory_context)
 
-    # ── Internal sync/async cores ──────────────────────────────────
-
     def _build_messages(self, user_message: str, memory_context: str):
-        system_prompt, user_prompt = build_router_prompt(
-            user_message=user_message,
-            memory_context=memory_context,
-        )
+        """LangFuse/base system prompt + hard rules + user template (memory + message)."""
+        system_prompt, user_prompt = build_router_prompt(user_message, memory_context)
         update_current_observation(
             input=user_prompt[:1000],
             model=self._model_name(),
         )
         return [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
+            SystemMessage(content=system_prompt),
+            HumanMessage(content=user_prompt),
         ]
 
     def _record_usage(self, content: str, response) -> None:
@@ -151,53 +171,41 @@ class QueryRouter:
     def _content(response) -> str:
         return response.content if hasattr(response, "content") else str(response)
 
-    def _call(self, user_message: str, memory_context: str, async_call: bool = False):
-        # async_call kept for symmetry; sync path is used by the LangGraph nodes.
+    def _call(self, user_message: str, memory_context: str) -> MultiRouteDecision:
         try:
             response = self.llm.invoke(self._build_messages(user_message, memory_context))
             content = self._content(response)
             self._record_usage(content, response)
         except Exception as exc:
             logger.error("Router LLM call failed: {}", exc)
-            return MultiRouteDecision(decisions=[
-                RouteDecision(route="direct", confidence=0.0, reasoning=f"Router LLM error: {exc}")
-            ])
+            return _fallback_multi(f"Router LLM error: {exc}")
         return self._parse_response(content)
 
-    async def _acall(self, user_message: str, memory_context: str):
+    async def _acall(self, user_message: str, memory_context: str) -> MultiRouteDecision:
         try:
-            response = await self.llm.ainvoke(self._build_messages(user_message, memory_context))
+            response = await self.llm.ainvoke(
+                self._build_messages(user_message, memory_context)
+            )
             content = self._content(response)
             self._record_usage(content, response)
         except Exception as exc:
             logger.error("Router LLM async call failed: {}", exc)
-            return MultiRouteDecision(decisions=[
-                RouteDecision(route="direct", confidence=0.0, reasoning=f"Router LLM error: {exc}")
-            ])
+            return _fallback_multi(f"Router LLM error: {exc}")
         return self._parse_response(content)
 
     def _model_name(self) -> str:
-        """Extract model name from the LLM for LangFuse metadata."""
         if hasattr(self.llm, "model_name"):
             return self.llm.model_name
         if hasattr(self.llm, "model"):
             return self.llm.model
         return "unknown"
 
-    # ── parsing ───────────────────────────────────────────────
-
     def _parse_response(self, raw: str) -> MultiRouteDecision:
         """
-        Parse the JSON response from the router LLM.
+        Parse router LLM JSON.
 
-        Supports two formats:
-          - Multi-route (new):  ``{"routes": [{...}, {...}]}``
-          - Single-route (old): ``{"route": "crm", ...}``
-
-        The old format is auto-wrapped into a single-element list
-        for full backward compatibility.
+        Supports ``{"routes": [...]}`` or a single route object (wrapped).
         """
-        # Strip markdown fences if present
         text = raw.strip()
         if text.startswith("```"):
             text = text.split("\n", 1)[-1]
@@ -205,65 +213,51 @@ class QueryRouter:
             text = text.rsplit("```", 1)[0]
         text = text.strip()
 
-        # Locate JSON object boundaries
         start = text.find("{")
         end = text.rfind("}")
         if start == -1 or end == -1:
-            logger.warning("Router output is not JSON; falling back to direct.")
-            return MultiRouteDecision(decisions=[
-                RouteDecision(route="direct", confidence=0.0,
-                              reasoning="Failed to parse router output as JSON.")
-            ])
+            logger.warning("Router output is not JSON; falling back to general_qa.")
+            return _fallback_multi("Failed to parse router output as JSON.")
 
         try:
             data = json.loads(text[start : end + 1])
         except json.JSONDecodeError as exc:
             logger.warning("Router JSON parse error: {}", exc)
-            return MultiRouteDecision(decisions=[
-                RouteDecision(route="direct", confidence=0.0,
-                              reasoning=f"JSON parse error: {exc}")
-            ])
+            return _fallback_multi(f"JSON parse error: {exc}")
 
-        # ── Normalise to a list of route dicts ──────────────────
         if "routes" in data and isinstance(data["routes"], list):
-            # New multi-route format
             route_dicts = data["routes"][:MAX_ROUTES]
         else:
-            # Old single-route format — wrap in list
             route_dicts = [data]
 
-        # ── Build RouteDecision objects ──────────────────────────
         decisions: List[RouteDecision] = []
-        seen_routes: set = set()
+        seen_routes: set[str] = set()
 
         for rd in route_dicts:
-            route = rd.get("route", "direct")
+            if not isinstance(rd, dict):
+                continue
+            route = rd.get("route", "general_qa")
             if route not in VALID_ROUTES:
                 logger.warning("Invalid route '{}'; skipping.", route)
                 continue
-            # Deduplicate (same route appearing twice)
             if route in seen_routes:
                 continue
             seen_routes.add(route)
 
-            action = rd.get("action")
-            if route == "crm" and action not in VALID_CRM_ACTIONS:
-                logger.warning(
-                    "Invalid CRM action '{}'; defaulting to lookup_patient.", action
+            action = _normalize_action(route, rd.get("action"))
+            params = _normalize_params(rd.get("params"))
+
+            decisions.append(
+                RouteDecision(
+                    route=route,
+                    confidence=float(rd.get("confidence", 0.5)),
+                    reasoning=rd.get("reasoning", "") or "",
+                    action=action,
+                    params=params,
                 )
-                action = "lookup_patient"
+            )
 
-            decisions.append(RouteDecision(
-                route=route,
-                confidence=float(rd.get("confidence", 0.5)),
-                reasoning=rd.get("reasoning", ""),
-                action=action if route == "crm" else None,
-                params=rd.get("params", {}),
-            ))
-
-        # Fallback if nothing valid was parsed
         if not decisions:
-            decisions = [RouteDecision(route="direct", confidence=0.0,
-                                       reasoning="No valid routes parsed.")]
+            return _fallback_multi("No valid routes parsed.")
 
         return MultiRouteDecision(decisions=decisions)
