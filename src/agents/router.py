@@ -109,7 +109,11 @@ def get_query_router() -> QueryRouter:
 
 
 def router_node(state: AgentState) -> dict:
-    """LangGraph node: classify intent → ``route_decisions`` on ``AgentState``."""
+    """Orchestrator graph node → ``route_decisions`` on ``AgentState``.
+
+    The decision subgraph uses ``QueryRouter.aroute`` via ``decision_graph``
+    (``DecisionState``), not this node.
+    """
     user_message = _last_user_text(state)
     memory_context = state.get("memory_context") or ""
     result = get_query_router().route(user_message, memory_context=memory_context)

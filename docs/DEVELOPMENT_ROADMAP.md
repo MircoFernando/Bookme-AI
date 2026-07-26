@@ -177,9 +177,15 @@ Phase 9  Stretch (memory, LangFuse traces, CI/Docker)⏳
 
 - `src/agents/guardrail.py`
 - `src/agents/router.py` — `RouteDecision`, `MultiRouteDecision` (`hotel` | `flight` | `general_qa`)
-- `src/agents/decision_graph.py` — LangGraph: START → guardrail ∥ router → decide → END
+- `src/agents/decision_state.py` — **Week 13** minimal `DecisionState` (`message`, `router_context`, …)
+- `src/agents/decision_graph.py` — LangGraph on `DecisionState`: START → guardrail ∥ router → decide → END
+- `src/agents/decision_bridge.py` — `map_decision_to_agent_state()` → orchestrator `AgentState`
 - Prompts via `build_guardrail_system_prompt()`, `build_router_*()` from LangFuse/fallbacks
 - `@observe` on guardrail and router LLM calls
+
+**Architecture (Week 13):** two state schemas — classification subgraph vs orchestrator graph; chat API runs decision graph first, then maps into `AgentState` for Phase 5 fan-out.
+
+**Design notes (discussion log):** [DECISION_GRAPH_NOTES.md](./DECISION_GRAPH_NOTES.md) — parallel guardrail/router behavior, bridge vs Week 13 `chat.py`, CAG/cache timing, OOS “Who is the president?” walkthrough, latency vs cost, viva diffs.
 
 **Decisions (already agreed):**
 
@@ -300,17 +306,24 @@ Phase 9  Stretch (memory, LangFuse traces, CI/Docker)⏳
 src/
   infrastructure/     config, llm, log, observability, http_client, session_store
   agents/
-    state.py
-    prompts/          LangFuse-backed builders
-    tools/            HotelTool, FlightTool
+    state.py              AgentState (orchestrator)
+    decision_state.py     DecisionState (subgraph)
+    decision_graph.py
+    decision_bridge.py
+    guardrail.py
+    router.py
+    prompts/              LangFuse-backed builders
+    tools/                HotelTool, FlightTool
   mcp_servers/        hotel_server, flight_server, mcp_config
   api/                (Phase 6)
 scripts/
   test_mcp_client.py
+  test_decision_graph.py
 config/
   models.yaml, params.yaml
 docs/
-  DEVELOPMENT_ROADMAP.md   ← this file
+  DEVELOPMENT_ROADMAP.md   ← phase log
+  DECISION_GRAPH_NOTES.md  ← architecture & Week 13 comparison notes
 ```
 
 **Legacy (baseline, root):** `main.py`, `frontend.py`, `agents/*` — to be retired when `src/api` is live.
@@ -332,6 +345,9 @@ make check-config
 # MCP (Phase 3)
 make test-mcp
 make inspect-hotel
+
+# Decision graph (Phase 4)
+make test-decision
 
 # Later
 make run-api          # Phase 6
