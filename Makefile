@@ -8,7 +8,7 @@
 PY := PYTHONPATH=src python
 
 .PHONY: help install config check-config run-api run-ui \
-        inspect-hotel inspect-flight test clean
+        inspect-hotel inspect-flight test-mcp test clean
 
 # ── Help (default) ────────────────────────────────────────────────────────────
 help:
@@ -19,8 +19,9 @@ help:
 	@echo "  make check-config   Validate required API keys are present"
 	@echo "  make run-api        Run the FastAPI backend        (Day 5)"
 	@echo "  make run-ui         Run the Gradio frontend         (Day 6)"
-	@echo "  make inspect-hotel  Open MCP Inspector on hotel srv (Day 2)"
-	@echo "  make inspect-flight Open MCP Inspector on flight srv (Day 2)"
+	@echo "  make inspect-hotel  Open MCP Inspector on hotel server"
+	@echo "  make inspect-flight Open MCP Inspector on flight server"
+	@echo "  make test-mcp       Smoke test MultiServerMCPClient + 6 tools"
 	@echo "  make test           Run the test suite              (Day 7)"
 	@echo "  make clean          Remove caches and __pycache__"
 
@@ -44,10 +45,13 @@ run-ui:
 
 # ── MCP inspection (Day 2) ────────────────────────────────────────────────────────
 inspect-hotel:
-	cd src && npx @modelcontextprotocol/inspector $$(which python) -m mcp_servers.hotel_server
+	cd src && npx @modelcontextprotocol/inspector ../.venv/bin/python -m mcp_servers.hotel_server
 
 inspect-flight:
-	cd src && npx @modelcontextprotocol/inspector $$(which python) -m mcp_servers.flight_server
+	cd src && npx @modelcontextprotocol/inspector ../.venv/bin/python -m mcp_servers.flight_server
+
+test-mcp:
+	PYTHONPATH=src .venv/bin/python scripts/test_mcp_client.py
 
 # ── Tests ─────────────────────────────────────────────────────────────────────────
 test:

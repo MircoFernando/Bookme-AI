@@ -1,10 +1,18 @@
 """
-MCP servers — the standardised bridge between agents and external travel
-services. Each server wraps a business tool and exposes it over the Model
-Context Protocol so agents consume it through the MCP layer, never directly.
+MCP servers — standardised bridge between agents and Convex travel APIs.
 
-Populated on Day 2:
-    hotel_server.py    — list_hotels / search_hotels / book_hotel
-    flight_server.py   — list_flights / search_flights / book_flight
-    mcp_config.py      — subprocess launch config for MultiServerMCPClient
+  hotel_server.py   → HotelTool   (3 tools)
+  flight_server.py  → FlightTool  (3 tools)
+  mcp_config.py     → subprocess launch config for MultiServerMCPClient
+
+Run:
+    cd src && python -m mcp_servers.hotel_server
+    cd src && python -m mcp_servers.flight_server
+
+Smoke test (loads all tools via MCP client):
+    PYTHONPATH=src python scripts/test_mcp_client.py
 """
+
+from mcp_servers.mcp_config import build_mcp_server_config
+
+__all__ = ["build_mcp_server_config"]
