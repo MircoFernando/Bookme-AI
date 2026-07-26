@@ -1,5 +1,5 @@
 # =============================================================================
-# TripWeaver — Model Catalogue
+# BookMe AI — Model Catalogue
 # =============================================================================
 # Model names per provider and tier. Which provider/tier is active is chosen
 # in config/params.yaml (provider.default + provider.tier). Swapping a model

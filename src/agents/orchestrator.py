@@ -1,5 +1,5 @@
 """
-TripWeaver orchestrator — LangGraph fan-out after the decision subgraph.
+BookMe AI orchestrator — LangGraph fan-out after the decision subgraph.
 
 Phase 6 chat runs ``decision_graph`` → ``decision_bridge`` → this graph.
 ``route_decisions`` are usually pre-filled by the bridge; the supervisor

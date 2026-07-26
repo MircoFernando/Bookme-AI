@@ -8,7 +8,7 @@ CONFIGURATION POLICY
   via ``os.getenv()``. Never commit secrets.
 
 This mirrors the Week 13 (Nawaloka) infrastructure pattern, trimmed to what
-TripWeaver needs: a provider-flexible multi-model LLM setup, the external
+BookMe AI needs: a provider-flexible multi-model LLM setup, the external
 travel service endpoints the MCP servers bridge to, per-session memory limits,
 and logging/observability toggles.
 """
@@ -253,7 +253,7 @@ def dump() -> None:
     """Log the active non-secret configuration (handy on startup)."""
     from loguru import logger
 
-    logger.info("── TripWeaver configuration ──────────────────────────")
+    logger.info("── BookMe AI configuration ──────────────────────────")
     logger.info("  provider default: {} (tier={})", PROVIDER, MODEL_TIER)
     logger.info("  router          : {} @ {}", ROUTER_MODEL, ROUTER_PROVIDER)
     logger.info("  guardrail       : {} @ {}", GUARDRAIL_MODEL, GUARDRAIL_PROVIDER)

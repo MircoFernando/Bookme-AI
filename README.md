@@ -1,6 +1,6 @@
-# Booking Agents Backend
+# BookMe AI
 
-A FastAPI-based booking system with hotel and flight agents powered by LangChain.
+A MCP-based multi-agent travel assistant (hotels, flights, guardrail + router) powered by LangGraph and LangChain.
 
 
 ## Setup

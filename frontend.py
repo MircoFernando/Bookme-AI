@@ -3,7 +3,10 @@ import os
 from urllib.request import Request, urlopen
 import gradio as gr
 
-API_URL = os.environ.get("TRAVEL_PLANNER_API_URL", "http://127.0.0.1:8000/chat")
+API_URL = os.environ.get(
+    "BOOKME_AI_API_URL",
+    os.environ.get("TRAVEL_PLANNER_API_URL", "http://127.0.0.1:8000/chat"),
+)
 
 
 def format_flights(flights):
@@ -76,7 +79,7 @@ def respond(message, history):
 def main():
     with gr.Blocks() as demo:
         gr.Markdown(
-            "# Travel Planner Chat\nAsk the backend for flights, hotels, or travel plans. ``TRAVEL_PLANNER_API_URL`` can be set to point to your FastAPI server."
+            "# BookMe AI Chat\nAsk for flights, hotels, or travel plans. Set ``BOOKME_AI_API_URL`` to your FastAPI chat endpoint."
         )
         chatbot = gr.Chatbot()
         message = gr.Textbox(label="Your message", placeholder="Find me flights from CAN to HAN on 2025-11-15")

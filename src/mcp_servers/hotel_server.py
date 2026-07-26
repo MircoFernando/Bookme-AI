@@ -32,7 +32,7 @@ from mcp.server.fastmcp import FastMCP
 
 from agents.tools.hotel_tool import HotelTool
 
-mcp = FastMCP("tripweaver-hotels")
+mcp = FastMCP("bookme-ai-hotels")
 
 _hotel: HotelTool | None = None
 
@@ -107,5 +107,5 @@ def book_hotel(
 
 
 if __name__ == "__main__":
-    logger.info("Starting tripweaver-hotels MCP server on stdio...")
+    logger.info("Starting bookme-ai-hotels MCP server on stdio...")
     mcp.run()

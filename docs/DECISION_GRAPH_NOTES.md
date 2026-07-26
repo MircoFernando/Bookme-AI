@@ -10,11 +10,11 @@
 
 ## 1. Two-stage pipeline (mental model)
 
-TripWeaver uses **two logical stages**, not two interchangeable “routers”:
+BookMe AI uses **two logical stages**, not two interchangeable “routers”:
 
 | Stage | Component | Question answered | Output |
 |-------|-----------|-------------------|--------|
-| **1 — Gate** | Decision graph (guardrail + decide) | Is this message allowed for TripWeaver? | `verdict`: `out_of_scope` \| `proceed` |
+| **1 — Gate** | Decision graph (guardrail + decide) | Is this message allowed for BookMe AI? | `verdict`: `out_of_scope` \| `proceed` |
 | **2 — Intent** | Router inside same graph (parallel) | Which agents/tools for this in-scope turn? | `decision` → `route_decisions` after bridge |
 
 **Phase 5 orchestrator** reads `AgentState` after the bridge: if `verdict != proceed`, return `final_answer`; else fan-out on `route_decisions` → MCP agents → merge.
@@ -49,11 +49,11 @@ We **intentionally** use two TypedDicts (same pattern as Week 13, clearer split 
 - Orchestrator needs `messages`, `route_decisions`, `agent_outputs`, session ids, etc.
 - Decision graph stays small, testable, and trace-friendly without SSE/MCP noise on minimal state.
 
-**Week 13** keeps the same split; handoff logic lives in `api/routers/chat.py`. **TripWeaver** extracts handoff to `decision_bridge.py` (same behavior, named module — see §7).
+**Week 13** keeps the same split; handoff logic lives in `api/routers/chat.py`. **BookMe AI** extracts handoff to `decision_bridge.py` (same behavior, named module — see §7).
 
 ---
 
-## 3. Decision graph topology (TripWeaver)
+## 3. Decision graph topology (BookMe AI)
 
 ```text
 START
@@ -117,7 +117,7 @@ Week 13 **does the same** for the decision graph (see §8). Chat then returns re
 
 ### 4.4 Two meanings of “instant return”
 
-| Meaning | TripWeaver / Week 13? |
+| Meaning | BookMe AI / Week 13? |
 |---------|------------------------|
 | **A — Product short-circuit** | Skip tools, orchestrator, synth → template or cache answer | **Yes** |
 | **B — HTTP at guardrail time, cancel router** | Response at ~150 ms, one LLM call | **No** (not implemented) |
@@ -126,7 +126,7 @@ Week 13 `chat.py` comments saying “no router LLM” on OOS mean **no downstrea
 
 ---
 
-## 5. Router (TripWeaver domain)
+## 5. Router (BookMe AI domain)
 
 **Valid routes:** `hotel` | `flight` | `general_qa`
 
@@ -173,19 +173,19 @@ Week 13 `chat.py` comments saying “no router LLM” on OOS mean **no downstrea
 
 ---
 
-## 8. Week 13 vs TripWeaver (exact differences)
+## 8. Week 13 vs BookMe AI (exact differences)
 
 ### 8.1 Same
 
 - Parallel classifiers from `START`, fan-in to `decide`
 - Full graph awaited before chat short-circuit
-- Guardrail fail-open; multi-route router; MCP behind agents (Week 13 built, TripWeaver Phase 5)
+- Guardrail fail-open; multi-route router; MCP behind agents (Week 13 built, BookMe AI Phase 5)
 - LangFuse prompts; `@observe` on LLM nodes
 - OOS: no orchestrator/tools; cancel parallel **prep** tasks in chat (patient/recall in Week 13)
 
 ### 8.2 Different — decision subgraph
 
-| | Week 13 | TripWeaver |
+| | Week 13 | BookMe AI |
 |---|---------|------------|
 | Parallel branches | guardrail + router + **CAG** | guardrail + router |
 | `decide` verdicts | `out_of_scope` \| **`cache_hit`** \| `proceed` | `out_of_scope` \| `proceed` |
@@ -200,7 +200,7 @@ Verified in Week 13:
 
 ### 8.3 Different — routing domain
 
-| Week 13 | TripWeaver |
+| Week 13 | BookMe AI |
 |---------|------------|
 | `crm`, `rag`, `web_search`, `direct` | `hotel`, `flight`, `general_qa` |
 | CRM actions (bookings, doctors, …) | `search`, `list_all`, `book`, `general` |
@@ -208,10 +208,10 @@ Verified in Week 13:
 
 ### 8.4 Different — tools & infra
 
-| Week 13 | TripWeaver |
+| Week 13 | BookMe AI |
 |---------|------------|
 | Supabase CRM, Qdrant RAG, web, CAG MCP | Convex HTTP hotels/flights |
-| MCP: crm, rag, web, cag, … | MCP: `tripweaver-hotels`, `tripweaver-flights` |
+| MCP: crm, rag, web, cag, … | MCP: `bookme-ai-hotels`, `bookme-ai-flights` |
 | `src/api/routers/chat.py` live | Phase 6 ⏳ |
 | `orchestrator.py` live | Phase 5 ⏳ |
 | Bridge in chat | `decision_bridge.py` |

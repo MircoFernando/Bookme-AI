@@ -1,6 +1,6 @@
-# TripWeaver — Development Roadmap & Phase Log
+# BookMe AI — Development Roadmap & Phase Log
 
-**Project:** MCP-Based Multi-Agent Travel Planner (assessment: TripWeaver)  
+**Project:** MCP-Based Multi-Agent Travel Planner (assessment: BookMe AI)  
 **Baseline:** FastAPI + LangGraph + Gradio chat with hardcoded Convex HTTP tools  
 **Target architecture:** Week 13 (Nawaloka) reference project — `src/` layout, MCP stdio servers, intent-routed orchestrator, streaming API, deployment  
 
@@ -109,7 +109,7 @@ Phase 9  Stretch (memory, LangFuse traces, CI/Docker)⏳
 4. **Instrument with `@observe` as we build** nodes (Phase 4–6); enable tracing for demo/viva screenshots.
 5. **Prefetch prompts in API lifespan** (planned Phase 6) to avoid first-request latency.
 
-**Prompt names to create in LangFuse:** see `LANGFUSE_PROMPT_NAMES` in `agent_prompts.py` (prefix `tripweaver-*`).
+**Prompt names to create in LangFuse:** see `LANGFUSE_PROMPT_NAMES` in `agent_prompts.py` (prefix `bookme-ai-*`).
 
 ---
 
@@ -130,7 +130,7 @@ Phase 9  Stretch (memory, LangFuse traces, CI/Docker)⏳
 
 **Decisions:**
 
-1. **`http_client.py` is TripWeaver-specific**, not copied from Week 13 (Nawaloka uses DB/RAG per tool). Justified because **both** hotel and flight share the same Convex REST pattern; avoids duplicating retry logic.
+1. **`http_client.py` is BookMe AI-specific**, not copied from Week 13 (Nawaloka uses DB/RAG per tool). Justified because **both** hotel and flight share the same Convex REST pattern; avoids duplicating retry logic.
 2. **`dispatch` returns JSON strings** — one contract for MCP tools and future agent adapters.
 3. **Param aliasing** in `_clean_params` (`check_in` ↔ `checkIn`, `flight_date` ↔ `date`) so router output does not have to match Convex field names exactly.
 4. **Booking validation** returns `"code": "VALIDATION"` instead of crashing or inventing emails (fixes baseline prompt risk).
@@ -150,8 +150,8 @@ Phase 9  Stretch (memory, LangFuse traces, CI/Docker)⏳
 
 | File | Role |
 |------|------|
-| `src/mcp_servers/hotel_server.py` | FastMCP `tripweaver-hotels` — 3 tools → `HotelTool.dispatch` |
-| `src/mcp_servers/flight_server.py` | FastMCP `tripweaver-flights` — 3 tools → `FlightTool.dispatch` |
+| `src/mcp_servers/hotel_server.py` | FastMCP `bookme-ai-hotels` — 3 tools → `HotelTool.dispatch` |
+| `src/mcp_servers/flight_server.py` | FastMCP `bookme-ai-flights` — 3 tools → `FlightTool.dispatch` |
 | `src/mcp_servers/mcp_config.py` | `build_mcp_server_config()` for `MultiServerMCPClient` (stdio, `cwd=src/`) |
 | `scripts/test_mcp_client.py` | Smoke: 6 tools, `list_hotels` / `list_flights` |
 | `Makefile` | `test-mcp`, `inspect-hotel`, `inspect-flight` |

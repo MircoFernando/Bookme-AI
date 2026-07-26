@@ -1,5 +1,5 @@
 """
-TripWeaver prompts — LangFuse Prompt Management + local fallbacks.
+BookMe AI prompts — LangFuse Prompt Management + local fallbacks.
 
 Create these prompt names in LangFuse (Prompts → New → Text prompt).
 Use Mustache variables: {{today}}, {{memory_context}}, {{user_message}}, etc.
@@ -20,15 +20,15 @@ from infrastructure.observability import fetch_prompt
 
 # ── LangFuse prompt registry ──────────────────────────────────────────────────
 LANGFUSE_PROMPT_NAMES = {
-    "guardrail_system": "tripweaver-guardrail-system",
-    "router_system": "tripweaver-router-system",
-    "router_user": "tripweaver-router-user",
-    "extractor_system": "tripweaver-extractor-system",
-    "general_qa_system": "tripweaver-general-qa-system",
-    "hotel_agent_system": "tripweaver-hotel-agent-system",
-    "flight_agent_system": "tripweaver-flight-agent-system",
-    "merge_system": "tripweaver-merge-system",
-    "out_of_scope_reply": "tripweaver-out-of-scope-reply",
+    "guardrail_system": "bookme-ai-guardrail-system",
+    "router_system": "bookme-ai-router-system",
+    "router_user": "bookme-ai-router-user",
+    "extractor_system": "bookme-ai-extractor-system",
+    "general_qa_system": "bookme-ai-general-qa-system",
+    "hotel_agent_system": "bookme-ai-hotel-agent-system",
+    "flight_agent_system": "bookme-ai-flight-agent-system",
+    "merge_system": "bookme-ai-merge-system",
+    "out_of_scope_reply": "bookme-ai-out-of-scope-reply",
 }
 
 ALL_LANGFUSE_PROMPT_NAMES = list(LANGFUSE_PROMPT_NAMES.values())
@@ -37,7 +37,7 @@ ALL_LANGFUSE_PROMPT_NAMES = list(LANGFUSE_PROMPT_NAMES.values())
 # ── Local fallbacks (Python {var} syntax) ─────────────────────────────────────
 
 _GUARDRAIL_SYSTEM_FALLBACK = """\
-You are a scope filter for TripWeaver, a travel planning assistant.
+You are a scope filter for BookMe AI, a travel planning assistant.
 
 Decide whether the user's message is within the assistant's domain.
 
@@ -57,7 +57,7 @@ Answer with ONE WORD ONLY: in_scope or out_of_scope.
 
 
 _ROUTER_SYSTEM_FALLBACK = """\
-You are the intent router for TripWeaver (multi-agent travel planner).
+You are the intent router for BookMe AI (multi-agent travel planner).
 
 Return JSON with a "routes" array (1–3 items). Each item:
   route: hotel | flight | general_qa
@@ -94,7 +94,7 @@ HARD ROUTING RULES (non-negotiable — these override anything above):
 
 CONTEXT
   Today is {today_local} (calendar date {today_d}).
-  The user is on TripWeaver, a hotel + flight planning assistant.
+  The user is on BookMe AI, a hotel + flight planning assistant.
   Use memory_context for follow-ups; do not re-ask for fields already stated.
 
 INTENT MAP (route field)
@@ -233,7 +233,7 @@ sub_action: search | list_all | book | general
 
 
 _GENERAL_QA_SYSTEM_FALLBACK = """\
-You are TripWeaver, a friendly travel assistant.
+You are BookMe AI, a friendly travel assistant.
 You help with general travel questions when no hotel/flight tool is needed.
 Be concise. If the user needs hotels or flights, suggest they ask explicitly.
 Do not invent prices or availability — only MCP tool results are authoritative.
@@ -244,7 +244,7 @@ Memory context:
 
 
 _HOTEL_AGENT_SYSTEM_FALLBACK = """\
-You are the Hotel Agent for TripWeaver.
+You are the Hotel Agent for BookMe AI.
 Use ONLY the tool output provided — never invent hotels or prices.
 If booking fields are missing, ask the user for them clearly.
 Be concise and helpful.
@@ -255,7 +255,7 @@ Memory context:
 
 
 _FLIGHT_AGENT_SYSTEM_FALLBACK = """\
-You are the Flight Agent for TripWeaver.
+You are the Flight Agent for BookMe AI.
 Use ONLY the tool output provided — never invent flights or prices.
 If booking fields are missing, ask the user for them clearly.
 Be concise and helpful.
@@ -266,7 +266,7 @@ Memory context:
 
 
 _MERGE_SYSTEM_FALLBACK = """\
-You merge outputs from multiple TripWeaver agents into one coherent reply.
+You merge outputs from multiple BookMe AI agents into one coherent reply.
 Combine hotel and flight results into a single travel plan when both are present.
 Do not add facts not present in the agent results.
 
@@ -276,7 +276,7 @@ Memory context:
 
 
 _OUT_OF_SCOPE_REPLY_FALLBACK = """\
-I'm TripWeaver — I help you search and book hotels and flights, and answer travel planning questions in that space. That's outside what I can help with here. What destination or trip can I help you plan?
+I'm BookMe AI — I help you search and book hotels and flights, and answer travel planning questions in that space. That's outside what I can help with here. What destination or trip can I help you plan?
 """
 
 

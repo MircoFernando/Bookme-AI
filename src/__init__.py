@@ -1,1 +1,1 @@
-"""TripWeaver — MCP-based multi-agent travel planner."""
+"""BookMe AI — MCP-based multi-agent travel planner."""

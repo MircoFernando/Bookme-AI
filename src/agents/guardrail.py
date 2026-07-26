@@ -1,5 +1,5 @@
 """
-Domain Guardrail — TripWeaver scope filter (Week 13 decision subgraph).
+Domain Guardrail — BookMe AI scope filter (Week 13 decision subgraph).
 
 Binary classifier used by ``decision_graph`` (``DecisionState``), not the
 orchestrator ``AgentState``. Fails open on LLM errors.
@@ -21,7 +21,7 @@ _default_guardrail: Optional["Guardrail"] = None
 
 
 _GUARDRAIL_SYSTEM = """\
-You are a scope filter for TripWeaver, a multi-agent travel planning assistant.
+You are a scope filter for BookMe AI, a multi-agent travel planning assistant.
 
 Decide whether the user's message is within the assistant's domain.
 

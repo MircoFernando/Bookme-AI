@@ -27,7 +27,7 @@ from mcp.server.fastmcp import FastMCP
 
 from agents.tools.flight_tool import FlightTool
 
-mcp = FastMCP("tripweaver-flights")
+mcp = FastMCP("bookme-ai-flights")
 
 _flight: FlightTool | None = None
 
@@ -91,5 +91,5 @@ def book_flight(
 
 
 if __name__ == "__main__":
-    logger.info("Starting tripweaver-flights MCP server on stdio...")
+    logger.info("Starting bookme-ai-flights MCP server on stdio...")
     mcp.run()

@@ -6,7 +6,7 @@
   "4": "http_client.py",
   "5": "SessionStore",
   "6": "Decision graph & routing — architecture notes",
-  "7": "TripWeaver — Development Roadmap & Phase Log",
+  "7": "BookMe AI — Development Roadmap & Phase Log",
   "8": "config.py",
   "9": "infrastructure/llm.py",
   "10": "llm/__init__.py",

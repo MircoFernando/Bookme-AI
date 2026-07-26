@@ -1,5 +1,5 @@
 # =============================================================================
-# TripWeaver — Makefile
+# BookMe AI — Makefile
 # =============================================================================
 # All Python targets run with PYTHONPATH=src so imports resolve from the
 # src/ layout (infrastructure.*, agents.*, mcp_servers.*, api.*).
@@ -13,7 +13,7 @@ PY := PYTHONPATH=src $(PYTHON)
 
 # ── Help (default) ────────────────────────────────────────────────────────────
 help:
-	@echo "TripWeaver — available commands:"
+	@echo "BookMe AI — available commands:"
 	@echo ""
 	@echo "  make install        Install Python dependencies"
 	@echo "  make config         Print active (non-secret) configuration"

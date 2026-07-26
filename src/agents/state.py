@@ -1,5 +1,5 @@
 """
-AgentState — the shared state for the TripWeaver LangGraph.
+AgentState — the shared state for the BookMe AI LangGraph.
 
 Every node reads from and writes to this TypedDict; it is the single source of
 truth passed along the graph ("the conveyor belt"). Design notes:

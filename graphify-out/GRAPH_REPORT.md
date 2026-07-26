@@ -1,7 +1,7 @@
 # Graph Report - Bookme AI  (2026-07-26)
 
 ## Corpus Check
-- 42 files · ~19,402 words
+- 42 files · ~19,386 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7b7918d6`
+- Built from commit: `0aaa6e59`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -40,7 +40,7 @@
 1. `AgentOrchestrator` - 25 edges
 2. `AgentState` - 25 edges
 3. `QueryRouter` - 21 edges
-4. `TripWeaver — Development Roadmap & Phase Log` - 19 edges
+4. `BookMe AI — Development Roadmap & Phase Log` - 19 edges
 5. `observe()` - 16 edges
 6. `SessionStore` - 15 edges
 7. `fetch_prompt()` - 14 edges
@@ -87,11 +87,11 @@ Nodes (21): Exception, retry, _dumps(), _extract_flights(), FlightTool, _normali
 
 ### Community 5 - "SessionStore"
 Cohesion: 0.10
-Nodes (19): Assessment mapping (SRS), Commands cheat sheet, Decision log (consolidated), High-level phase map, How to read this document, Next recommended step, Phase 0 — Baseline starter ✅, Phase 1 — Infrastructure & project skeleton ✅ (+11 more)
+Nodes (19): Assessment mapping (SRS), BookMe AI — Development Roadmap & Phase Log, Commands cheat sheet, Decision log (consolidated), High-level phase map, How to read this document, Next recommended step, Phase 0 — Baseline starter ✅ (+11 more)
 
 ### Community 6 - "Decision graph & routing — architecture notes"
 Cohesion: 0.08
-Nodes (24): 10. Phase 4 status & acceptance, 11. Repository map (Phase 4 agents), 12. Questions for Week 13 / instructor (optional prompt), 1. Two-stage pipeline (mental model), 2. Week 13 architecture choice (two state types), 3. Decision graph topology (TripWeaver), 4.1 Both branches always start, 4.2 Fan-in before `decide` (+16 more)
+Nodes (24): 10. Phase 4 status & acceptance, 11. Repository map (Phase 4 agents), 12. Questions for Week 13 / instructor (optional prompt), 1. Two-stage pipeline (mental model), 2. Week 13 architecture choice (two state types), 3. Decision graph topology (BookMe AI), 4.1 Both branches always start, 4.2 Fan-in before `decide` (+16 more)
 
 ### Community 7 - "TripWeaver — Development Roadmap & Phase Log"
 Cohesion: 0.09
@@ -107,7 +107,7 @@ Nodes (19): LogRecord, Infrastructure layer — pure plumbing (config, logging, 
 
 ### Community 11 - "Setup"
 Cohesion: 0.17
-Nodes (11): 1. Create Virtual Environment, 2. Install Dependencies, 3. Configure API Key, 4. Run the Backend, 5. Run the Frontend, API Endpoints, Booking Agents Backend, Chat Example (+3 more)
+Nodes (11): 1. Create Virtual Environment, 2. Install Dependencies, 3. Configure API Key, 4. Run the Backend, 5. Run the Frontend, API Endpoints, BookMe AI, Chat Example (+3 more)
 
 ### Community 12 - "main.py"
 Cohesion: 0.33

@@ -1,5 +1,5 @@
 """
-Decision LangGraph — Week 13 architecture (TripWeaver).
+Decision LangGraph — Week 13 architecture (BookMe AI).
 
 Small ``DecisionState`` subgraph: parallel guardrail + intent router, then
 ``decide``. Output is mapped into ``AgentState`` via ``decision_bridge`` for

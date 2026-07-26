@@ -1,5 +1,5 @@
 """
-Chat LLM providers — TripWeaver hybrid layout.
+Chat LLM providers — BookMe AI hybrid layout.
 
   - Router / guardrail / extractor / chat → OpenAI (gpt-4o-mini via models.yaml)
   - Merge (hotel + flight synthesis) → native Gemini (GOOGLE_API_KEY)
