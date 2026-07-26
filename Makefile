@@ -8,7 +8,7 @@
 PY := PYTHONPATH=src python
 
 .PHONY: help install config check-config run-api run-ui \
-        inspect-hotel inspect-flight test-mcp test clean
+        inspect-hotel inspect-flight test-mcp test-decision test clean
 
 # ── Help (default) ────────────────────────────────────────────────────────────
 help:
@@ -22,6 +22,7 @@ help:
 	@echo "  make inspect-hotel  Open MCP Inspector on hotel server"
 	@echo "  make inspect-flight Open MCP Inspector on flight server"
 	@echo "  make test-mcp       Smoke test MultiServerMCPClient + 6 tools"
+	@echo "  make test-decision  Decision subgraph + bridge (needs OPENAI_API_KEY)"
 	@echo "  make test           Run the test suite              (Day 7)"
 	@echo "  make clean          Remove caches and __pycache__"
 
@@ -52,6 +53,9 @@ inspect-flight:
 
 test-mcp:
 	PYTHONPATH=src .venv/bin/python scripts/test_mcp_client.py
+
+test-decision:
+	PYTHONPATH=src .venv/bin/python scripts/test_decision_graph.py
 
 # ── Tests ─────────────────────────────────────────────────────────────────────────
 test:

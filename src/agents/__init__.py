@@ -1,15 +1,23 @@
 """
 Agent layer — LangGraph orchestration, routing, guardrail, and agent nodes.
 
-Populated across the enhancement sprint:
-    state.py           — shared AgentState (this Day-1 deliverable)
-    guardrail.py       — fail-open scope classifier            (Day 3)
-    router.py          — intent classification                (Day 3)
-    decision_graph.py  — parallel guardrail + router → decide  (Day 3)
-    orchestrator.py    — supervisor → fan-out agents → merge   (Day 4)
-    tools/             — hotel/flight business logic           (Day 2)
+Week 13 layout:
+    decision_state.py  — DecisionState (classification subgraph)
+    decision_graph.py  — guardrail ∥ router → decide
+    decision_bridge.py — DecisionState → AgentState
+    state.py           — AgentState (orchestrator / full pipeline)
+    guardrail.py, router.py, orchestrator.py (Phase 5), tools/
 """
 
+from agents.decision_bridge import map_decision_to_agent_state
+from agents.decision_graph import build_decision_graph, build_decision_input
+from agents.decision_state import DecisionState
 from agents.state import AgentState
 
-__all__ = ["AgentState"]
+__all__ = [
+    "AgentState",
+    "DecisionState",
+    "build_decision_graph",
+    "build_decision_input",
+    "map_decision_to_agent_state",
+]
