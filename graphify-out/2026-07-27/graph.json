@@ -1133,7 +1133,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "orchestrator.py"
     },
     {
@@ -1144,7 +1144,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentresponse",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "agentresponse"
     },
     {
@@ -1155,7 +1155,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_llm_content_to_str",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "_llm_content_to_str()"
     },
     {
@@ -1166,7 +1166,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_py_any",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "any"
     },
     {
@@ -1177,7 +1177,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_last_user_text",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "_last_user_text()"
     },
     {
@@ -1188,7 +1188,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_format_session_memory",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "_format_session_memory()"
     },
     {
@@ -1199,7 +1199,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_mcp_result_to_str",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "_mcp_result_to_str()"
     },
     {
@@ -1210,7 +1210,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_tool_status",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "_tool_status()"
     },
     {
@@ -1221,7 +1221,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_parse_inventory",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "_parse_inventory()"
     },
     {
@@ -1232,7 +1232,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "agentorchestrator"
     },
     {
@@ -1243,7 +1243,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_init",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".__init__()"
     },
     {
@@ -1254,7 +1254,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_build_graph",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "._build_graph()"
     },
     {
@@ -1265,7 +1265,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_entry_routing",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".entry_routing()"
     },
     {
@@ -1276,7 +1276,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_recall_node",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".recall_node()"
     },
     {
@@ -1287,7 +1287,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_supervisor_node",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".supervisor_node()"
     },
     {
@@ -1298,7 +1298,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_supervisor_routing",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".supervisor_routing()"
     },
     {
@@ -1309,7 +1309,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_decision_for_route",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "._decision_for_route()"
     },
     {
@@ -1320,7 +1320,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_dispatch_hotel",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "._dispatch_hotel()"
     },
     {
@@ -1331,7 +1331,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_dispatch_flight",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "._dispatch_flight()"
     },
     {
@@ -1342,7 +1342,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_generate_agent_response",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "._generate_agent_response()"
     },
     {
@@ -1353,7 +1353,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_hotel_agent_node",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".hotel_agent_node()"
     },
     {
@@ -1364,7 +1364,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_flight_agent_node",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".flight_agent_node()"
     },
     {
@@ -1375,7 +1375,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_general_qa_agent_node",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".general_qa_agent_node()"
     },
     {
@@ -1386,7 +1386,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_merge_responses_node",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".merge_responses_node()"
     },
     {
@@ -1397,7 +1397,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_save_memory_node",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".save_memory_node()"
     },
     {
@@ -1408,7 +1408,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_achat",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".achat()"
     },
     {
@@ -1419,7 +1419,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_arun_state",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".arun_state()"
     },
     {
@@ -1430,7 +1430,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_to_agent_response",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "._to_agent_response()"
     },
     {
@@ -1441,7 +1441,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_mcphoteltooladapter",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "_mcphoteltooladapter"
     },
     {
@@ -1452,7 +1452,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_mcphoteltooladapter_init",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".__init__()"
     },
     {
@@ -1463,7 +1463,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_mcphoteltooladapter_dispatch",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".dispatch()"
     },
     {
@@ -1474,7 +1474,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_mcphoteltooladapter_adispatch",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".adispatch()"
     },
     {
@@ -1485,7 +1485,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_mcpflighttooladapter",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "_mcpflighttooladapter"
     },
     {
@@ -1496,7 +1496,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_mcpflighttooladapter_init",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".__init__()"
     },
     {
@@ -1507,7 +1507,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_mcpflighttooladapter_dispatch",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".dispatch()"
     },
     {
@@ -1518,7 +1518,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_mcpflighttooladapter_adispatch",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": ".adispatch()"
     },
     {
@@ -1529,7 +1529,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_async_mcp_dispatch",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "_async_mcp_dispatch()"
     },
     {
@@ -1540,7 +1540,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_sync_mcp_dispatch",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "_sync_mcp_dispatch()"
     },
     {
@@ -1573,7 +1573,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_rationale_1",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "bookme ai orchestrator \u2014 langgraph fan-out after the decision subgraph.  phase 6"
     },
     {
@@ -1584,7 +1584,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_rationale_60",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "one orchestrator turn \u2014 metadata for api / scripts."
     },
     {
@@ -1595,7 +1595,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_rationale_72",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "normalize openai/gemini message content to plain text."
     },
     {
@@ -1606,7 +1606,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_rationale_163",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "supervisor\u2013worker langgraph with parallel hotel / flight / general_qa nodes."
     },
     {
@@ -1617,7 +1617,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_rationale_499",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "standalone turn: no decision graph (supervisor runs router)."
     },
     {
@@ -1628,7 +1628,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_rationale_514",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "invoke with a bridged ``agentstate`` patch (phase 6 path)."
     },
     {
@@ -1639,7 +1639,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_rationale_540",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "mcp hotel tools \u2192 ``dispatch(action, params)`` (sync or async)."
     },
     {
@@ -1650,7 +1650,7 @@
       "_origin": "ast",
       "id": "src_agents_orchestrator_rationale_555",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "mcp flight tools \u2192 ``dispatch(action, params)`` (sync or async)."
     },
     {
@@ -1712,7 +1712,7 @@
       "label": "build_router_prompt()",
       "file_type": "code",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L288",
+      "source_location": "L285",
       "_origin": "ast",
       "id": "src_agents_prompts_agent_prompts_build_router_prompt",
       "community": 3,
@@ -1723,7 +1723,7 @@
       "label": "build_guardrail_system_prompt()",
       "file_type": "code",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L324",
+      "source_location": "L319",
       "_origin": "ast",
       "id": "src_agents_prompts_agent_prompts_build_guardrail_system_prompt",
       "community": 3,
@@ -1734,7 +1734,7 @@
       "label": "build_router_system_prompt()",
       "file_type": "code",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L331",
+      "source_location": "L326",
       "_origin": "ast",
       "id": "src_agents_prompts_agent_prompts_build_router_system_prompt",
       "community": 3,
@@ -1742,21 +1742,10 @@
       "norm_label": "build_router_system_prompt()"
     },
     {
-      "label": "build_router_hard_rules_prompt()",
-      "file_type": "code",
-      "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L341",
-      "_origin": "ast",
-      "id": "src_agents_prompts_agent_prompts_build_router_hard_rules_prompt",
-      "community": 3,
-      "community_name": "observability.py",
-      "norm_label": "build_router_hard_rules_prompt()"
-    },
-    {
       "label": "build_router_user_prompt()",
       "file_type": "code",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L350",
+      "source_location": "L335",
       "_origin": "ast",
       "id": "src_agents_prompts_agent_prompts_build_router_user_prompt",
       "community": 3,
@@ -1767,7 +1756,7 @@
       "label": "build_extractor_system_prompt()",
       "file_type": "code",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L359",
+      "source_location": "L344",
       "_origin": "ast",
       "id": "src_agents_prompts_agent_prompts_build_extractor_system_prompt",
       "community": 3,
@@ -1778,7 +1767,7 @@
       "label": "build_general_qa_system_prompt()",
       "file_type": "code",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L368",
+      "source_location": "L353",
       "_origin": "ast",
       "id": "src_agents_prompts_agent_prompts_build_general_qa_system_prompt",
       "community": 3,
@@ -1789,7 +1778,7 @@
       "label": "build_hotel_agent_system_prompt()",
       "file_type": "code",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L376",
+      "source_location": "L361",
       "_origin": "ast",
       "id": "src_agents_prompts_agent_prompts_build_hotel_agent_system_prompt",
       "community": 3,
@@ -1800,7 +1789,7 @@
       "label": "build_flight_agent_system_prompt()",
       "file_type": "code",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L384",
+      "source_location": "L369",
       "_origin": "ast",
       "id": "src_agents_prompts_agent_prompts_build_flight_agent_system_prompt",
       "community": 3,
@@ -1811,7 +1800,7 @@
       "label": "build_merge_system_prompt()",
       "file_type": "code",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L392",
+      "source_location": "L377",
       "_origin": "ast",
       "id": "src_agents_prompts_agent_prompts_build_merge_system_prompt",
       "community": 3,
@@ -1822,7 +1811,7 @@
       "label": "get_out_of_scope_reply()",
       "file_type": "code",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L400",
+      "source_location": "L385",
       "_origin": "ast",
       "id": "src_agents_prompts_agent_prompts_get_out_of_scope_reply",
       "community": 3,
@@ -1844,23 +1833,12 @@
       "label": "Return (system_prompt, user_prompt) for the router call.",
       "file_type": "rationale",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L292",
+      "source_location": "L289",
       "_origin": "ast",
-      "id": "src_agents_prompts_agent_prompts_rationale_292",
+      "id": "src_agents_prompts_agent_prompts_rationale_289",
       "community": 3,
       "community_name": "observability.py",
       "norm_label": "return (system_prompt, user_prompt) for the router call."
-    },
-    {
-      "label": "Base router system only (no hard rules). Prefer ``build_router_prompt`` for rout",
-      "file_type": "rationale",
-      "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L332",
-      "_origin": "ast",
-      "id": "src_agents_prompts_agent_prompts_rationale_332",
-      "community": 3,
-      "community_name": "observability.py",
-      "norm_label": "base router system only (no hard rules). prefer ``build_router_prompt`` for rout"
     },
     {
       "label": "router.py",
@@ -2233,7 +2211,7 @@
       "_origin": "ast",
       "id": "src_agents_state_agentstate",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "agentstate"
     },
     {
@@ -2244,7 +2222,7 @@
       "_origin": "ast",
       "id": "src_agents_state_py_typeddict",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "typeddict"
     },
     {
@@ -3509,7 +3487,7 @@
       "_origin": "ast",
       "id": "src_infrastructure_observability_observe",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "observe()"
     },
     {
@@ -3619,7 +3597,7 @@
       "_origin": "ast",
       "id": "src_infrastructure_observability_rationale_109",
       "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community_name": "TripWeaver \u2014 Development Roadmap & Phase Log",
       "norm_label": "decorator wrapping ``langfuse.observe`` \u2014 no-op when tracing is off."
     },
     {
@@ -8941,7 +8919,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L21",
+      "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts",
@@ -8952,7 +8930,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L359",
+      "source_location": "L344",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts",
@@ -8963,7 +8941,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L384",
+      "source_location": "L369",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts",
@@ -8974,7 +8952,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L368",
+      "source_location": "L353",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts",
@@ -8985,7 +8963,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L324",
+      "source_location": "L319",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts",
@@ -8996,7 +8974,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L376",
+      "source_location": "L361",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts",
@@ -9007,7 +8985,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L392",
+      "source_location": "L377",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts",
@@ -9018,18 +8996,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L341",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_agents_prompts_agent_prompts",
-      "target": "src_agents_prompts_agent_prompts_build_router_hard_rules_prompt",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L288",
+      "source_location": "L285",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts",
@@ -9040,7 +9007,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L331",
+      "source_location": "L326",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts",
@@ -9051,7 +9018,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L350",
+      "source_location": "L335",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts",
@@ -9062,7 +9029,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L400",
+      "source_location": "L385",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts",
@@ -9086,7 +9053,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L303",
+      "source_location": "L300",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts_build_router_prompt",
@@ -9096,10 +9063,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L292",
+      "source_location": "L289",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "src_agents_prompts_agent_prompts_rationale_292",
+      "source": "src_agents_prompts_agent_prompts_rationale_289",
       "target": "src_agents_prompts_agent_prompts_build_router_prompt",
       "confidence_score": 1.0
     },
@@ -9121,7 +9088,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L325",
+      "source_location": "L320",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts_build_guardrail_system_prompt",
@@ -9133,42 +9100,19 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L334",
+      "source_location": "L328",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts_build_router_system_prompt",
       "target": "src_infrastructure_observability_fetch_prompt"
     },
     {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L332",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_agents_prompts_agent_prompts_rationale_332",
-      "target": "src_agents_prompts_agent_prompts_build_router_system_prompt",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L342",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_agents_prompts_agent_prompts_build_router_hard_rules_prompt",
-      "target": "src_infrastructure_observability_fetch_prompt"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L351",
+      "source_location": "L336",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts_build_router_user_prompt",
@@ -9180,7 +9124,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L361",
+      "source_location": "L346",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts_build_extractor_system_prompt",
@@ -9192,7 +9136,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L369",
+      "source_location": "L354",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts_build_general_qa_system_prompt",
@@ -9204,7 +9148,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L377",
+      "source_location": "L362",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts_build_hotel_agent_system_prompt",
@@ -9216,7 +9160,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L385",
+      "source_location": "L370",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts_build_flight_agent_system_prompt",
@@ -9228,7 +9172,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L393",
+      "source_location": "L378",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts_build_merge_system_prompt",
@@ -9240,7 +9184,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/agents/prompts/agent_prompts.py",
-      "source_location": "L401",
+      "source_location": "L386",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_prompts_agent_prompts_get_out_of_scope_reply",
@@ -13917,5 +13861,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "0ea1ae8f5d95d9bb1468a9a8d2ae944057fb2f5e"
+  "built_at_commit": "0aaa6e59323e8856e708898c67c13447b7a66c2c"
 }

@@ -9,7 +9,8 @@ PYTHON ?= .venv/bin/python
 PY := PYTHONPATH=src $(PYTHON)
 
 .PHONY: help install config check-config run-api run-ui \
-        inspect-hotel inspect-flight test-mcp test-decision test-orchestrator test clean
+        inspect-hotel inspect-flight test-mcp test-decision test-orchestrator \
+        seed-langfuse test clean
 
 # ── Help (default) ────────────────────────────────────────────────────────────
 help:
@@ -25,6 +26,7 @@ help:
 	@echo "  make test-mcp       Smoke test MultiServerMCPClient + 6 tools"
 	@echo "  make test-decision  Decision subgraph + bridge (OPENAI_API_KEY)"
 	@echo "  make test-orchestrator  Orchestrator E2E (OPENAI + GOOGLE + network)"
+	@echo "  make seed-langfuse      Upload bookme-ai-* prompts to LangFuse (production label)"
 	@echo "  make test           Run the test suite              (Day 7)"
 	@echo "  make clean          Remove caches and __pycache__"
 
@@ -61,6 +63,9 @@ test-decision:
 
 test-orchestrator:
 	PYTHONPATH=src .venv/bin/python scripts/test_orchestrator.py
+
+seed-langfuse:
+	PYTHONPATH=src .venv/bin/python scripts/seed_langfuse_prompts.py
 
 # ── Tests ─────────────────────────────────────────────────────────────────────────
 test:

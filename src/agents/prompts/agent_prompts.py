@@ -9,7 +9,9 @@ When ``LANGFUSE_PROMPTS=true`` (or ``observability.prompts_enabled`` in yaml),
 runtime loads from LangFuse. Missing prompts fall back to the strings below —
 so the app works before you create anything in the dashboard.
 
-Prompt names (copy into LangFuse):
+When uploading ``bookme-ai-router-hard-rules`` to LangFuse, use Mustache
+``{{today_local}}`` and ``{{today_d}}``. JSON examples in the text use a single
+``{`` (not Python ``{{``) so Mustache leaves them literal.
 """
 
 from __future__ import annotations
@@ -22,6 +24,7 @@ from infrastructure.observability import fetch_prompt
 LANGFUSE_PROMPT_NAMES = {
     "guardrail_system": "bookme-ai-guardrail-system",
     "router_system": "bookme-ai-router-system",
+    "router_hard_rules": "bookme-ai-router-hard-rules",
     "router_user": "bookme-ai-router-user",
     "extractor_system": "bookme-ai-extractor-system",
     "general_qa_system": "bookme-ai-general-qa-system",
@@ -87,7 +90,7 @@ User message:
 """
 
 
-_ROUTER_HARD_RULES_TEMPLATE = """
+_ROUTER_HARD_RULES_FALLBACK = """
 ═════════════════════════════════════════════════════════════════════
 HARD ROUTING RULES (non-negotiable — these override anything above):
 ═════════════════════════════════════════════════════════════════════
@@ -302,7 +305,9 @@ def build_router_prompt(
         fallback=_ROUTER_SYSTEM_FALLBACK,
         today=today_d,
     )
-    hard = _ROUTER_HARD_RULES_TEMPLATE.format(
+    hard = fetch_prompt(
+        LANGFUSE_PROMPT_NAMES["router_hard_rules"],
+        fallback=_ROUTER_HARD_RULES_FALLBACK,
         today_local=today_local,
         today_d=today_d,
     )
@@ -324,11 +329,21 @@ def build_guardrail_system_prompt() -> str:
 
 
 def build_router_system_prompt(*, today: str | None = None) -> str:
+    """Base router system only (no hard rules). Prefer ``build_router_prompt`` for routing."""
     today = today or date.today().isoformat()
     return fetch_prompt(
         LANGFUSE_PROMPT_NAMES["router_system"],
         fallback=_ROUTER_SYSTEM_FALLBACK,
         today=today,
+    )
+
+
+def build_router_hard_rules_prompt(*, today_local: str, today_d: str) -> str:
+    return fetch_prompt(
+        LANGFUSE_PROMPT_NAMES["router_hard_rules"],
+        fallback=_ROUTER_HARD_RULES_FALLBACK,
+        today_local=today_local,
+        today_d=today_d,
     )
 
 

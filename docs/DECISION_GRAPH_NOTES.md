@@ -141,7 +141,7 @@ Week 13 `chat.py` comments saying “no router LLM” on OOS mean **no downstrea
 | `QueryRouter.aroute` in decision graph | `DecisionState` | Week 13 path |
 | `router_node` in `router.py` | `AgentState` | Optional orchestrator graph / alternate wiring |
 
-**Prompts:** `build_router_prompt()` = LangFuse/base system + `_ROUTER_HARD_RULES_TEMPLATE` + user template.
+**Prompts:** `build_router_prompt()` = LangFuse/base system + LangFuse hard rules + user template.
 
 ---
 

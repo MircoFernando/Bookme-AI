@@ -1,16 +1,16 @@
-# Graph Report - Bookme AI  (2026-07-27)
+# Graph Report - Bookme AI  (2026-07-26)
 
 ## Corpus Check
-- 42 files · ~19,440 words
+- 42 files · ~19,386 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 436 nodes · 792 edges · 20 communities (16 shown, 4 thin omitted)
-- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 80 edges (avg confidence: 0.73)
+- 434 nodes · 789 edges · 20 communities (16 shown, 4 thin omitted)
+- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 79 edges (avg confidence: 0.73)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0ea1ae8f`
+- Built from commit: `0aaa6e59`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -22,7 +22,7 @@
 - http_client.py
 - SessionStore
 - Decision graph & routing — architecture notes
-- BookMe AI — Development Roadmap & Phase Log
+- TripWeaver — Development Roadmap & Phase Log
 - config.py
 - infrastructure/llm.py
 - llm/__init__.py
@@ -42,8 +42,8 @@
 3. `QueryRouter` - 21 edges
 4. `BookMe AI — Development Roadmap & Phase Log` - 19 edges
 5. `observe()` - 16 edges
-6. `fetch_prompt()` - 15 edges
-7. `SessionStore` - 15 edges
+6. `SessionStore` - 15 edges
+7. `fetch_prompt()` - 14 edges
 8. `Decision graph & routing — architecture notes` - 13 edges
 9. `build_decision_graph()` - 12 edges
 10. `MultiRouteDecision` - 12 edges
@@ -78,8 +78,8 @@ Cohesion: 0.12
 Nodes (30): GraphState, TypedDict, build_graph(), flight_node(), _format_flight(), _format_hotel(), generate_response(), hotel_node() (+22 more)
 
 ### Community 3 - "observability.py"
-Cohesion: 0.10
-Nodes (32): build_extractor_system_prompt(), build_flight_agent_system_prompt(), build_general_qa_system_prompt(), build_guardrail_system_prompt(), build_hotel_agent_system_prompt(), build_merge_system_prompt(), build_router_hard_rules_prompt(), build_router_prompt() (+24 more)
+Cohesion: 0.11
+Nodes (30): build_extractor_system_prompt(), build_flight_agent_system_prompt(), build_general_qa_system_prompt(), build_guardrail_system_prompt(), build_hotel_agent_system_prompt(), build_merge_system_prompt(), build_router_prompt(), build_router_system_prompt() (+22 more)
 
 ### Community 4 - "http_client.py"
 Cohesion: 0.12
@@ -93,7 +93,7 @@ Nodes (19): Assessment mapping (SRS), BookMe AI — Development Roadmap & Phase 
 Cohesion: 0.08
 Nodes (24): 10. Phase 4 status & acceptance, 11. Repository map (Phase 4 agents), 12. Questions for Week 13 / instructor (optional prompt), 1. Two-stage pipeline (mental model), 2. Week 13 architecture choice (two state types), 3. Decision graph topology (BookMe AI), 4.1 Both branches always start, 4.2 Fan-in before `decide` (+16 more)
 
-### Community 7 - "BookMe AI — Development Roadmap & Phase Log"
+### Community 7 - "TripWeaver — Development Roadmap & Phase Log"
 Cohesion: 0.09
 Nodes (25): AgentOrchestrator, AgentResponse, _async_mcp_dispatch(), _format_session_memory(), _last_user_text(), _llm_content_to_str(), _mcp_result_to_str(), _MCPFlightToolAdapter (+17 more)
 
@@ -137,11 +137,11 @@ Nodes (5): call_chat_api(), format_flights(), format_hotels(), main(), respond()
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `build_orchestrator()` connect `mcp_config.py` to `infrastructure/llm.py`, `http_client.py`, `hotel_server.py`, `BookMe AI — Development Roadmap & Phase Log`?**
-  _High betweenness centrality (0.102) - this node is a cross-community bridge._
-- **Why does `SessionStore` connect `infrastructure/llm.py` to `mcp_config.py`, `BookMe AI — Development Roadmap & Phase Log`?**
-  _High betweenness centrality (0.071) - this node is a cross-community bridge._
-- **Why does `AgentOrchestrator` connect `BookMe AI — Development Roadmap & Phase Log` to `router.py`, `infrastructure/llm.py`, `mcp_config.py`?**
+- **Why does `build_orchestrator()` connect `mcp_config.py` to `infrastructure/llm.py`, `http_client.py`, `hotel_server.py`, `TripWeaver — Development Roadmap & Phase Log`?**
+  _High betweenness centrality (0.103) - this node is a cross-community bridge._
+- **Why does `SessionStore` connect `infrastructure/llm.py` to `mcp_config.py`, `TripWeaver — Development Roadmap & Phase Log`?**
+  _High betweenness centrality (0.072) - this node is a cross-community bridge._
+- **Why does `AgentOrchestrator` connect `TripWeaver — Development Roadmap & Phase Log` to `router.py`, `infrastructure/llm.py`, `mcp_config.py`?**
   _High betweenness centrality (0.063) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `AgentOrchestrator` (e.g. with `QueryRouter` and `AgentState`) actually correct?**
   _`AgentOrchestrator` has 3 INFERRED edges - model-reasoned connections that need verification._
