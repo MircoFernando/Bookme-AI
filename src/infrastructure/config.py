@@ -131,6 +131,9 @@ PROMPT_CACHE_TTL_SECONDS: int = _get_nested(
     _PARAMS, "observability", "prompt_cache_ttl_seconds", default=300
 )
 
+# Timezone (used by web_search_tool for timestamp display)
+TIMEZONE = "Asia/Colombo"
+
 
 # ── Secrets (from .env only) ──────────────────────────────────────────────────
 def get_api_key(provider: Optional[str] = None) -> Optional[str]:
