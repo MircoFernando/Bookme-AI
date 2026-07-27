@@ -44,7 +44,7 @@ class AgentState(TypedDict, total=False):
 
     # ── Routing ───────────────────────────────────────────────────────────────
     # One dict per detected intent:
-    #   {"route": "hotel"|"flight"|"general_qa",
+    #   {"route": "hotel"|"flight"|"general_qa"|"web_search",
     #    "action": "search"|"list_all"|"book"|"general",
     #    "params": {...}, "reasoning": str, "confidence": float}
     route_decisions: Optional[List[dict]]

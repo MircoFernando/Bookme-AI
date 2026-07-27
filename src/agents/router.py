@@ -3,7 +3,7 @@ Query Router — LLM-based intent classification.
 
 Takes a user message + memory context and returns a ``MultiRouteDecision``
 containing one or more ``RouteDecision`` objects. Multiple routes enable the
-orchestrator to fan out to parallel hotel / flight / general_qa agent nodes.
+orchestrator to fan out to parallel hotel / flight / general_qa / web_search agent nodes.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ from agents.state import AgentState
 from infrastructure.llm import get_router_llm
 from infrastructure.observability import observe, update_current_observation
 
-VALID_ROUTES = frozenset({"hotel", "flight", "general_qa"})
+VALID_ROUTES = frozenset({"hotel", "flight", "general_qa", "web_search"})
 VALID_ACTIONS = frozenset({"search", "list_all", "book", "general"})
 MAX_ROUTES = 3
 
@@ -62,6 +62,14 @@ def _normalize_action(route: str, action: Optional[str]) -> str:
     """Map router LLM output to a valid action per route."""
     if route == "general_qa":
         return "general"
+    if route == "web_search":
+        if action in (None, "general", "search"):
+            return "search"
+        logger.warning(
+            "Invalid action '{}' for route 'web_search'; defaulting to search.",
+            action,
+        )
+        return "search"
     if action in VALID_ACTIONS:
         return action
     if route in ("hotel", "flight"):

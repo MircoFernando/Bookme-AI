@@ -9,7 +9,7 @@ PYTHON ?= .venv/bin/python
 PY := PYTHONPATH=src $(PYTHON)
 
 .PHONY: help install config check-config run-api run-ui \
-        inspect-hotel inspect-flight inspect-web-search test-mcp test-decision test-orchestrator test-session-store test-chat-pipeline \
+        inspect-hotel inspect-flight inspect-web-search test-mcp test-decision test-orchestrator test-orchestrator-web-search test-session-store test-chat-pipeline \
         seed-langfuse test clean
 
 # ── Help (default) ────────────────────────────────────────────────────────────
@@ -27,6 +27,7 @@ help:
 	@echo "  make test-mcp       Smoke test MultiServerMCPClient + 7 tools"
 	@echo "  make test-decision  Decision subgraph + bridge (OPENAI_API_KEY)"
 	@echo "  make test-orchestrator  Orchestrator E2E (OPENAI + GOOGLE + network)"
+	@echo "  make test-orchestrator-web-search  Tourism → web_search MCP + Tavily"
 	@echo "  make test-session-store SessionStore (user_id + session_id) isolation"
 	@echo "  make test-chat-pipeline Decision + chat_pipeline (OPENAI_API_KEY)"
 	@echo "  make seed-langfuse      Upload bookme-ai-* prompts to LangFuse (production label)"
@@ -69,6 +70,9 @@ test-decision:
 
 test-orchestrator:
 	PYTHONPATH=src .venv/bin/python scripts/test_orchestrator.py
+
+test-orchestrator-web-search:
+	PYTHONPATH=src .venv/bin/python scripts/test_orchestrator_web_search.py
 
 test-session-store:
 	PYTHONPATH=src .venv/bin/python scripts/test_session_store.py

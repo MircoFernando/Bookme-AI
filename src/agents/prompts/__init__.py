@@ -4,6 +4,7 @@ from agents.prompts.agent_prompts import (
     ALL_LANGFUSE_PROMPT_NAMES,
     LANGFUSE_PROMPT_NAMES,
     build_flight_agent_system_prompt,
+    build_web_search_agent_system_prompt,
     build_general_qa_system_prompt,
     build_guardrail_system_prompt,
     build_hotel_agent_system_prompt,
@@ -26,6 +27,7 @@ __all__ = [
     "build_general_qa_system_prompt",
     "build_hotel_agent_system_prompt",
     "build_flight_agent_system_prompt",
+    "build_web_search_agent_system_prompt",
     "build_merge_system_prompt",
     "get_out_of_scope_reply",
 ]

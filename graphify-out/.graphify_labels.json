@@ -21,6 +21,5 @@
   "19": "src/__init__.py",
   "20": "infrastructure/__init__.py",
   "21": "decision_graph.py",
-  "22": "build_mcp_server_config",
-  "23": "decision_bridge.py"
+  "22": "build_mcp_server_config"
 }

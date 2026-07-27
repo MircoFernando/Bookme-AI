@@ -8,7 +8,7 @@ re-routes only when the graph is invoked standalone (CLI / tests).
 Topology::
 
     START → (out_of_scope? END)
-         → recall → supervisor → [hotel_agent | flight_agent | general_qa_agent]
+         → recall → supervisor → [hotel_agent | flight_agent | general_qa_agent | web_search_agent]
                                               ↘ merge_responses → save_memory → END
 
 Tools reach Convex only via MCP adapters in ``build_agent_mcp()`` (assessment E1).
@@ -30,6 +30,7 @@ from agents.prompts import (
     build_general_qa_system_prompt,
     build_hotel_agent_system_prompt,
     build_merge_system_prompt,
+    build_web_search_agent_system_prompt,
 )
 from agents.router import QueryRouter, get_query_router
 from agents.state import AgentState
@@ -47,11 +48,16 @@ _FLIGHT_ACTION_TO_TOOL = {
     "search": "search_flights",
     "book": "book_flight",
 }
+_WEB_SEARCH_ACTION_TO_TOOL = {
+    "search": "search_web",
+    "general": "search_web",
+}
 
 _ROUTE_TO_NODE = {
     "hotel": "hotel",
     "flight": "flight",
     "general_qa": "general_qa",
+    "web_search": "web_search",
 }
 
 
@@ -162,7 +168,7 @@ def _parse_inventory(tool_output: str, key: str) -> List[dict]:
 
 
 class AgentOrchestrator:
-    """Supervisor–worker LangGraph with parallel hotel / flight / general_qa nodes."""
+    """Supervisor–worker LangGraph with parallel hotel / flight / general_qa / web_search nodes."""
 
     def __init__(
         self,
@@ -173,6 +179,7 @@ class AgentOrchestrator:
         router: Optional[QueryRouter] = None,
         hotel_tool: Optional[Any] = None,
         flight_tool: Optional[Any] = None,
+        web_search_tool: Optional[Any] = None,
     ) -> None:
         self.llm_chat = llm_chat
         self.llm_merge = llm_merge or llm_chat
@@ -180,6 +187,7 @@ class AgentOrchestrator:
         self.router = router or get_query_router()
         self.hotel_tool = hotel_tool
         self.flight_tool = flight_tool
+        self.web_search_tool = web_search_tool
         self.graph = self._build_graph()
 
     def _build_graph(self):
@@ -190,6 +198,7 @@ class AgentOrchestrator:
         workflow.add_node("hotel_agent", self.hotel_agent_node)
         workflow.add_node("flight_agent", self.flight_agent_node)
         workflow.add_node("general_qa_agent", self.general_qa_agent_node)
+        workflow.add_node("web_search_agent", self.web_search_agent_node)
         workflow.add_node("merge_responses", self.merge_responses_node)
         workflow.add_node("save_memory", self.save_memory_node)
 
@@ -206,11 +215,13 @@ class AgentOrchestrator:
                 "hotel": "hotel_agent",
                 "flight": "flight_agent",
                 "general_qa": "general_qa_agent",
+                "web_search": "web_search_agent",
             },
         )
         workflow.add_edge("hotel_agent", "merge_responses")
         workflow.add_edge("flight_agent", "merge_responses")
         workflow.add_edge("general_qa_agent", "merge_responses")
+        workflow.add_edge("web_search_agent", "merge_responses")
         workflow.add_edge("merge_responses", "save_memory")
         workflow.add_edge("save_memory", END)
 
@@ -273,7 +284,47 @@ class AgentOrchestrator:
             return match
         if len(decisions) == 1:
             return decisions[0]
-        return {"route": route, "action": "general", "params": {}}
+        default_action = "search" if route == "web_search" else "general"
+        return {"route": route, "action": default_action, "params": {}}
+
+    async def _dispatch_web_search(
+        self, action: str, params: dict, *, fallback_query: str = ""
+    ) -> str:
+        if action == "general" or not action:
+            action = "search"
+        tool_action = _WEB_SEARCH_ACTION_TO_TOOL.get(action)
+        if not tool_action:
+            return json.dumps(
+                {
+                    "ok": False,
+                    "error": f"Unknown web_search action: {action}",
+                    "code": "UNKNOWN_ACTION",
+                }
+            )
+        if not self.web_search_tool:
+            return json.dumps(
+                {
+                    "ok": False,
+                    "error": "Web search tool unavailable.",
+                    "code": "UNAVAILABLE",
+                }
+            )
+        clean = {k: v for k, v in (params or {}).items() if v is not None}
+        if not clean.get("query"):
+            clean["query"] = fallback_query
+        if not clean.get("query"):
+            return json.dumps(
+                {"ok": False, "error": "Missing search query.", "code": "VALIDATION"}
+            )
+        try:
+            if hasattr(self.web_search_tool, "adispatch"):
+                return await self.web_search_tool.adispatch(action, clean)
+            return self.web_search_tool.dispatch(tool_action, clean)
+        except Exception as exc:
+            logger.error("Web search tool dispatch failed: {}", exc)
+            return json.dumps(
+                {"ok": False, "error": str(exc), "code": "INTERNAL"}
+            )
 
     async def _dispatch_hotel(self, action: str, params: dict) -> str:
         if action == "general" or not action:
@@ -421,6 +472,35 @@ class AgentOrchestrator:
                     "tool_output": "",
                     "answer": answer,
                     "status": "ok",
+                }
+            ],
+        }
+
+    @observe(name="node_web_search_agent")
+    async def web_search_agent_node(self, state: AgentState) -> Dict[str, Any]:
+        decision = self._decision_for_route(state, "web_search")
+        action = decision.get("action") or "search"
+        params = decision.get("params") or {}
+        memory_context = state.get("memory_context") or ""
+        user_message = _last_user_text(state)
+
+        tool_output = await self._dispatch_web_search(
+            action, params, fallback_query=user_message
+        )
+        system_prompt = build_web_search_agent_system_prompt(
+            memory_context=memory_context
+        )
+        answer = await self._generate_agent_response(state, system_prompt, tool_output)
+        status = _tool_status(tool_output)
+
+        return {
+            "messages": [AIMessage(content=answer)],
+            "agent_outputs": [
+                {
+                    "route": "web_search",
+                    "tool_output": tool_output,
+                    "answer": answer,
+                    "status": status,
                 }
             ],
         }
@@ -574,6 +654,37 @@ class _MCPFlightToolAdapter:
         return await _async_mcp_dispatch(self._tools, self._ACTION_TO_TOOL, action, params)
 
 
+class _MCPWebSearchToolAdapter:
+    """MCP ``search_web`` → ``adispatch(action, params)`` with ``query``."""
+
+    _ACTION_TO_TOOL = _WEB_SEARCH_ACTION_TO_TOOL
+
+    def __init__(self, tools_by_name: dict):
+        self._tools = tools_by_name
+
+    def dispatch(self, action: str, params: dict) -> str:
+        return _sync_mcp_dispatch(
+            self._tools, self._ACTION_TO_TOOL, action, params
+        )
+
+    async def adispatch(self, action: str, params: dict) -> str:
+        return await _async_mcp_dispatch(
+            self._tools, self._ACTION_TO_TOOL, action, params
+        )
+
+
+class _DirectWebSearchToolAdapter:
+    """In-process ``WebSearchTool`` for ``build_orchestrator`` debug path."""
+
+    def __init__(self, tool: Any) -> None:
+        self._tool = tool
+
+    async def adispatch(self, action: str, params: dict) -> str:
+        _ = action
+        query = (params or {}).get("query") or ""
+        return await self._tool.asearch(query)
+
+
 async def _async_mcp_dispatch(
     tools_by_name: dict,
     action_map: dict,
@@ -631,13 +742,17 @@ def build_orchestrator(
 
     hotel_tool = None
     flight_tool = None
+    web_search_tool = None
     if use_direct_tools:
         try:
-            from agents.tools import FlightTool, HotelTool
+            from agents.tools import FlightTool, HotelTool, WebSearchTool
 
             hotel_tool = HotelTool()
             flight_tool = FlightTool()
-            logger.info("Orchestrator using direct HotelTool / FlightTool")
+            web_search_tool = _DirectWebSearchToolAdapter(WebSearchTool())
+            logger.info(
+                "Orchestrator using direct HotelTool / FlightTool / WebSearchTool"
+            )
         except Exception as exc:
             logger.warning("Direct travel tools unavailable: {}", exc)
 
@@ -652,6 +767,7 @@ def build_orchestrator(
         session_store=session_store,
         hotel_tool=hotel_tool,
         flight_tool=flight_tool,
+        web_search_tool=web_search_tool,
     )
 
 
@@ -685,6 +801,7 @@ async def build_agent_mcp(
         session_store=session_store,
         hotel_tool=_MCPHotelToolAdapter(tools_by_name),
         flight_tool=_MCPFlightToolAdapter(tools_by_name),
+        web_search_tool=_MCPWebSearchToolAdapter(tools_by_name),
     )
     orchestrator.mcp_client = mcp_client
     orchestrator.mcp_tools = tools_by_name

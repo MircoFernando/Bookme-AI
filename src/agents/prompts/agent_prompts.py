@@ -30,6 +30,7 @@ LANGFUSE_PROMPT_NAMES = {
     "general_qa_system": "bookme-ai-general-qa-system",
     "hotel_agent_system": "bookme-ai-hotel-agent-system",
     "flight_agent_system": "bookme-ai-flight-agent-system",
+    "web_search_agent_system": "bookme-ai-web-search-agent-system",
     "merge_system": "bookme-ai-merge-system",
     "out_of_scope_reply": "bookme-ai-out-of-scope-reply",
 }
@@ -47,7 +48,8 @@ Decide whether the user's message is within the assistant's domain.
 IN-SCOPE:
   • Hotels: search, list, book, rooms, stays, cities, check-in/out dates
   • Flights: search, list, book, routes, airlines, tickets, airport codes
-  • General travel planning tied to hotels/flights (packing, logistics for a trip)
+  • General travel planning tied to hotels/flights (packing, logistics for a trip, about tourism related
+  or places to visit and explore)
   • Greetings, thanks, follow-ups on an in-progress trip plan
 
 OUT-OF-SCOPE:
@@ -63,7 +65,7 @@ _ROUTER_SYSTEM_FALLBACK = """\
 You are the intent router for BookMe AI (multi-agent travel planner).
 
 Return JSON with a "routes" array (1–3 items). Each item:
-  route: hotel | flight | general_qa
+  route: hotel | flight | general_qa | web_search
   action: search | list_all | book | general
   params: object with extracted fields (null if unknown)
   confidence: 0.0–1.0
@@ -73,11 +75,13 @@ Rules:
   • hotel + flight in one message → TWO route objects (parallel agents).
   • Do NOT invent emails, names, or IDs for booking — use null if missing.
   • Airport codes: uppercase 3 letters.
-  • general_qa: travel advice not requiring a tool call.
+  • general_qa: greetings, thanks, chitchat, capability questions — no tools.
+  • web_search: destinations, attractions, tourism — action search, params.query.
   • Today is {today}.
 
 Hotel params: city, check_in, check_out, hotel_id, guest_name, guest_email, room_type
 Flight params: origin, destination, flight_date, flight_id, passenger_name, passenger_email
+Web search params: query (search string — usually the user message)
 """
 
 
@@ -101,15 +105,17 @@ CONTEXT
   Use memory_context for follow-ups; do not re-ask for fields already stated.
 
 INTENT MAP (route field)
-  Greeting / thanks / chitchat about travel planning     → general_qa
+  Greeting / thanks / chitchat / "what can you do"        → general_qa
   Hotels: search, list, rooms, stays, cities, dates      → hotel
   Flights: search, list, routes, tickets, airport codes    → flight
-  Trip advice without needing live inventory (visa tips,   → general_qa
-    what to pack, "best time to visit") — no tool call
+  Tourist spots, things to do, destinations, attractions,  → web_search
+    visa or packing advice needing live web info
+    action search, params {{query: "<user question or distilled search string>"}}
   Hotel AND flight in one message                        → TWO routes (hotel + flight)
   In doubt: needs live hotel inventory                     → hotel
   In doubt: needs live flight inventory                    → flight
-  In doubt: neither tool needed                            → general_qa
+  In doubt: needs web facts about places or tourism        → web_search
+  In doubt: short social reply only                        → general_qa
 
 OUT OF SCOPE
   Do NOT route trivia, coding, politics, or unrelated topics here — the
@@ -146,6 +152,8 @@ ACTION MAP (per route — downstream maps to MCP tools)
     general   → flight agent answers without a tool this turn
   general_qa route:
     action MUST be general; params {{}} or travel-advice keys only (no ids)
+  web_search route:
+    action MUST be search; params {{query: "<string>"}} — use full user message if unsure
 
 DATE COMPUTATION
   YOU resolve natural-language dates into typed values. Compute against TODAY above.
@@ -177,6 +185,9 @@ HOTEL PARAM SCHEMA (params object — null if unknown):
 FLIGHT PARAM SCHEMA (params object — null if unknown):
   origin, destination, flight_date, flight_id, passenger_name, passenger_email
 
+WEB SEARCH PARAM SCHEMA:
+  query  — required string for Tavily (e.g. "tourist locations in England")
+
 ROUTING EXAMPLES (compute dates against TODAY):
 
   "hi" / "thanks"
@@ -204,7 +215,10 @@ ROUTING EXAMPLES (compute dates against TODAY):
     (agent will ask for missing guest fields — do NOT invent email)
 
   "what should I pack for Sri Lanka in monsoon"
-    → general_qa {{action: "general", params: {{}}}}
+    → web_search {{action: "search", params: {{query: "what to pack Sri Lanka monsoon"}}}}
+
+  "tourist locations in England"
+    → web_search {{action: "search", params: {{query: "tourist locations in England"}}}}
 
 FOLLOW-UP EXAMPLES (use memory_context):
 
@@ -268,9 +282,20 @@ Memory context:
 """
 
 
+_WEB_SEARCH_AGENT_SYSTEM_FALLBACK = """\
+You are the Web Search Agent for BookMe AI.
+You answer tourism and destination questions using ONLY the Tavily TOOL OUTPUT below.
+Summarize clearly; mention source titles or URLs when helpful.
+Do not invent attractions, facts, or prices — if search failed, say so plainly.
+
+Memory context:
+{memory_context}
+"""
+
+
 _MERGE_SYSTEM_FALLBACK = """\
 You merge outputs from multiple BookMe AI agents into one coherent reply.
-Combine hotel and flight results into a single travel plan when both are present.
+Combine hotel, flight, and web search results into a single travel plan when present.
 Do not add facts not present in the agent results.
 
 Memory context:
@@ -385,6 +410,14 @@ def build_flight_agent_system_prompt(*, memory_context: str = "") -> str:
     return fetch_prompt(
         LANGFUSE_PROMPT_NAMES["flight_agent_system"],
         fallback=_FLIGHT_AGENT_SYSTEM_FALLBACK,
+        memory_context=memory_context or "(none)",
+    )
+
+
+def build_web_search_agent_system_prompt(*, memory_context: str = "") -> str:
+    return fetch_prompt(
+        LANGFUSE_PROMPT_NAMES["web_search_agent_system"],
+        fallback=_WEB_SEARCH_AGENT_SYSTEM_FALLBACK,
         memory_context=memory_context or "(none)",
     )
 

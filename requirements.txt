@@ -4,6 +4,8 @@ uvicorn[standard]
 pydantic
 python-dotenv
 sse-starlette
+# Production Clerk JWT verification (optional for local AUTH_DISABLED=1)
+clerk-backend-api
 
 # ── LLM / agents ───────────────────────────────────────────────────────────────
 langchain

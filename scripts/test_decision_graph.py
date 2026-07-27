@@ -23,6 +23,13 @@ async def _run(message: str) -> dict:
     return {"decision": decision_out, "agent": agent_patch}
 
 
+async def _router_primary_route(message: str) -> str:
+    from agents.router import get_query_router
+
+    multi = await get_query_router().aroute(message, "")
+    return multi.primary.route
+
+
 async def main() -> int:
     off = await _run("What is the capital of France?")
     d_off = off["decision"]
@@ -49,6 +56,18 @@ async def main() -> int:
         print("FAIL: expected hotel+flight routes, got", routes)
         return 1
     print("OK travel: verdict=proceed routes=", route_names)
+
+    hi_route = await _router_primary_route("hi")
+    if hi_route != "general_qa":
+        print("FAIL: expected general_qa for 'hi', got", hi_route)
+        return 1
+    print("OK router chitchat: hi →", hi_route)
+
+    tourism_route = await _router_primary_route("tourist locations in England")
+    if tourism_route != "web_search":
+        print("FAIL: expected web_search for tourism, got", tourism_route)
+        return 1
+    print("OK router tourism: tourist locations in England →", tourism_route)
 
     return 0
 
