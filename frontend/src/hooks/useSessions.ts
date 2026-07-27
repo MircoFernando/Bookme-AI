@@ -39,7 +39,7 @@ function newSession(userId: string, title?: string): SessionMeta {
 }
 
 /**
- * Client-side conversation threads (Week 13 sidebar UX, no Supabase).
+ * Client-side conversation threads (sidebar session list).
  * Server memory is keyed by `(user_id, session_id)` on the API.
  */
 export function useSessions(userId: string | undefined | null) {

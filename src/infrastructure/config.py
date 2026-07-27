@@ -7,8 +7,7 @@ CONFIGURATION POLICY
 - Secrets (API keys, credentialed URLs) live ONLY in ``.env`` and are read
   via ``os.getenv()``. Never commit secrets.
 
-This mirrors the Week 13 (Nawaloka) infrastructure pattern, trimmed to what
-BookMe AI needs: a provider-flexible multi-model LLM setup, the external
+BookMe AI loads a provider-flexible multi-model LLM setup, the external
 travel service endpoints the MCP servers bridge to, per-session memory limits,
 and logging/observability toggles.
 """
@@ -94,7 +93,7 @@ def resolve_role(
     provider_override: Optional[str] = None,
 ) -> tuple[str, str]:
     """
-    Week 13-style per-role (model, provider).
+    Resolve per-role (model, provider).
 
     Reads ``llm.roles.<role>`` from params.yaml; falls back to ``provider.default``
     + models.yaml tier lookup.

@@ -1,7 +1,7 @@
 """
 Pydantic request / response schemas for the BookMe AI API.
 
-Chat models mirror Week 13 shape with travel-specific route literals.
+Chat request/response models with travel-specific route literals.
 """
 
 from __future__ import annotations

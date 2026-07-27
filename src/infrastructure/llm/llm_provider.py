@@ -59,7 +59,7 @@ def _build_google_llm(
     max_tokens: Optional[int] = None,
     **kwargs: Any,
 ):
-    """Native Gemini Developer API (optional; prefer OpenRouter in Week 13 layout)."""
+    """Native Gemini Developer API (optional; OpenRouter can serve Gemini models too)."""
     from langchain_google_genai import ChatGoogleGenerativeAI
 
     api_key = config.get_api_key("google")
@@ -131,7 +131,7 @@ def get_extractor_llm(temperature: float = 0.0, **kwargs: Any) -> ChatOpenAI:
 
 
 def get_fast_chat_llm(temperature: float = 0.0, **kwargs: Any) -> ChatOpenAI:
-    """Fast conversational replies (Week 13 ``direct`` route pattern)."""
+    """Fast conversational replies (lighter model role from config)."""
     model, provider = config.resolve_role("fast_chat")
     return _build_llm(model, provider, temperature=temperature, **kwargs)
 

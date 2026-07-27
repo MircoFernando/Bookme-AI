@@ -1,9 +1,9 @@
 """
 Hotel tool — Convex hotel API (list / search / book).
 
-Week 13 pattern: business logic lives here; MCP servers only call
+Business logic lives here; MCP servers only call
 ``HotelTool.dispatch(action, params)``. Returns a **JSON string** so MCP
-and future adapters share one contract.
+and adapters share one contract.
 """
 
 from __future__ import annotations

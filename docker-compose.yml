@@ -1,5 +1,5 @@
 # =============================================================================
-# BookMe AI — local / single-host deployment (Week 13 layout)
+# BookMe AI — local / single-host deployment
 #
 #   api   FastAPI + MCP stdio servers              :8000
 #   web   nginx + React SPA + /api reverse proxy    :8080 → 80

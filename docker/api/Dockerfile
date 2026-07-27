@@ -1,11 +1,11 @@
 # =============================================================================
-# BookMe AI — API container (Week 13 pattern: builder venv + slim runtime)
+# BookMe AI — API container (multi-stage: builder venv + slim runtime)
 #
 #   1. builder — installs requirements.txt into /opt/venv
 #   2. runtime — copies venv + src/ + config/, runs uvicorn with MCP stdio
 #      subprocesses (same Python as the API process).
 #
-# No Playwright / torch / local ML weights — smaller image than Nawaloka Week 13.
+# No Playwright / torch / local ML weights — lean runtime image.
 # =============================================================================
 
 # syntax=docker/dockerfile:1

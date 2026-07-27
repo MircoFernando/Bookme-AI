@@ -1,7 +1,7 @@
 """
 Agent layer — LangGraph orchestration, routing, guardrail, and agent nodes.
 
-Week 13 layout:
+Layout:
     decision_state.py  — DecisionState (classification subgraph)
     decision_graph.py  — guardrail ∥ router → decide
     decision_bridge.py — DecisionState → AgentState

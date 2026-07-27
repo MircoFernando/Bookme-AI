@@ -1,8 +1,6 @@
 # Decision graph & routing — architecture notes
 
-**Purpose:** Design log for Phase 4 (guardrail, router, decision graph, bridge). Captures engineering discussions, Week 13 parity, latency/cost tradeoffs, and viva talking points.
-
-**Reference codebase:** Week 13 Nawaloka at `Documents/projects/Week 13` (verified 2026-07-26).
+**Purpose:** Design log for Phase 4 (guardrail, router, decision graph, bridge). Captures engineering discussions, latency/cost tradeoffs, and viva talking points.
 
 **Related:** [DEVELOPMENT_ROADMAP.md](./DEVELOPMENT_ROADMAP.md) Phase 4–5.
 
@@ -39,9 +37,9 @@ AgentState  ── orchestrator (MCP agents) → final_answer
 
 ---
 
-## 2. Week 13 architecture choice (two state types)
+## 2. Two state types
 
-We **intentionally** use two TypedDicts (same pattern as Week 13, clearer split than a single `AgentState` for everything):
+We **intentionally** use two TypedDicts — clearer split than a single `AgentState` for everything:
 
 | State | File | Used by |
 |-------|------|---------|
@@ -54,7 +52,7 @@ We **intentionally** use two TypedDicts (same pattern as Week 13, clearer split 
 - Orchestrator needs `messages`, `route_decisions`, `agent_outputs`, session ids, etc.
 - Decision graph stays small, testable, and trace-friendly without SSE/MCP noise on minimal state.
 
-**Week 13** keeps the same split; handoff logic lives in `api/routers/chat.py`. **BookMe AI** extracts handoff to `decision_bridge.py` (same behavior, named module — see §7).
+Handoff from decision output to orchestrator input lives in **`decision_bridge.py`** (see §7).
 
 ---
 
@@ -122,22 +120,22 @@ Example (typical rough numbers):
 - Router output is **discarded** for the user response (bridge does not set `route_decisions` on OOS).
 - **No orchestrator / MCP / synthesis** on OOS — that is the meaningful “short-circuit.”
 
-Week 13 **does the same** for the decision graph (see §8). Chat then returns refusal after `await decision_graph_task` completes.
+The chat handler returns the refusal after the **full decision graph** completes (both parallel branches).
 
 ### 4.4 Two meanings of “instant return”
 
-| Meaning | BookMe AI / Week 13? |
-|---------|------------------------|
-| **A — Product short-circuit** | Skip tools, orchestrator, synth → template or cache answer | **Yes** |
+| Meaning | BookMe AI? |
+|---------|------------|
+| **A — Product short-circuit** | Skip tools, orchestrator, synth → template answer | **Yes** |
 | **B — HTTP at guardrail time, cancel router** | Response at ~150 ms, one LLM call | **No** (not implemented) |
 
-Week 13 `chat.py` comments saying “no router LLM” on OOS mean **no downstream tool path**, not that the router node was skipped inside the graph.
+Comments about “no router on OOS” in downstream code mean **no downstream tool path**, not that the router node was skipped inside the graph.
 
 ---
 
 ## 5. Router (BookMe AI domain)
 
-**Valid routes:** `hotel` | `flight` | `general_qa`
+**Valid routes:** `hotel` | `flight` | `general_qa` | `web_search`
 
 **Valid actions:** `search` | `list_all` | `book` | `general`
 
@@ -147,7 +145,7 @@ Week 13 `chat.py` comments saying “no router LLM” on OOS mean **no downstrea
 
 | Entry | State | Use |
 |-------|-------|-----|
-| `QueryRouter.aroute` in decision graph | `DecisionState` | Week 13 path |
+| `QueryRouter.aroute` in decision graph | `DecisionState` | Primary chat path |
 | `router_node` in `router.py` | `AgentState` | Optional orchestrator graph / alternate wiring |
 
 **Prompts:** `build_router_prompt()` = LangFuse/base system + LangFuse hard rules + user template.
@@ -165,7 +163,7 @@ Week 13 `chat.py` comments saying “no router LLM” on OOS mean **no downstrea
 
 ## 7. Bridge module (`decision_bridge.py`)
 
-**Not a new layer** — explicit handoff Week 13 performs inside `chat.py`.
+Explicit handoff from decision subgraph output to orchestrator input.
 
 `map_decision_to_agent_state(decision_out, messages=..., memory_context=..., user_id=..., session_id=...)`:
 
@@ -173,7 +171,7 @@ Week 13 `chat.py` comments saying “no router LLM” on OOS mean **no downstrea
 - If `verdict == out_of_scope`: `final_answer` only (no `route_decisions`)
 - If `verdict == proceed`: `route_decisions` from `asdict(decision.decisions)`
 
-**Phase 6 chat flow (planned):**
+**Chat flow:**
 
 1. `decision_out = await decision_graph.ainvoke(...)`
 2. `patch = map_decision_to_agent_state(decision_out, ...)`
@@ -182,52 +180,18 @@ Week 13 `chat.py` comments saying “no router LLM” on OOS mean **no downstrea
 
 ---
 
-## 8. Week 13 vs BookMe AI (exact differences)
+## 8. BookMe AI design choices
 
-### 8.1 Same
+- **Parallel classifiers** from `START`, fan-in to `decide` (guardrail + router only — no FAQ cache branch).
+- **`decide` verdicts:** `out_of_scope` | `proceed`.
+- **Travel routes:** `hotel`, `flight`, `general_qa`, `web_search` with actions `search`, `list_all`, `book`, `general`.
+- **Tools:** Convex HTTP hotels/flights via MCP stdio servers; Tavily for web search.
+- **Bridge:** dedicated `decision_bridge.py` module (not inlined in the chat router).
+- **OOS:** no orchestrator/tools; downstream prep tasks in chat may be cancelled once verdict is known.
 
-- Parallel classifiers from `START`, fan-in to `decide`
-- Full graph awaited before chat short-circuit
-- Guardrail fail-open; multi-route router; MCP behind agents (Week 13 built, BookMe AI Phase 5)
-- LangFuse prompts; `@observe` on LLM nodes
-- OOS: no orchestrator/tools; cancel parallel **prep** tasks in chat (patient/recall in Week 13)
+**Viva one-liner:**
 
-### 8.2 Different — decision subgraph
-
-| | Week 13 | BookMe AI |
-|---|---------|------------|
-| Parallel branches | guardrail + router + **CAG** | guardrail + router |
-| `decide` verdicts | `out_of_scope` \| **`cache_hit`** \| `proceed` | `out_of_scope` \| `proceed` |
-| CAG gate | `cag_hit` + route ∈ `{rag, direct}` | N/A |
-
-**CAG + cache:** Even when CAG hits in ~300 ms, Week 13 still **waits for router** (~800 ms) before `decide` and before returning cached FAQ — router route gates cache eligibility (prevents CRM questions matching generic FAQ).
-
-Verified in Week 13:
-
-- `src/agents/decision_graph.py` — three edges into `decide`; docstring “LangGraph waits for all three”
-- `src/api/routers/chat.py` — `await decision_graph_task` then OOS / `cache_eligible` checks; “route already awaited above”
-
-### 8.3 Different — routing domain
-
-| Week 13 | BookMe AI |
-|---------|------------|
-| `crm`, `rag`, `web_search`, `direct` | `hotel`, `flight`, `general_qa` |
-| CRM actions (bookings, doctors, …) | `search`, `list_all`, `book`, `general` |
-| Router fallback `direct` | Fallback `general_qa` |
-
-### 8.4 Different — tools & infra
-
-| Week 13 | BookMe AI |
-|---------|------------|
-| Supabase CRM, Qdrant RAG, web, CAG MCP | Convex HTTP hotels/flights |
-| MCP: crm, rag, web, cag, … | MCP: `bookme-ai-hotels`, `bookme-ai-flights` |
-| `src/api/routers/chat.py` live | Phase 6 ⏳ |
-| `orchestrator.py` live | Phase 5 ⏳ |
-| Bridge in chat | `decision_bridge.py` |
-
-### 8.5 Viva one-liner
-
-> We kept Week 13’s two-state decision subgraph and parallel fan-in; we removed CAG and hospital routes, added Convex travel MCP, explicit bridge, and will wire chat + orchestrator in Phases 5–6.
+> Two-state decision subgraph with parallel guardrail and router fan-in; travel MCP behind orchestrator agents; explicit bridge into `AgentState`.
 
 ---
 
@@ -243,14 +207,14 @@ Verified in Week 13:
 
 | Approach | Latency (in-scope) | Cost (off-topic) | Notes |
 |----------|-------------------|------------------|-------|
-| **Parallel guardrail + router (current)** | Best | Higher (2 LLMs) | Week 13 aligned |
+| **Parallel guardrail + router (current)** | Best | Higher (2 LLMs) | Default for this project |
 | **Sequential guardrail → router** | Slower in-scope | Lower off-topic (1 LLM) | Simple graph change |
 | **Single LLM scope + routes** | One call | Lowest calls | Harder prompts, weaker separation |
 | **Rules pre-filter + LLM guardrail** | Medium | Medium | Obvious junk without LLM |
-| **Faster/smaller guardrail model** | Slightly better parallel floor | Same 2 calls | Groq 8B on guardrail (Week 13 style) |
-| **Add CAG (Week 13)** | Saves synth/RAG after graph | Still pays router in graph | FAQ-heavy products |
+| **Faster/smaller guardrail model** | Slightly better parallel floor | Same 2 calls | e.g. Groq 8B on guardrail role |
+| **FAQ / response cache after graph** | Saves synth after graph | Still pays router in graph | Only if FAQ volume justifies it |
 
-**Recommendation for assessment:** Keep parallel graph for Week 13 parity; measure traffic in production; consider sequential guardrail→router only if off-topic volume dominates cost.
+**Recommendation:** Keep parallel graph for assessment demo; measure traffic in production; consider sequential guardrail→router only if off-topic volume dominates cost.
 
 ---
 
@@ -272,10 +236,10 @@ Verified in Week 13:
 - `orchestrator.py`, `build_agent_mcp()`, four agent nodes + merge
 - `make test-orchestrator`, `make test-orchestrator-web-search`
 
-**Phase 6 — API 🔄**
+**Phase 6 — API ✅**
 
 - `src/api/*`, `chat_pipeline.py`, `make run-api`
-- Remaining: production Clerk-only auth; optional HTTP tests
+- Optional: production Clerk-only auth; HTTP tests
 
 **Session memory (not LangGraph checkpointer):**
 
@@ -306,10 +270,4 @@ src/infrastructure/
 
 ---
 
-## 12. Questions for Week 13 / instructor (optional prompt)
-
-> In Week 13, decision graph runs guardrail, router, and CAG in parallel with fan-in to `decide`. For (1) guardrail `out_of_scope` and (2) CAG cache hit, does the API always await the full graph including router before responding? Is the router ever cancelled mid-flight, or only downstream tasks (patient/ST recall)? Please cite `decision_graph.py` and `chat.py`.
-
----
-
-*Last updated: 2026-07-27 — Phases 4–5 complete; Phase 6 API + web_search + SessionStore documented.*
+*Last updated: 2026-07-28 — Phases 4–6 complete; web_search + SessionStore documented.*

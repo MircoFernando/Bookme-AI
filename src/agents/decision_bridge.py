@@ -1,5 +1,5 @@
 """
-Bridge decision subgraph output → orchestrator ``AgentState`` (Week 13).
+Bridge decision subgraph output → orchestrator ``AgentState``.
 
 The chat/API layer:
   1. ``await decision_graph.ainvoke({ message, router_context })``

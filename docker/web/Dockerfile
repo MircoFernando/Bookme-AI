@@ -1,5 +1,5 @@
 # =============================================================================
-# BookMe AI — Web container (Week 13 pattern: Node builder + nginx runtime)
+# BookMe AI — Web container (Node builder + nginx runtime)
 #
 #   1. builder — npm ci + vite build (Clerk keys via build-args)
 #   2. runtime — nginx-alpine serves dist/ and proxies /api → api:8000

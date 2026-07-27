@@ -1,5 +1,5 @@
 """
-Decision subgraph state (Week 13 pattern).
+Decision subgraph state (separate from orchestrator ``AgentState``).
 
 Separate from ``AgentState``: the decision graph only classifies the latest
 user turn. The orchestrator graph (Phase 5) runs on ``AgentState`` after

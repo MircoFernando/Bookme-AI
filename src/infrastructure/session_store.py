@@ -10,7 +10,7 @@ stores it on ``app.state``; each request reads/writes only its own thread.
 
 This is deliberately in-memory (fine for a single-process deployment and the
 assessment demo). Swapping in Redis later means implementing the same methods
-with no call-site changes, mirroring the Week 13 decoupling philosophy.
+with no call-site changes.
 """
 
 from __future__ import annotations

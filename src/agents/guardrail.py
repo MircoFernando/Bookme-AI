@@ -1,5 +1,5 @@
 """
-Domain Guardrail — BookMe AI scope filter (Week 13 decision subgraph).
+Domain Guardrail — BookMe AI scope filter for the decision subgraph.
 
 Binary classifier used by ``decision_graph`` (``DecisionState``), not the
 orchestrator ``AgentState``. Fails open on LLM errors.

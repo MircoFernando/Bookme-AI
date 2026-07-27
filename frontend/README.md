@@ -1,6 +1,6 @@
 # BookMe AI — React UI
 
-Week 13–style chat UI (Vite + React + Tailwind), adapted for BookMe travel routes and Clerk auth.
+BookMe AI chat UI (Vite + React + Tailwind) with travel routes and Clerk auth.
 
 Full local setup (API + env + Docker): see the root [README.md](../README.md#getting-started).
 

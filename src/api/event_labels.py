@@ -1,7 +1,7 @@
 """
 Friendly labels for streaming chain-of-thought events.
 
-Maps internal stage / tool identifiers to user-facing copy (Week 13 pattern).
+Maps internal stage / tool identifiers to user-facing copy for the chat UI.
 """
 
 from __future__ import annotations

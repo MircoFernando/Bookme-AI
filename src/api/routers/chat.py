@@ -1,5 +1,5 @@
 """
-Conversational chat endpoints — decision graph → orchestrator (Week 13 SSE pattern).
+Conversational chat endpoints — decision graph → orchestrator with SSE streaming.
 """
 
 from __future__ import annotations

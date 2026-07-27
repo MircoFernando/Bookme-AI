@@ -2,7 +2,7 @@
 
 **Project:** MCP-Based Multi-Agent Travel Planner (assessment: BookMe AI)  
 **Baseline:** FastAPI + LangGraph + Gradio chat with hardcoded Convex HTTP tools  
-**Target architecture:** Week 13 (Nawaloka) reference project — `src/` layout, MCP stdio servers, intent-routed orchestrator, streaming API, deployment  
+**Target architecture:** `src/` layout, MCP stdio servers, intent-routed orchestrator, streaming API, deployment  
 
 **Last updated:** 2026-07-28  
 
@@ -61,7 +61,7 @@ Phase 10 Final delivery — polish, deploy, articles   ⏳
 **Branch / PR:** `feat/infra-restructure` → merged (#1)  
 **Commits:** `15f0309` (infra scaffold)
 
-**Goal:** Week-13-style layout and shared plumbing for agents, API, and MCP.
+**Goal:** Production-style `src/` layout and shared plumbing for agents, API, and MCP.
 
 **Deliverables:**
 
@@ -82,7 +82,7 @@ Phase 10 Final delivery — polish, deploy, articles   ⏳
 2. **YAML for behaviour, `.env` for secrets** — no API keys in repo.
 3. **Python 3.11+ required** (`mcp`, `langchain-mcp-adapters`); project uses `.venv` with 3.11 (system Python 3.9 is insufficient).
 4. **In-memory `SessionStore` for MVP** — keyed by **`(user_id, session_id)`**; window from `config/params.yaml` (`session.max_turns`, `session.history_window`).
-5. **Architecture north star:** Week 13 (guardrail ∥ router → orchestrator fan-out → merge → MCP tools).
+5. **Architecture north star:** guardrail ∥ router → orchestrator fan-out → merge → MCP tools.
 
 **Acceptance:** `PYTHONPATH=src` imports; session isolation test; config dump runs.
 
@@ -105,7 +105,7 @@ Phase 10 Final delivery — polish, deploy, articles   ⏳
 
 **Decisions:**
 
-1. **Tracing and prompts are separate toggles** — `observability.enabled` (spans) vs `LANGFUSE_PROMPTS` / `prompts_enabled` (Prompt Management), matching Week 13.
+1. **Tracing and prompts are separate toggles** — `observability.enabled` (spans) vs `LANGFUSE_PROMPTS` / `prompts_enabled` (Prompt Management).
 2. **Local fallbacks always ship** — app works before prompts exist in LangFuse dashboard.
 3. **LangFuse Mustache `{{var}}` in cloud; Python `{var}` in fallbacks** — compiled via `fetch_prompt(..., **vars)`.
 4. **Instrument with `@observe` as we build** nodes (Phase 4–6); enable tracing for demo/viva screenshots.
@@ -119,7 +119,7 @@ Phase 10 Final delivery — polish, deploy, articles   ⏳
 
 **Commits:** `6eda5e5` (http_client), `e9a082a` (tools)
 
-**Goal:** Week-13-style `HotelTool` / `FlightTool` with `dispatch(action, params)`; no silent failures.
+**Goal:** `HotelTool` / `FlightTool` with `dispatch(action, params)`; no silent failures.
 
 **Deliverables:**
 
@@ -132,7 +132,7 @@ Phase 10 Final delivery — polish, deploy, articles   ⏳
 
 **Decisions:**
 
-1. **`http_client.py` is BookMe AI-specific**, not copied from Week 13 (Nawaloka uses DB/RAG per tool). Justified because **both** hotel and flight share the same Convex REST pattern; avoids duplicating retry logic.
+1. **`http_client.py` is shared by hotel and flight tools** — both use the same Convex REST pattern; avoids duplicating retry logic.
 2. **`dispatch` returns JSON strings** — one contract for MCP tools and future agent adapters.
 3. **Param aliasing** in `_clean_params` (`check_in` ↔ `checkIn`, `flight_date` ↔ `date`) so router output does not have to match Convex field names exactly.
 4. **Booking validation** returns `"code": "VALIDATION"` instead of crashing or inventing emails (fixes baseline prompt risk).
@@ -163,7 +163,7 @@ Phase 10 Final delivery — polish, deploy, articles   ⏳
 
 **Decisions:**
 
-1. **Transport: stdio subprocesses** (Week 13 default) — simple to run locally and defend in viva; HTTP MCP optional later for remote deploy.
+1. **Transport: stdio subprocesses** — simple to run locally and defend in viva; HTTP MCP optional later for remote deploy.
 2. **MCP servers are thin** — no HTTP, no routing; only `@mcp.tool()` → `dispatch`.
 3. **Three servers** (hotel + flight + web search) — domain split; orchestrator uses `build_agent_mcp()`.
 4. **Decoupling proof:** change Convex URL or Tavily env → tools change; MCP tool schemas unchanged; orchestrator adapters unchanged.
@@ -267,7 +267,7 @@ Phase 10 Final delivery — polish, deploy, articles   ⏳
 
 | Area | Location |
 |------|----------|
-| Week 13 UI port | `frontend/` — Vite + React + Tailwind (from `Week 13/ui/`) |
+| Chat UI | `frontend/` — Vite + React + Tailwind |
 | SSE chat | `useChatStream` → `POST /chat/stream` + chain-of-thought |
 | Sessions | `useSessions` — localStorage threads + API `(user_id, session_id)` memory |
 | Clerk | `@clerk/clerk-react`; Bearer via `getToken()` when `VITE_AUTH_DISABLED=false` |
@@ -423,7 +423,7 @@ Ordered work to close the assessment and portfolio. Do these **in sequence** so 
 
 | Topic | Decision | Rationale |
 |-------|----------|-----------|
-| Reference architecture | Week 13 Nawaloka | Production patterns: MCP, orchestrator, SSE, lifespan |
+| Reference architecture | Parallel decision graph + MCP orchestrator | MCP, orchestrator, SSE, lifespan |
 | Repo layout | `src/` package | Separates new system from root baseline |
 | MCP transport | stdio | Matches course reference; easy local + viva |
 | External APIs | Convex via tools only | MCP → tools → http_client → Convex |
@@ -432,7 +432,7 @@ Ordered work to close the assessment and portfolio. Do these **in sequence** so 
 | Prompts | LangFuse + local fallback | Edit without redeploy; works offline |
 | Tracing | LangFuse SDK v4 (`@observe`, `propagate_attributes`, `update_current_span`) |
 | Chat memory | In-memory `SessionStore`; `(user_id, session_id)`; YAML window |
-| ST vs LangGraph checkpoint | Custom ST store (Week 13 style); no checkpointer in MVP |
+| ST vs LangGraph checkpoint | Custom ST store; no checkpointer in MVP |
 | Auth | Clerk in prod; `AUTH_DISABLED=1` for local API | JWT `sub` → `user_id`; app-owned `session_id` |
 | Legacy root code | Kept for reference; **`make run-api`** is production path |
 | Python version | 3.11+ | MCP package requirement |

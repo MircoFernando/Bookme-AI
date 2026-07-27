@@ -1,5 +1,5 @@
 """
-LLM provider wrappers — Week 13 multi-provider layout.
+LLM provider wrappers — multi-provider layout.
 
 See ``llm_provider.py`` for role → provider mapping (``config/params.yaml``).
 """

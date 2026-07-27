@@ -66,7 +66,7 @@ tavily:
 
 # ── MCP configuration ─────────────────────────────────────────────────────────
 mcp:
-  # "stdio" launches each server as a subprocess (default, matches Week 13).
+  # "stdio" launches each server as a subprocess (default).
   transport: stdio
 
 # ── Conversation memory (per-session, kills the global-history bug) ───────────

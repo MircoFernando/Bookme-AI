@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke test: Week 13 decision subgraph + bridge to AgentState."""
+"""Smoke test: decision subgraph + bridge to AgentState."""
 
 from __future__ import annotations
 

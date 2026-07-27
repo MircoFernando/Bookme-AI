@@ -82,7 +82,7 @@ run-api:
 run-ui:
 	cd frontend && npm run dev
 
-# ── Docker (Week 13 layout under docker/) ─────────────────────────────────────
+# ── Docker (images under docker/) ─────────────────────────────────────────────
 docker-build:
 	docker compose build
 
