@@ -104,11 +104,13 @@ def _last_user_text(state: AgentState) -> str:
     return ""
 
 
-def _format_session_memory(session_store: Any, session_id: str) -> str:
+def _format_session_memory(
+    session_store: Any, user_id: str, session_id: str
+) -> str:
     if not session_store or not session_id:
         return ""
     try:
-        pairs = session_store.recent_pairs(session_id)
+        pairs = session_store.recent_pairs(user_id, session_id)
     except Exception as exc:
         logger.warning("Session recall failed: {}", exc)
         return ""
@@ -223,8 +225,11 @@ class AgentOrchestrator:
     async def recall_node(self, state: AgentState) -> Dict[str, Any]:
         if state.get("memory_context"):
             return {}
+        user_id = state.get("user_id") or ""
         session_id = state.get("session_id") or ""
-        memory_context = _format_session_memory(self.session_store, session_id)
+        memory_context = _format_session_memory(
+            self.session_store, user_id, session_id
+        )
         return {"memory_context": memory_context or "(no prior turns)"}
 
     @observe(name="node_supervisor")
@@ -475,6 +480,7 @@ class AgentOrchestrator:
 
     @observe(name="node_save_memory")
     async def save_memory_node(self, state: AgentState) -> Dict[str, Any]:
+        user_id = state.get("user_id") or ""
         session_id = state.get("session_id") or ""
         answer = state.get("final_answer")
         if not self.session_store or not session_id or not answer:
@@ -483,7 +489,9 @@ class AgentOrchestrator:
         if not user_message:
             return {}
         try:
-            self.session_store.add_exchange(session_id, user_message, answer)
+            self.session_store.add_exchange(
+                user_id, session_id, user_message, answer
+            )
         except Exception as exc:
             logger.warning("save_memory failed: {}", exc)
         return {}

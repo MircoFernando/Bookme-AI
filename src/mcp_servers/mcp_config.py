@@ -6,8 +6,9 @@ Consumed by ``langchain_mcp_adapters.client.MultiServerMCPClient`` (Day 4
 MCP tools discovered from these servers.
 
 Servers:
-  1. bookme-ai-hotels   — list_hotels, search_hotels, book_hotel
-  2. bookme-ai-flights — list_flights, search_flights, book_flight
+  1. bookme-ai-hotels      — list_hotels, search_hotels, book_hotel
+  2. bookme-ai-flights     — list_flights, search_flights, book_flight
+  3. bookme-ai-web-search  — search_web
 """
 
 from __future__ import annotations
@@ -31,6 +32,12 @@ def build_mcp_server_config() -> dict:
         "bookme-ai-flights": {
             "command": _PYTHON,
             "args": ["-m", "mcp_servers.flight_server"],
+            "transport": "stdio",
+            "cwd": _SRC_DIR,
+        },
+        "bookme-ai-web-search": {
+            "command": _PYTHON,
+            "args": ["-m", "mcp_servers.web_search_server"],
             "transport": "stdio",
             "cwd": _SRC_DIR,
         },

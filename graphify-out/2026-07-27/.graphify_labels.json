@@ -18,5 +18,10 @@
   "16": "frontend.py",
   "17": "prompts/__init__.py",
   "18": "tools/__init__.py",
-  "19": "src/__init__.py"
+  "19": "src/__init__.py",
+  "20": "infrastructure/__init__.py",
+  "21": "decision_graph.py",
+  "22": "build_mcp_server_config",
+  "23": "decision_bridge.py",
+  "24": "_RecordingOrchestrator"
 }

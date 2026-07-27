@@ -9,6 +9,7 @@ Week 13 layout:
     guardrail.py, router.py, orchestrator.py (Phase 5), tools/
 """
 
+from agents.chat_pipeline import ChatResult, run_chat_turn
 from agents.decision_bridge import map_decision_to_agent_state
 from agents.decision_graph import build_decision_graph, build_decision_input
 from agents.decision_state import DecisionState
@@ -16,6 +17,8 @@ from agents.orchestrator import AgentOrchestrator, AgentResponse, build_agent_mc
 from agents.state import AgentState
 
 __all__ = [
+    "ChatResult",
+    "run_chat_turn",
     "AgentOrchestrator",
     "AgentResponse",
     "AgentState",

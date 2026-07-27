@@ -9,7 +9,7 @@ PYTHON ?= .venv/bin/python
 PY := PYTHONPATH=src $(PYTHON)
 
 .PHONY: help install config check-config run-api run-ui \
-        inspect-hotel inspect-flight test-mcp test-decision test-orchestrator \
+        inspect-hotel inspect-flight inspect-web-search test-mcp test-decision test-orchestrator test-session-store test-chat-pipeline \
         seed-langfuse test clean
 
 # ── Help (default) ────────────────────────────────────────────────────────────
@@ -23,9 +23,12 @@ help:
 	@echo "  make run-ui         Run the Gradio frontend         (Day 6)"
 	@echo "  make inspect-hotel  Open MCP Inspector on hotel server"
 	@echo "  make inspect-flight Open MCP Inspector on flight server"
-	@echo "  make test-mcp       Smoke test MultiServerMCPClient + 6 tools"
+	@echo "  make inspect-web-search Open MCP Inspector on web search server"
+	@echo "  make test-mcp       Smoke test MultiServerMCPClient + 7 tools"
 	@echo "  make test-decision  Decision subgraph + bridge (OPENAI_API_KEY)"
 	@echo "  make test-orchestrator  Orchestrator E2E (OPENAI + GOOGLE + network)"
+	@echo "  make test-session-store SessionStore (user_id + session_id) isolation"
+	@echo "  make test-chat-pipeline Decision + chat_pipeline (OPENAI_API_KEY)"
 	@echo "  make seed-langfuse      Upload bookme-ai-* prompts to LangFuse (production label)"
 	@echo "  make test           Run the test suite              (Day 7)"
 	@echo "  make clean          Remove caches and __pycache__"
@@ -55,6 +58,9 @@ inspect-hotel:
 inspect-flight:
 	cd src && npx @modelcontextprotocol/inspector ../.venv/bin/python -m mcp_servers.flight_server
 
+inspect-web-search:
+	cd src && npx @modelcontextprotocol/inspector ../.venv/bin/python -m mcp_servers.web_search_server
+
 test-mcp:
 	PYTHONPATH=src .venv/bin/python scripts/test_mcp_client.py
 
@@ -63,6 +69,12 @@ test-decision:
 
 test-orchestrator:
 	PYTHONPATH=src .venv/bin/python scripts/test_orchestrator.py
+
+test-session-store:
+	PYTHONPATH=src .venv/bin/python scripts/test_session_store.py
+
+test-chat-pipeline:
+	PYTHONPATH=src .venv/bin/python scripts/test_chat_pipeline.py
 
 seed-langfuse:
 	PYTHONPATH=src .venv/bin/python scripts/seed_langfuse_prompts.py

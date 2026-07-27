@@ -180,6 +180,15 @@ HTTP_MAX_RETRIES: int = _get_nested(_PARAMS, "services", "http_max_retries", def
 HTTP_BACKOFF_SECONDS: float = _get_nested(_PARAMS, "services", "http_backoff_seconds", default=0.5)
 
 
+# ── Tavily web search (secret via get_tavily_api_key(); behaviour in params.yaml)
+TAVILY_SEARCH_URL: str = _get_nested(
+    _PARAMS, "tavily", "search_url", default="https://api.tavily.com/search"
+)
+TAVILY_MAX_RESULTS: int = _get_nested(_PARAMS, "tavily", "max_results", default=5)
+TAVILY_SEARCH_DEPTH: str = _get_nested(_PARAMS, "tavily", "search_depth", default="basic")
+TAVILY_INCLUDE_ANSWER: bool = _get_nested(_PARAMS, "tavily", "include_answer", default=True)
+
+
 # ── MCP ───────────────────────────────────────────────────────────────────────
 MCP_TRANSPORT: str = _get_nested(_PARAMS, "mcp", "transport", default="stdio")
 
@@ -199,23 +208,39 @@ PROMPT_CACHE_TTL_SECONDS: int = _get_nested(
     _PARAMS, "observability", "prompt_cache_ttl_seconds", default=300
 )
 
-# Timezone (used by web_search_tool for timestamp display)
+# Timezone (display / logging helpers)
 TIMEZONE = "Asia/Colombo"
 
 
 # ── Secrets (from .env only) ──────────────────────────────────────────────────
+_API_KEY_ENV: Dict[str, str] = {
+    "openai": "OPENAI_API_KEY",
+    "openrouter": "OPENROUTER_API_KEY",
+    "groq": "GROQ_API_KEY",
+    "anthropic": "ANTHROPIC_API_KEY",
+    "google": "GOOGLE_API_KEY",
+    "tavily": "TAVILY_API_KEY",
+}
+
+
 def get_api_key(provider: Optional[str] = None) -> Optional[str]:
-    """Return the API key env var for the given (or active) provider."""
-    provider = provider or PROVIDER
-    key_map = {
-        "openai": "OPENAI_API_KEY",
-        "openrouter": "OPENROUTER_API_KEY",
-        "groq": "GROQ_API_KEY",
-        "anthropic": "ANTHROPIC_API_KEY",
-        "google": "GOOGLE_API_KEY",
-    }
-    env_var = key_map.get(provider, f"{provider.upper()}_API_KEY")
-    return os.getenv(env_var)
+    """Return the API key for *provider* (or active LLM ``PROVIDER`` if omitted).
+
+    Also used for non-LLM integrations, e.g. ``get_api_key("tavily")``.
+    Values are stripped; empty strings count as missing.
+    """
+    provider = (provider or PROVIDER).lower()
+    env_var = _API_KEY_ENV.get(provider, f"{provider.upper()}_API_KEY")
+    raw = os.getenv(env_var)
+    if raw is None:
+        return None
+    stripped = raw.strip().strip('"').strip("'")
+    return stripped or None
+
+
+def get_tavily_api_key() -> Optional[str]:
+    """Tavily Search API key from ``TAVILY_API_KEY`` in project ``.env``."""
+    return get_api_key("tavily")
 
 
 def provider_base_url(provider: Optional[str] = None) -> Optional[str]:
@@ -264,6 +289,11 @@ def dump() -> None:
     logger.info("  llm fallback    : {}", LLM_ENABLE_FALLBACK)
     logger.info("  hotels service  : {}", HOTELS_BASE_URL)
     logger.info("  flights service : {}", FLIGHTS_BASE_URL)
+    logger.info(
+        "  tavily search   : {} (key={})",
+        TAVILY_SEARCH_URL,
+        "yes" if get_tavily_api_key() else "NO",
+    )
     logger.info("  mcp transport   : {}", MCP_TRANSPORT)
     logger.info("  observability   : {}", OBSERVABILITY_ENABLED)
     try:

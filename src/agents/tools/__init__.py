@@ -2,5 +2,6 @@
 
 from agents.tools.flight_tool import FlightTool
 from agents.tools.hotel_tool import HotelTool
+from agents.tools.web_search_tool import WebSearchTool
 
-__all__ = ["HotelTool", "FlightTool"]
+__all__ = ["FlightTool", "HotelTool", "WebSearchTool"]
