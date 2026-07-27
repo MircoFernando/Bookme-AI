@@ -36,6 +36,12 @@ Open http://127.0.0.1:5173 — Vite proxies `/api/*` to `VITE_API_URL` (default 
 
 See [docs/CLERK_SETUP.md](../docs/CLERK_SETUP.md) for Dashboard steps and deploy URLs.
 
+## Deploy (Vercel)
+
+1. Import repo → set **Root Directory** to `frontend`.
+2. Production env: `VITE_API_URL=https://<your-render-service>.onrender.com`, Clerk keys as above.
+3. Full checklist: [docs/DEPLOY_RENDER_VERCEL.md](../docs/DEPLOY_RENDER_VERCEL.md).
+
 ## Structure
 
 - `/` — marketing landing (Clerk Sign in / Get started → redirect back to `/`)

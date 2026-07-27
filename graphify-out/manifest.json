@@ -175,8 +175,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785178384.555352,
-    "ast_hash": "7878826adfd7a3fcc4613d357b4e851d",
+    "mtime": 1785179392.6424634,
+    "ast_hash": "7a30f5a61e0b593bc0379e71cea41386",
     "semantic_hash": ""
   },
   "config/models.yaml": {
@@ -330,8 +330,8 @@
     "semantic_hash": ""
   },
   "frontend/src/api/client.ts": {
-    "mtime": 1785169522.419911,
-    "ast_hash": "31bba7d256c71bf093d4a14f4615cc5c",
+    "mtime": 1785179395.330499,
+    "ast_hash": "324f3b626eda1912fc03ea3fb6b0639c",
     "semantic_hash": ""
   },
   "frontend/src/components/AuthGate.tsx": {
@@ -492,6 +492,36 @@
   "frontend/public/images/product-visual.jpg": {
     "mtime": 1785178649.1225872,
     "ast_hash": "c9341eb077fc1b58328643339f22be58",
+    "semantic_hash": ""
+  },
+  ".github/workflows/docker-publish.yml": {
+    "mtime": 1785178933.4683707,
+    "ast_hash": "327df87eb57fd38573a71c8f8398bb32",
+    "semantic_hash": ""
+  },
+  "compose.prod.yaml": {
+    "mtime": 1785178932.3322544,
+    "ast_hash": "c2660cbc21ebb701612e5feb8912d327",
+    "semantic_hash": ""
+  },
+  "docker-compose.yml": {
+    "mtime": 1785178931.6744905,
+    "ast_hash": "664a9a4fd6b2744241d29378638c57b5",
+    "semantic_hash": ""
+  },
+  "frontend/vercel.json": {
+    "mtime": 1785179388.068701,
+    "ast_hash": "a6f343ce0329b85268834f4ab16c95ff",
+    "semantic_hash": ""
+  },
+  "docs/DEPLOY_RENDER_VERCEL.md": {
+    "mtime": 1785179391.1333246,
+    "ast_hash": "1a8831bab125e2e6989df5f66f6478f2",
+    "semantic_hash": ""
+  },
+  "render.yaml": {
+    "mtime": 1785179387.849473,
+    "ast_hash": "e23115809e6701ec82a2419152c0cf81",
     "semantic_hash": ""
   }
 }

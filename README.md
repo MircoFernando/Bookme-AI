@@ -305,18 +305,20 @@ Images: `docker/api/Dockerfile`, `docker/web/Dockerfile` (Week 13 multi-stage pa
 
 ---
 
-## ☁️ AWS Deployment
+## ☁️ Deployment
 
-*This feature is currently **Under Development**.*
-Deployment instructions for AWS (ECS Fargate / API Gateway) will be added in Phase 8.
+| API | UI | Doc |
+|-----|-----|-----|
+| Render (free tier) | Vercel | [DEPLOY_RENDER_VERCEL.md](docs/DEPLOY_RENDER_VERCEL.md) |
+| **DigitalOcean** Droplet | Vercel | [DEPLOY_DO_VERCEL.md](docs/DEPLOY_DO_VERCEL.md) — **API first:** [DEPLOY_DO_API.md](docs/DEPLOY_DO_API.md) |
+
+Docker Compose locally or full stack on one VM: `make docker-up`, `compose.prod.yaml`. API-only on a droplet: `compose.prod.api.yaml`.
 
 ---
 
 ## 🔄 CI/CD Pipeline
 
-On push to `main`, `.github/workflows/docker-publish.yml` builds and pushes `bookme-ai-api` and `bookme-ai-web` to Docker Hub (GHA cache + `:latest` and `:${{ github.sha }}` tags). Repository secrets: `DOCKER_USERNAME`, `DOCKER_TOKEN`, `VITE_CLERK_PUBLISHABLE_KEY`. Optional variable: `VITE_AUTH_DISABLED`.
-
-Remote deploy (SSH + `compose.prod.yaml` pull) follows the same pattern as the booking-platform-api project; wire that when you pick a host (Droplet, ECS, etc.).
+Optional: `.github/workflows/docker-publish.yml` pushes the API image to Docker Hub and auto-deploys to a DigitalOcean droplet (see [docs/DEPLOY_DO_API.md](docs/DEPLOY_DO_API.md)). **Vercel** deploys the frontend separately from Git.
 
 ---
 
