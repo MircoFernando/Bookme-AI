@@ -53,45 +53,41 @@ BookMe AI is an intelligent travel planning system built on a modern AI architec
 
 ### High-Level Overview
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         CLIENTS                                     │
-│   React SPA (Vite + Clerk)  │  REST API / SSE Streams               │
-└──────────────┬──────────────┴─────┬─────────────────────────────────┘
-               │                    │
-               ▼                    ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                      GATEWAY LAYER                                   │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │ FastAPI App (REST + SSE Streaming, Session Management)      │   │
-│  └───────────────────────────────┬─────────────────────────────┘   │
-└──────────────────────────────────┼───────────────────────────────────┘
-                                   │
-                                   ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                   ORCHESTRATION LAYER (LangGraph)                    │
-│                                                                      │
-│   ┌────────────┐    ┌─────────────┐                                  │
-│   │ Guardrail  │    │   Router    │  (Parallel Decision Graph)       │
-│   │ (Scope     │───▶│  (Intent    │                                  │
-│   │  Filter)   │    │ Classifier) │                                  │
-│   └──────┬─────┘    └──────┬──────┘                                  │
-│          │                 │                                         │
-│          ▼                 ▼                                         │
-│   ┌────────────────────────────────┐                                 │
-│   │  Bridge & Orchestrator Fan-out │                                 │
-│   └────────────────────────────────┘                                 │
-└──────────────────────────────────────────────────────────────────────┘
-                                   │
-                                   ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                       TOOL LAYER (MCP Servers)                       │
-│                                                                      │
-│   ┌───────────────┐   ┌────────────────┐   ┌─────────────────┐       │
-│   │  Hotel Server │   │  Flight Server │   │ Web Search (Tavily) │     │
-│   │  (Convex API) │   │  (Convex API)  │   │     Server      │       │
-│   └───────────────┘   └────────────────┘   └─────────────────┘       │
-└──────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph Clients["Clients"]
+        SPA["React SPA (Vite + Clerk)"]
+        API_Client["REST API / SSE Streams"]
+    end
+
+    subgraph Gateway["Gateway Layer"]
+        FastAPI["FastAPI App (REST + SSE Streaming)"]
+    end
+
+    subgraph Orchestration["Orchestration Layer (LangGraph)"]
+        Guardrail["Guardrail (Scope Filter)"]
+        Router["Router (Intent Classifier)"]
+        Bridge["Bridge & Orchestrator Fan-out"]
+    end
+
+    subgraph Tools["Tool Layer (MCP Servers)"]
+        Hotel["Hotel Server (Convex API)"]
+        Flight["Flight Server (Convex API)"]
+        Tavily["Web Search Server (Tavily API)"]
+    end
+
+    SPA --> FastAPI
+    API_Client --> FastAPI
+    
+    FastAPI --> Guardrail
+    FastAPI --> Router
+    
+    Guardrail --> Bridge
+    Router --> Bridge
+    
+    Bridge --> Hotel
+    Bridge --> Flight
+    Bridge --> Tavily
 ```
 
 ---
@@ -100,6 +96,41 @@ BookMe AI is an intelligent travel planning system built on a modern AI architec
 
 The core orchestration relies on a dual-state LangGraph implementation:
 
+```mermaid
+graph LR
+    User["User Message + Memory"] --> Guardrail
+    User --> Router
+    
+    subgraph DecisionGraph["Gate (Decision Graph)"]
+        Guardrail["Guardrail Node"]
+        Router["Router Node"]
+        Guardrail --> Decide{"Decide"}
+        Router --> Decide
+    end
+    
+    Decide -->|"proceed"| Orch["Orchestrator Fan-out"]
+    Decide -->|"out_of_scope"| OOS["Out of Scope Template"]
+    
+    subgraph Agents["Agents"]
+        Hotel["Hotel Agent"]
+        Flight["Flight Agent"]
+        WebSearch["Web Search Agent"]
+        GeneralQA["General Q&A"]
+    end
+    
+    Orch -.-> Hotel
+    Orch -.-> Flight
+    Orch -.-> WebSearch
+    Orch -.-> GeneralQA
+    
+    Hotel --> Merge["Merge Model"]
+    Flight --> Merge
+    WebSearch --> Merge
+    GeneralQA --> Merge
+    
+    Merge --> Output["Final Output"]
+    OOS --> Output
+```
 | Layer | Role | What It Does |
 |---|---|---|
 | **Gate (Decision Graph)** | Scope & Intent | Evaluates `in_scope` vs `out_of_scope`. If valid, routes to appropriate actions (`hotel`, `flight`, `web_search`, `general_qa`). Guardrail and routing happen in parallel for zero added latency. |
