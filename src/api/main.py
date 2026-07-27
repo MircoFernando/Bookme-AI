@@ -52,8 +52,10 @@ async def lifespan(app: FastAPI):
     logger.info("Starting BookMe AI API...")
     if not is_auth_disabled() and not (os.getenv("CLERK_SECRET_KEY") or "").strip():
         raise RuntimeError(
-            "CLERK_SECRET_KEY is required when AUTH_DISABLED is not set. "
-            "For local dev, set AUTH_DISABLED=1 in .env. See docs/CLERK_SETUP.md."
+            "AUTH_DISABLED=0 but CLERK_SECRET_KEY is missing or empty in .env. "
+            "Clerk Dashboard → your app → API keys → copy the Secret key (sk_test_…) "
+            "into CLERK_SECRET_KEY (same application as VITE_CLERK_PUBLISHABLE_KEY). "
+            "Or set AUTH_DISABLED=1 for local dev without JWT checks. See docs/CLERK_SETUP.md."
         )
     if not is_auth_disabled() and not (
         os.getenv("CLERK_AUTHORIZED_PARTIES") or ""

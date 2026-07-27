@@ -103,8 +103,8 @@ function AppShell({
           <Plane size={16} className="text-brand-400" />
         </div>
         <div className="flex-1 min-w-0">
-          <h1 className="text-sm font-semibold text-slate-100 truncate">
-            BookMe AI
+          <h1 className="text-sm font-semibold text-slate-100 truncate tracking-tight">
+            BookMe<span className="text-brand-400"> AI</span>
           </h1>
           <div className="text-[11px] text-slate-500 truncate">
             {activeSession?.title ?? sessions.activeId}
@@ -142,6 +142,7 @@ function AppShell({
             loading={chat.loading}
             thoughts={chat.thoughts}
             error={chat.error}
+            onTrySample={chat.send}
           />
           <div className="shrink-0 border-t border-border p-3 bg-bg-soft">
             <div className="max-w-3xl mx-auto">

@@ -36,7 +36,7 @@ export function InputBox({ disabled, onSend, onReset, placeholder }: Props) {
         onKeyDown={onKey}
         disabled={disabled}
         rows={1}
-        placeholder={placeholder || "Ask the hospital assistant anything…"}
+        placeholder={placeholder || "Ask about flights, hotels, or your trip…"}
         className="flex-1 resize-none bg-transparent outline-none text-sm placeholder-slate-500 py-1.5 px-2 min-h-[36px] max-h-[160px]"
         style={{ fieldSizing: "content" } as React.CSSProperties}
       />
@@ -46,7 +46,7 @@ export function InputBox({ disabled, onSend, onReset, placeholder }: Props) {
             type="button"
             className="btn-ghost"
             onClick={onReset}
-            title="Clear this session's short-term memory"
+            title="Clear this trip thread on the server"
             disabled={disabled}
           >
             <RotateCcw size={16} />

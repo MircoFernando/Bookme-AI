@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 
+/** BookMe travel UI — warm amber accent on dark slate (Week 13 layout). */
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   darkMode: "class",
@@ -7,29 +8,43 @@ export default {
     extend: {
       colors: {
         bg: {
-          DEFAULT: "#0b0f17",
-          soft: "#111827",
-          card: "#161f2e",
+          DEFAULT: "#0c0f14",
+          soft: "#121820",
+          card: "#171e28",
         },
         border: {
-          DEFAULT: "#1f2937",
-          strong: "#374151",
+          DEFAULT: "#243044",
+          strong: "#334155",
         },
         brand: {
-          DEFAULT: "#22d3ee",
-          50: "#ecfeff",
-          100: "#cffafe",
-          400: "#22d3ee",
-          500: "#06b6d4",
-          600: "#0891b2",
+          DEFAULT: "#f59e0b",
+          50: "#fffbeb",
+          100: "#fef3c7",
+          400: "#fbbf24",
+          500: "#f59e0b",
+          600: "#d97706",
         },
         success: "#10b981",
         warn: "#f59e0b",
         danger: "#ef4444",
       },
       fontFamily: {
-        sans: ["-apple-system", "BlinkMacSystemFont", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+        sans: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Inter",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
+        mono: [
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Monaco",
+          "Consolas",
+          "monospace",
+        ],
       },
       animation: {
         "fade-in": "fadeIn 0.18s ease-out",

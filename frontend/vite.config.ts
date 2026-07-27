@@ -4,8 +4,10 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const srcDir = path.resolve(__dirname, "src");
 
-// Proxy /api → FastAPI backend. Avoids CORS noise during development and
+// Run dev from this folder: `cd frontend && npm run dev` (or `make run-ui`).
+// The `@/` alias maps to `src/` — e.g. `@/api/auth` → `src/api/auth.ts`.
 // lets production deploy the UI behind the same hostname as the API.
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
@@ -15,7 +17,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "./src"),
+        "@": srcDir,
       },
     },
     server: {

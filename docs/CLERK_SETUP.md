@@ -57,6 +57,18 @@ make check-clerk
 
 Then sign in at http://localhost:5173 and send a chat message. In API logs you should **not** see body `user_id` used for auth; LangFuse/metadata should show Clerk `sub`.
 
+## Troubleshooting
+
+### `CLERK_SECRET_KEY is required` / API won't start
+
+Root `.env` has `AUTH_DISABLED=0` but `CLERK_SECRET_KEY=` is empty. The **publishable** key (`pk_test_…`) only goes in `frontend/.env`; the API needs the **secret** key (`sk_test_…`) from the **same** Clerk application.
+
+### Chat returns 401 after sign-in
+
+- Confirm `CLERK_AUTHORIZED_PARTIES` includes `http://localhost:5173`
+- Confirm `CORS_ORIGINS` matches
+- Restart API after env changes
+
 ## 4. Deploy (Phase 8)
 
 Add production frontend URL to **both**:
