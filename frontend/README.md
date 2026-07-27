@@ -2,19 +2,23 @@
 
 Week 13–style chat UI (Vite + React + Tailwind), adapted for BookMe travel routes and Clerk auth.
 
-## Setup
+Full local setup (API + env + Docker): see the root [README.md](../README.md#getting-started).
+
+## One-time setup (from repo root)
 
 ```bash
-cd frontend
+make setup
 cp .env.example .env
-npm install
+cp frontend/.env.example frontend/.env
+# edit both .env files (keys + auth mode)
 ```
 
-## Run (with API)
+## Run locally (two terminals, repo root)
 
 Terminal 1:
 
 ```bash
+source .venv/bin/activate
 make run-api
 ```
 
@@ -22,10 +26,9 @@ Terminal 2:
 
 ```bash
 make run-ui
-# or: cd frontend && npm run dev
 ```
 
-Open http://127.0.0.1:5173 — Vite proxies `/api/*` to `VITE_API_URL` (default `http://127.0.0.1:8000`).
+Open http://127.0.0.1:5173 — landing at `/`, chat at `/app`. Vite proxies `/api/*` to `VITE_API_URL` (default `http://127.0.0.1:8000`).
 
 ## Auth modes
 
