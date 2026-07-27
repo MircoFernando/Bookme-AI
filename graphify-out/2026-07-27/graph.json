@@ -65,8 +65,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "stategraph",
-      "community": 0,
-      "community_name": "decision_graph.py",
+      "community": 1,
+      "community_name": "router.py",
       "norm_label": "stategraph"
     },
     {
@@ -537,7 +537,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "id": "get",
+      "id": "main_py_get",
       "community": 2,
       "community_name": "nodes.py",
       "norm_label": "get"
@@ -581,7 +581,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "id": "post",
+      "id": "main_py_post",
       "community": 2,
       "community_name": "nodes.py",
       "norm_label": "post"
@@ -598,14 +598,25 @@
       "norm_label": "chat()"
     },
     {
+      "label": "ChatRequest",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "main_py_chatrequest",
+      "community": 2,
+      "community_name": "nodes.py",
+      "norm_label": "chatrequest"
+    },
+    {
       "label": "test_chat_pipeline.py",
       "file_type": "code",
       "source_file": "scripts/test_chat_pipeline.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_test_chat_pipeline",
-      "community": 9,
-      "community_name": "infrastructure/llm.py",
+      "community": 7,
+      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
       "norm_label": "test_chat_pipeline.py"
     },
     {
@@ -615,8 +626,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "scripts_test_chat_pipeline_recordingorchestrator",
-      "community": 9,
-      "community_name": "infrastructure/llm.py",
+      "community": 7,
+      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
       "norm_label": "_recordingorchestrator"
     },
     {
@@ -626,8 +637,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "scripts_test_chat_pipeline_recordingorchestrator_init",
-      "community": 9,
-      "community_name": "infrastructure/llm.py",
+      "community": 7,
+      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
       "norm_label": ".__init__()"
     },
     {
@@ -637,8 +648,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "scripts_test_chat_pipeline_recordingorchestrator_arun_state",
-      "community": 9,
-      "community_name": "infrastructure/llm.py",
+      "community": 7,
+      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
       "norm_label": ".arun_state()"
     },
     {
@@ -648,8 +659,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "scripts_test_chat_pipeline_recordingorchestrator_to_agent_response",
-      "community": 9,
-      "community_name": "infrastructure/llm.py",
+      "community": 7,
+      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
       "norm_label": "._to_agent_response()"
     },
     {
@@ -659,8 +670,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "scripts_test_chat_pipeline_main",
-      "community": 9,
-      "community_name": "infrastructure/llm.py",
+      "community": 7,
+      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
       "norm_label": "main()"
     },
     {
@@ -670,8 +681,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "scripts_test_chat_pipeline_rationale_18",
-      "community": 9,
-      "community_name": "infrastructure/llm.py",
+      "community": 7,
+      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
       "norm_label": "minimal stand-in \u2014 records whether mcp path would run."
     },
     {
@@ -725,8 +736,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_test_mcp_client",
-      "community": 22,
-      "community_name": "build_mcp_server_config",
+      "community": 8,
+      "community_name": "config.py",
       "norm_label": "test_mcp_client.py"
     },
     {
@@ -736,8 +747,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "scripts_test_mcp_client_text",
-      "community": 22,
-      "community_name": "build_mcp_server_config",
+      "community": 8,
+      "community_name": "config.py",
       "norm_label": "_text()"
     },
     {
@@ -747,8 +758,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "scripts_test_mcp_client_main",
-      "community": 22,
-      "community_name": "build_mcp_server_config",
+      "community": 8,
+      "community_name": "config.py",
       "norm_label": "main()"
     },
     {
@@ -1517,8 +1528,8 @@
       "source_location": "L173",
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_init",
-      "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community": 1,
+      "community_name": "router.py",
       "norm_label": ".__init__()"
     },
     {
@@ -1528,8 +1539,8 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "src_agents_orchestrator_agentorchestrator_build_graph",
-      "community": 7,
-      "community_name": "BookMe AI \u2014 Development Roadmap & Phase Log",
+      "community": 1,
+      "community_name": "router.py",
       "norm_label": "._build_graph()"
     },
     {
@@ -3084,6 +3095,864 @@
       "norm_label": "sync entry for scripts/tests."
     },
     {
+      "label": "api/__init__.py",
+      "file_type": "code",
+      "source_file": "src/api/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_init",
+      "community": 14,
+      "community_name": "hotel_server.py",
+      "norm_label": "api/__init__.py"
+    },
+    {
+      "label": "BookMe AI FastAPI layer (Phase 6).",
+      "file_type": "rationale",
+      "source_file": "src/api/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_init_rationale_1",
+      "community": 14,
+      "community_name": "hotel_server.py",
+      "norm_label": "bookme ai fastapi layer (phase 6)."
+    },
+    {
+      "label": "deps.py",
+      "file_type": "code",
+      "source_file": "src/api/deps.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_deps",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "deps.py"
+    },
+    {
+      "label": "is_auth_disabled()",
+      "file_type": "code",
+      "source_file": "src/api/deps.py",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "src_api_deps_is_auth_disabled",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "is_auth_disabled()"
+    },
+    {
+      "label": "_state_attr()",
+      "file_type": "code",
+      "source_file": "src/api/deps.py",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "src_api_deps_state_attr",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "_state_attr()"
+    },
+    {
+      "label": "Request",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_deps_py_request",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "request"
+    },
+    {
+      "label": "Any",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_deps_py_any",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "any"
+    },
+    {
+      "label": "get_session_store()",
+      "file_type": "code",
+      "source_file": "src/api/deps.py",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "src_api_deps_get_session_store",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "get_session_store()"
+    },
+    {
+      "label": "get_decision_graph()",
+      "file_type": "code",
+      "source_file": "src/api/deps.py",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "src_api_deps_get_decision_graph",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "get_decision_graph()"
+    },
+    {
+      "label": "get_orchestrator()",
+      "file_type": "code",
+      "source_file": "src/api/deps.py",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "src_api_deps_get_orchestrator",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "get_orchestrator()"
+    },
+    {
+      "label": "_clerk_user_id()",
+      "file_type": "code",
+      "source_file": "src/api/deps.py",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "src_api_deps_clerk_user_id",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "_clerk_user_id()"
+    },
+    {
+      "label": "resolve_user_id()",
+      "file_type": "code",
+      "source_file": "src/api/deps.py",
+      "source_location": "L78",
+      "_origin": "ast",
+      "id": "src_api_deps_resolve_user_id",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "resolve_user_id()"
+    },
+    {
+      "label": "Dependency injection \u2014 objects built in ``api.main`` lifespan live on ``app.stat",
+      "file_type": "rationale",
+      "source_file": "src/api/deps.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_deps_rationale_1",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "dependency injection \u2014 objects built in ``api.main`` lifespan live on ``app.stat"
+    },
+    {
+      "label": "When true, ``user_id`` comes from the request body or ``DEV_USER_ID``.",
+      "file_type": "rationale",
+      "source_file": "src/api/deps.py",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "src_api_deps_rationale_17",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "when true, ``user_id`` comes from the request body or ``dev_user_id``."
+    },
+    {
+      "label": "Production: Clerk JWT ``sub`` from ``Authorization: Bearer``.      Local smoke:",
+      "file_type": "rationale",
+      "source_file": "src/api/deps.py",
+      "source_location": "L79",
+      "_origin": "ast",
+      "id": "src_api_deps_rationale_79",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "production: clerk jwt ``sub`` from ``authorization: bearer``.      local smoke:"
+    },
+    {
+      "label": "event_labels.py",
+      "file_type": "code",
+      "source_file": "src/api/event_labels.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_event_labels",
+      "community": 0,
+      "community_name": "decision_graph.py",
+      "norm_label": "event_labels.py"
+    },
+    {
+      "label": "stage_label()",
+      "file_type": "code",
+      "source_file": "src/api/event_labels.py",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "src_api_event_labels_stage_label",
+      "community": 0,
+      "community_name": "decision_graph.py",
+      "norm_label": "stage_label()"
+    },
+    {
+      "label": "tool_label()",
+      "file_type": "code",
+      "source_file": "src/api/event_labels.py",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "src_api_event_labels_tool_label",
+      "community": 0,
+      "community_name": "decision_graph.py",
+      "norm_label": "tool_label()"
+    },
+    {
+      "label": "Friendly labels for streaming chain-of-thought events.  Maps internal stage / to",
+      "file_type": "rationale",
+      "source_file": "src/api/event_labels.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_event_labels_rationale_1",
+      "community": 0,
+      "community_name": "decision_graph.py",
+      "norm_label": "friendly labels for streaming chain-of-thought events.  maps internal stage / to"
+    },
+    {
+      "label": "api/main.py",
+      "file_type": "code",
+      "source_file": "src/api/main.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_main",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "api/main.py"
+    },
+    {
+      "label": "_cors_origins()",
+      "file_type": "code",
+      "source_file": "src/api/main.py",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "src_api_main_cors_origins",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "_cors_origins()"
+    },
+    {
+      "label": "lifespan()",
+      "file_type": "code",
+      "source_file": "src/api/main.py",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "src_api_main_lifespan",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "lifespan()"
+    },
+    {
+      "label": "FastAPI",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_main_py_fastapi",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "fastapi"
+    },
+    {
+      "label": "get",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_main_py_get",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "get"
+    },
+    {
+      "label": "root()",
+      "file_type": "code",
+      "source_file": "src/api/main.py",
+      "source_location": "L127",
+      "_origin": "ast",
+      "id": "src_api_main_root",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "root()"
+    },
+    {
+      "label": "FastAPI application \u2014 BookMe AI travel assistant (Phase 6).  Start::      make r",
+      "file_type": "rationale",
+      "source_file": "src/api/main.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_main_rationale_1",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "fastapi application \u2014 bookme ai travel assistant (phase 6).  start::      make r"
+    },
+    {
+      "label": "middleware.py",
+      "file_type": "code",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_middleware",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "middleware.py"
+    },
+    {
+      "label": "RequestContextMiddleware",
+      "file_type": "code",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "src_api_middleware_requestcontextmiddleware",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "requestcontextmiddleware"
+    },
+    {
+      "label": "BaseHTTPMiddleware",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "basehttpmiddleware",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "basehttpmiddleware"
+    },
+    {
+      "label": ".dispatch()",
+      "file_type": "code",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "src_api_middleware_requestcontextmiddleware_dispatch",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": ".dispatch()"
+    },
+    {
+      "label": "Request",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_middleware_py_request",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "request"
+    },
+    {
+      "label": "install_middleware()",
+      "file_type": "code",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "src_api_middleware_install_middleware",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "install_middleware()"
+    },
+    {
+      "label": "FastAPI",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_middleware_py_fastapi",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "fastapi"
+    },
+    {
+      "label": "HTTP middleware \u2014 request id, latency header, JSON 500 handler.",
+      "file_type": "rationale",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_middleware_rationale_1",
+      "community": 9,
+      "community_name": "infrastructure/llm.py",
+      "norm_label": "http middleware \u2014 request id, latency header, json 500 handler."
+    },
+    {
+      "label": "routers/__init__.py",
+      "file_type": "code",
+      "source_file": "src/api/routers/__init__.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_routers_init",
+      "community": 22,
+      "community_name": "build_mcp_server_config",
+      "norm_label": "routers/__init__.py"
+    },
+    {
+      "label": "chat.py",
+      "file_type": "code",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_routers_chat",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "chat.py"
+    },
+    {
+      "label": "_noop_emit()",
+      "file_type": "code",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "src_api_routers_chat_noop_emit",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "_noop_emit()"
+    },
+    {
+      "label": "Any",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_routers_chat_py_any",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "any"
+    },
+    {
+      "label": "_run_chat_pipeline()",
+      "file_type": "code",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "src_api_routers_chat_run_chat_pipeline",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "_run_chat_pipeline()"
+    },
+    {
+      "label": "ChatRequest",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_routers_chat_py_chatrequest",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "chatrequest"
+    },
+    {
+      "label": "Request",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_routers_chat_py_request",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "request"
+    },
+    {
+      "label": "EmitFn",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_routers_chat_py_emitfn",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "emitfn"
+    },
+    {
+      "label": "ChatResponse",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_routers_chat_py_chatresponse",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "chatresponse"
+    },
+    {
+      "label": "post",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_routers_chat_py_post",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "post"
+    },
+    {
+      "label": "chat()",
+      "file_type": "code",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "src_api_routers_chat_chat",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "chat()"
+    },
+    {
+      "label": "chat_stream()",
+      "file_type": "code",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "src_api_routers_chat_chat_stream",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "chat_stream()"
+    },
+    {
+      "label": "StreamingResponse",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "streamingresponse",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "streamingresponse"
+    },
+    {
+      "label": "chat_reset()",
+      "file_type": "code",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L118",
+      "_origin": "ast",
+      "id": "src_api_routers_chat_chat_reset",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "chat_reset()"
+    },
+    {
+      "label": "Conversational chat endpoints \u2014 decision graph \u2192 orchestrator (Week 13 SSE patte",
+      "file_type": "rationale",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_routers_chat_rationale_1",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "conversational chat endpoints \u2014 decision graph \u2192 orchestrator (week 13 sse patte"
+    },
+    {
+      "label": "health.py",
+      "file_type": "code",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_routers_health",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "health.py"
+    },
+    {
+      "label": "get",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_routers_health_py_get",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "get"
+    },
+    {
+      "label": "health()",
+      "file_type": "code",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "src_api_routers_health_health",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "health()"
+    },
+    {
+      "label": "Request",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_routers_health_py_request",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "request"
+    },
+    {
+      "label": "ready()",
+      "file_type": "code",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "src_api_routers_health_ready",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "ready()"
+    },
+    {
+      "label": "active_config()",
+      "file_type": "code",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L73",
+      "_origin": "ast",
+      "id": "src_api_routers_health_active_config",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "active_config()"
+    },
+    {
+      "label": "System endpoints \u2014 liveness, readiness, and active configuration.",
+      "file_type": "rationale",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_routers_health_rationale_1",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "system endpoints \u2014 liveness, readiness, and active configuration."
+    },
+    {
+      "label": "schemas.py",
+      "file_type": "code",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_schemas",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "schemas.py"
+    },
+    {
+      "label": "ChatRequest",
+      "file_type": "code",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "src_api_schemas_chatrequest",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "chatrequest"
+    },
+    {
+      "label": "BaseModel",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_schemas_py_basemodel",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "basemodel"
+    },
+    {
+      "label": "ChatResponse",
+      "file_type": "code",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "src_api_schemas_chatresponse",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "chatresponse"
+    },
+    {
+      "label": "ChatResetRequest",
+      "file_type": "code",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "src_api_schemas_chatresetrequest",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "chatresetrequest"
+    },
+    {
+      "label": "ChatResetResponse",
+      "file_type": "code",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "src_api_schemas_chatresetresponse",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "chatresetresponse"
+    },
+    {
+      "label": "HealthResponse",
+      "file_type": "code",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L80",
+      "_origin": "ast",
+      "id": "src_api_schemas_healthresponse",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "healthresponse"
+    },
+    {
+      "label": "ReadinessCheck",
+      "file_type": "code",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L84",
+      "_origin": "ast",
+      "id": "src_api_schemas_readinesscheck",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "readinesscheck"
+    },
+    {
+      "label": "ReadinessResponse",
+      "file_type": "code",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L90",
+      "_origin": "ast",
+      "id": "src_api_schemas_readinessresponse",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "readinessresponse"
+    },
+    {
+      "label": "ConfigResponse",
+      "file_type": "code",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L95",
+      "_origin": "ast",
+      "id": "src_api_schemas_configresponse",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "configresponse"
+    },
+    {
+      "label": "Pydantic request / response schemas for the BookMe AI API.  Chat models mirror W",
+      "file_type": "rationale",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_schemas_rationale_1",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "pydantic request / response schemas for the bookme ai api.  chat models mirror w"
+    },
+    {
+      "label": "POST /chat and POST /chat/stream.",
+      "file_type": "rationale",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "src_api_schemas_rationale_26",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "post /chat and post /chat/stream."
+    },
+    {
+      "label": "POST /chat/reset \u2014 clear short-term memory for one thread.",
+      "file_type": "rationale",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L64",
+      "_origin": "ast",
+      "id": "src_api_schemas_rationale_64",
+      "community": 5,
+      "community_name": "SessionStore",
+      "norm_label": "post /chat/reset \u2014 clear short-term memory for one thread."
+    },
+    {
+      "label": "utils.py",
+      "file_type": "code",
+      "source_file": "src/api/utils.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_utils",
+      "community": 20,
+      "community_name": "infrastructure/__init__.py",
+      "norm_label": "utils.py"
+    },
+    {
+      "label": "current_trace_id()",
+      "file_type": "code",
+      "source_file": "src/api/utils.py",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "src_api_utils_current_trace_id",
+      "community": 20,
+      "community_name": "infrastructure/__init__.py",
+      "norm_label": "current_trace_id()"
+    },
+    {
+      "label": "_normalize_route()",
+      "file_type": "code",
+      "source_file": "src/api/utils.py",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "src_api_utils_normalize_route",
+      "community": 20,
+      "community_name": "infrastructure/__init__.py",
+      "norm_label": "_normalize_route()"
+    },
+    {
+      "label": "VerdictLiteral",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "verdictliteral",
+      "community": 20,
+      "community_name": "infrastructure/__init__.py",
+      "norm_label": "verdictliteral"
+    },
+    {
+      "label": "RouteLiteral",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "routeliteral",
+      "community": 20,
+      "community_name": "infrastructure/__init__.py",
+      "norm_label": "routeliteral"
+    },
+    {
+      "label": "chat_result_to_response()",
+      "file_type": "code",
+      "source_file": "src/api/utils.py",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "src_api_utils_chat_result_to_response",
+      "community": 20,
+      "community_name": "infrastructure/__init__.py",
+      "norm_label": "chat_result_to_response()"
+    },
+    {
+      "label": "ChatResponse",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_api_utils_py_chatresponse",
+      "community": 20,
+      "community_name": "infrastructure/__init__.py",
+      "norm_label": "chatresponse"
+    },
+    {
+      "label": "Shared API helpers \u2014 trace ids and ChatResult mapping.",
+      "file_type": "rationale",
+      "source_file": "src/api/utils.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_api_utils_rationale_1",
+      "community": 20,
+      "community_name": "infrastructure/__init__.py",
+      "norm_label": "shared api helpers \u2014 trace ids and chatresult mapping."
+    },
+    {
+      "label": "Map pipeline ``ChatResult`` \u2192 HTTP ``ChatResponse``.",
+      "file_type": "rationale",
+      "source_file": "src/api/utils.py",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "src_api_utils_rationale_42",
+      "community": 20,
+      "community_name": "infrastructure/__init__.py",
+      "norm_label": "map pipeline ``chatresult`` \u2192 http ``chatresponse``."
+    },
+    {
       "label": "infrastructure/__init__.py",
       "file_type": "code",
       "source_file": "src/infrastructure/__init__.py",
@@ -4454,8 +5323,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_mcp_servers_init",
-      "community": 22,
-      "community_name": "build_mcp_server_config",
+      "community": 8,
+      "community_name": "config.py",
       "norm_label": "mcp_servers/__init__.py"
     },
     {
@@ -4465,8 +5334,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_mcp_servers_init_rationale_1",
-      "community": 22,
-      "community_name": "build_mcp_server_config",
+      "community": 8,
+      "community_name": "config.py",
       "norm_label": "mcp servers \u2014 standardised bridge between agents and convex travel apis.    hote"
     },
     {
@@ -4586,8 +5455,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_mcp_servers_hotel_server",
-      "community": 14,
-      "community_name": "hotel_server.py",
+      "community": 4,
+      "community_name": "http_client.py",
       "norm_label": "hotel_server.py"
     },
     {
@@ -4597,8 +5466,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "src_mcp_servers_hotel_server_get_hotel",
-      "community": 14,
-      "community_name": "hotel_server.py",
+      "community": 4,
+      "community_name": "http_client.py",
       "norm_label": "_get_hotel()"
     },
     {
@@ -4608,8 +5477,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "src_mcp_servers_hotel_server_py_tool",
-      "community": 14,
-      "community_name": "hotel_server.py",
+      "community": 4,
+      "community_name": "http_client.py",
       "norm_label": "tool"
     },
     {
@@ -4619,8 +5488,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_mcp_servers_hotel_server_list_hotels",
-      "community": 14,
-      "community_name": "hotel_server.py",
+      "community": 4,
+      "community_name": "http_client.py",
       "norm_label": "list_hotels()"
     },
     {
@@ -4630,8 +5499,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "src_mcp_servers_hotel_server_search_hotels",
-      "community": 14,
-      "community_name": "hotel_server.py",
+      "community": 4,
+      "community_name": "http_client.py",
       "norm_label": "search_hotels()"
     },
     {
@@ -4641,8 +5510,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "src_mcp_servers_hotel_server_book_hotel",
-      "community": 14,
-      "community_name": "hotel_server.py",
+      "community": 4,
+      "community_name": "http_client.py",
       "norm_label": "book_hotel()"
     },
     {
@@ -4652,8 +5521,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_mcp_servers_hotel_server_rationale_1",
-      "community": 14,
-      "community_name": "hotel_server.py",
+      "community": 4,
+      "community_name": "http_client.py",
       "norm_label": "hotel mcp server \u2014 exposes hoteltool over the model context protocol.  thin tran"
     },
     {
@@ -4663,8 +5532,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "src_mcp_servers_hotel_server_rationale_50",
-      "community": 14,
-      "community_name": "hotel_server.py",
+      "community": 4,
+      "community_name": "http_client.py",
       "norm_label": "list all available hotels from the travel service."
     },
     {
@@ -4674,8 +5543,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "src_mcp_servers_hotel_server_rationale_60",
-      "community": 14,
-      "community_name": "hotel_server.py",
+      "community": 4,
+      "community_name": "http_client.py",
       "norm_label": "search hotels by city and optional check-in/check-out dates (yyyy-mm-dd).      a"
     },
     {
@@ -4685,8 +5554,8 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "src_mcp_servers_hotel_server_rationale_85",
-      "community": 14,
-      "community_name": "hotel_server.py",
+      "community": 4,
+      "community_name": "http_client.py",
       "norm_label": "book a hotel room.      args:         hotel_id: hotel identifier from search/lis"
     },
     {
@@ -4696,8 +5565,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_mcp_servers_mcp_config",
-      "community": 22,
-      "community_name": "build_mcp_server_config",
+      "community": 8,
+      "community_name": "config.py",
       "norm_label": "mcp_config.py"
     },
     {
@@ -4707,8 +5576,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_mcp_servers_mcp_config_build_mcp_server_config",
-      "community": 22,
-      "community_name": "build_mcp_server_config",
+      "community": 8,
+      "community_name": "config.py",
       "norm_label": "build_mcp_server_config()"
     },
     {
@@ -4718,8 +5587,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_mcp_servers_mcp_config_rationale_1",
-      "community": 22,
-      "community_name": "build_mcp_server_config",
+      "community": 8,
+      "community_name": "config.py",
       "norm_label": "mcp client configuration \u2014 stdio subprocess launch for bookme ai.  consumed by `"
     },
     {
@@ -4729,8 +5598,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_mcp_servers_mcp_config_rationale_24",
-      "community": 22,
-      "community_name": "build_mcp_server_config",
+      "community": 8,
+      "community_name": "config.py",
       "norm_label": "dict suitable for ``multiservermcpclient(server_config)``."
     },
     {
@@ -4938,8 +5807,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_decision_graph_notes",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "decision_graph_notes.md"
     },
     {
@@ -5213,8 +6082,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_development_roadmap",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "development_roadmap.md"
     },
     {
@@ -5224,8 +6093,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_development_roadmap_bookme_ai_development_roadmap_phase_log",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "bookme ai \u2014 development roadmap & phase log"
     },
     {
@@ -5235,8 +6104,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "docs_development_roadmap_how_to_read_this_document",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "how to read this document"
     },
     {
@@ -5246,8 +6115,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "docs_development_roadmap_high_level_phase_map",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "high-level phase map"
     },
     {
@@ -5257,8 +6126,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "docs_development_roadmap_phase_0_baseline_starter",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "phase 0 \u2014 baseline starter \u2705"
     },
     {
@@ -5268,8 +6137,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "docs_development_roadmap_phase_1_infrastructure_project_skeleton",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "phase 1 \u2014 infrastructure & project skeleton \u2705"
     },
     {
@@ -5279,8 +6148,8 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "docs_development_roadmap_phase_1b_langfuse_prompt_management_observability",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "phase 1b \u2014 langfuse prompt management & observability \u2705"
     },
     {
@@ -5290,8 +6159,8 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "docs_development_roadmap_phase_2_travel_tool_layer_convex_http",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "phase 2 \u2014 travel tool layer (convex http) \u2705"
     },
     {
@@ -5301,8 +6170,8 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "docs_development_roadmap_phase_3_mcp_servers_client_config",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "phase 3 \u2014 mcp servers & client config \u2705"
     },
     {
@@ -5312,8 +6181,8 @@
       "source_location": "L172",
       "_origin": "ast",
       "id": "docs_development_roadmap_phase_4_guardrail_router_decision_graph",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "phase 4 \u2014 guardrail + router + decision graph \u23f3"
     },
     {
@@ -5323,8 +6192,8 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "docs_development_roadmap_phase_5_orchestrator_fan_out_merge_mcp_adapters",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "phase 5 \u2014 orchestrator (fan-out, merge, mcp adapters) \u23f3"
     },
     {
@@ -5334,8 +6203,8 @@
       "source_location": "L221",
       "_origin": "ast",
       "id": "docs_development_roadmap_phase_6_fastapi_backend",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "phase 6 \u2014 fastapi backend \u23f3"
     },
     {
@@ -5345,8 +6214,8 @@
       "source_location": "L242",
       "_origin": "ast",
       "id": "docs_development_roadmap_phase_7_frontend_clerk_web_app_chat",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "phase 7 \u2014 frontend (clerk web app + chat) \u23f3"
     },
     {
@@ -5356,8 +6225,8 @@
       "source_location": "L257",
       "_origin": "ast",
       "id": "docs_development_roadmap_phase_8_deployment_documentation",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "phase 8 \u2014 deployment & documentation \u23f3"
     },
     {
@@ -5367,8 +6236,8 @@
       "source_location": "L271",
       "_origin": "ast",
       "id": "docs_development_roadmap_phase_9_stretch_optional_for_top_marks",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "phase 9 \u2014 stretch (optional, for top marks) \u23f3"
     },
     {
@@ -5378,8 +6247,8 @@
       "source_location": "L283",
       "_origin": "ast",
       "id": "docs_development_roadmap_decision_log_consolidated",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "decision log (consolidated)"
     },
     {
@@ -5389,8 +6258,8 @@
       "source_location": "L303",
       "_origin": "ast",
       "id": "docs_development_roadmap_repository_map_current_src",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "repository map (current `src/`)"
     },
     {
@@ -5400,8 +6269,8 @@
       "source_location": "L333",
       "_origin": "ast",
       "id": "docs_development_roadmap_commands_cheat_sheet",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "commands cheat sheet"
     },
     {
@@ -5411,8 +6280,8 @@
       "source_location": "L358",
       "_origin": "ast",
       "id": "docs_development_roadmap_assessment_mapping_srs",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "assessment mapping (srs)"
     },
     {
@@ -5422,8 +6291,8 @@
       "source_location": "L371",
       "_origin": "ast",
       "id": "docs_development_roadmap_next_recommended_step",
-      "community": 5,
-      "community_name": "SessionStore",
+      "community": 6,
+      "community_name": "Decision graph & routing \u2014 architecture notes",
       "norm_label": "next recommended step"
     }
   ],
@@ -6537,18 +7406,6 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "main.py",
-      "source_location": "L36",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "main_chat",
-      "target": "entity_chatrequest",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "entity.py",
@@ -6739,7 +7596,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "main_chat",
-      "target": "get",
+      "target": "main_py_get",
       "confidence_score": 1.0
     },
     {
@@ -6751,7 +7608,7 @@
       "context": "decorator",
       "_origin": "ast",
       "source": "main_hello",
-      "target": "get",
+      "target": "main_py_get",
       "confidence_score": 1.0
     },
     {
@@ -6763,7 +7620,7 @@
       "context": "decorator",
       "_origin": "ast",
       "source": "main_list_flights",
-      "target": "get",
+      "target": "main_py_get",
       "confidence_score": 1.0
     },
     {
@@ -6775,7 +7632,7 @@
       "context": "decorator",
       "_origin": "ast",
       "source": "main_list_hotels",
-      "target": "get",
+      "target": "main_py_get",
       "confidence_score": 1.0
     },
     {
@@ -6787,7 +7644,19 @@
       "context": "decorator",
       "_origin": "ast",
       "source": "main_chat",
-      "target": "post",
+      "target": "main_py_post",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "main_chat",
+      "target": "main_py_chatrequest",
       "confidence_score": 1.0
     },
     {
@@ -7582,6 +8451,30 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat",
+      "target": "src_agents_chat_pipeline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils",
+      "target": "src_agents_chat_pipeline",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "references",
       "context": "generic_arg",
       "confidence": "EXTRACTED",
@@ -7648,6 +8541,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_chat_pipeline_run_chat_turn",
+      "target": "src_agents_chat_pipeline_chatresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils_chat_result_to_response",
       "target": "src_agents_chat_pipeline_chatresult",
       "confidence_score": 1.0
     },
@@ -7805,6 +8710,18 @@
       "_origin": "ast",
       "source": "src_agents_chat_pipeline_run_chat_turn",
       "target": "src_infrastructure_observability_update_current_trace"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_run_chat_pipeline",
+      "target": "src_agents_chat_pipeline_run_chat_turn"
     },
     {
       "relation": "imports_from",
@@ -8047,6 +8964,18 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main",
+      "target": "src_agents_decision_graph",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "references",
       "context": "generic_arg",
       "confidence": "EXTRACTED",
@@ -8081,6 +9010,18 @@
       "source": "src_agents_decision_graph_decide_node",
       "target": "runnableconfig",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/agents/decision_graph.py",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_agents_decision_graph_stage_label_safe",
+      "target": "src_api_event_labels_stage_label"
     },
     {
       "relation": "calls",
@@ -8259,6 +9200,18 @@
       "source": "src_agents_decision_graph_rationale_170",
       "target": "src_agents_decision_graph_build_decision_graph",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/main.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main_lifespan",
+      "target": "src_agents_decision_graph_build_decision_graph"
     },
     {
       "relation": "references",
@@ -8766,6 +9719,30 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_orchestrator_rationale_1",
+      "target": "src_agents_orchestrator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps",
+      "target": "src_agents_orchestrator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main",
       "target": "src_agents_orchestrator",
       "confidence_score": 1.0
     },
@@ -10666,6 +11643,18 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/main.py",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main_lifespan",
+      "target": "src_agents_orchestrator_build_agent_mcp"
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/agents/prompts/__init__.py",
@@ -11152,6 +12141,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_agents_router_rationale_1",
+      "target": "src_agents_router",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main",
       "target": "src_agents_router",
       "confidence_score": 1.0
     },
@@ -12812,6 +13813,1509 @@
       "_origin": "ast",
       "source": "src_agents_tools_web_search_tool_rationale_127",
       "target": "src_agents_tools_web_search_tool_websearchtool_search",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/__init__.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_init_rationale_1",
+      "target": "src_api_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps",
+      "target": "src_api_deps_clerk_user_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps",
+      "target": "src_api_deps_get_decision_graph",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps",
+      "target": "src_api_deps_get_orchestrator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps",
+      "target": "src_api_deps_get_session_store",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps",
+      "target": "src_api_deps_is_auth_disabled",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L78",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps",
+      "target": "src_api_deps_resolve_user_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps",
+      "target": "src_api_deps_state_attr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_rationale_1",
+      "target": "src_api_deps",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main",
+      "target": "src_api_deps",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat",
+      "target": "src_api_deps",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health",
+      "target": "src_api_deps",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_rationale_17",
+      "target": "src_api_deps_is_auth_disabled",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L84",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_resolve_user_id",
+      "target": "src_api_deps_is_auth_disabled",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/main.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main_lifespan",
+      "target": "src_api_deps_is_auth_disabled"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/main.py",
+      "source_location": "L132",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main_root",
+      "target": "src_api_deps_is_auth_disabled"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L91",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health_active_config",
+      "target": "src_api_deps_is_auth_disabled"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_get_decision_graph",
+      "target": "src_api_deps_state_attr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_get_orchestrator",
+      "target": "src_api_deps_state_attr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_get_session_store",
+      "target": "src_api_deps_state_attr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_state_attr",
+      "target": "src_api_deps_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_state_attr",
+      "target": "src_api_deps_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_clerk_user_id",
+      "target": "src_api_deps_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_get_decision_graph",
+      "target": "src_api_deps_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_get_orchestrator",
+      "target": "src_api_deps_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_get_session_store",
+      "target": "src_api_deps_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L78",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_resolve_user_id",
+      "target": "src_api_deps_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_run_chat_pipeline",
+      "target": "src_api_deps_get_session_store"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_run_chat_pipeline",
+      "target": "src_api_deps_get_decision_graph"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_run_chat_pipeline",
+      "target": "src_api_deps_get_orchestrator"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L89",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_resolve_user_id",
+      "target": "src_api_deps_clerk_user_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/deps.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_deps_rationale_79",
+      "target": "src_api_deps_resolve_user_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L123",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat_reset",
+      "target": "src_api_deps_resolve_user_id"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_run_chat_pipeline",
+      "target": "src_api_deps_resolve_user_id"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/event_labels.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_event_labels",
+      "target": "src_api_event_labels_stage_label",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/event_labels.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_event_labels",
+      "target": "src_api_event_labels_tool_label",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/event_labels.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_event_labels_rationale_1",
+      "target": "src_api_event_labels",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main",
+      "target": "src_api_middleware",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main",
+      "target": "src_infrastructure_observability",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main",
+      "target": "src_infrastructure_session_store",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main",
+      "target": "src_api_main_cors_origins",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main",
+      "target": "src_api_main_lifespan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main",
+      "target": "src_api_main_py_fastapi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L127",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main",
+      "target": "src_api_main_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main_rationale_1",
+      "target": "src_api_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main_lifespan",
+      "target": "src_api_main_py_fastapi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/main.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_main_lifespan",
+      "target": "src_infrastructure_session_store_sessionstore"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/main.py",
+      "source_location": "L126",
+      "weight": 1.0,
+      "context": "decorator",
+      "_origin": "ast",
+      "source": "src_api_main_root",
+      "target": "src_api_main_py_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_middleware",
+      "target": "src_api_middleware_install_middleware",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_middleware",
+      "target": "src_api_middleware_py_fastapi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_middleware",
+      "target": "src_api_middleware_requestcontextmiddleware",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_middleware_rationale_1",
+      "target": "src_api_middleware",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_middleware_requestcontextmiddleware",
+      "target": "basehttpmiddleware",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_middleware_requestcontextmiddleware",
+      "target": "src_api_middleware_requestcontextmiddleware_dispatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_middleware_requestcontextmiddleware_dispatch",
+      "target": "src_api_middleware_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/middleware.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_middleware_install_middleware",
+      "target": "src_api_middleware_py_fastapi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat",
+      "target": "src_api_schemas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat",
+      "target": "src_api_utils",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat",
+      "target": "src_api_routers_chat_chat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat",
+      "target": "src_api_routers_chat_chat_reset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat",
+      "target": "src_api_routers_chat_chat_stream",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat",
+      "target": "src_api_routers_chat_noop_emit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat",
+      "target": "src_api_routers_chat_run_chat_pipeline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_rationale_1",
+      "target": "src_api_routers_chat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L55",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat",
+      "target": "src_api_routers_chat_noop_emit",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_noop_emit",
+      "target": "src_api_routers_chat_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L55",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat",
+      "target": "src_api_routers_chat_run_chat_pipeline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_run_chat_pipeline",
+      "target": "src_api_routers_chat_py_chatrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_run_chat_pipeline",
+      "target": "src_api_routers_chat_py_chatresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_run_chat_pipeline",
+      "target": "src_api_routers_chat_py_emitfn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_run_chat_pipeline",
+      "target": "src_api_routers_chat_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_run_chat_pipeline",
+      "target": "src_api_utils_chat_result_to_response"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat",
+      "target": "src_api_routers_chat_py_chatrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat_stream",
+      "target": "src_api_routers_chat_py_chatrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat",
+      "target": "src_api_routers_chat_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat_reset",
+      "target": "src_api_routers_chat_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat_stream",
+      "target": "src_api_routers_chat_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat",
+      "target": "src_api_routers_chat_py_chatresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "context": "decorator",
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat",
+      "target": "src_api_routers_chat_py_post",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L117",
+      "weight": 1.0,
+      "context": "decorator",
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat_reset",
+      "target": "src_api_routers_chat_py_post",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "context": "decorator",
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat_stream",
+      "target": "src_api_routers_chat_py_post",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat_stream",
+      "target": "streamingresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat_reset",
+      "target": "src_api_schemas_chatresetrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/chat.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_chat_chat_reset",
+      "target": "src_api_schemas_chatresetresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health",
+      "target": "src_api_schemas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health",
+      "target": "src_api_routers_health_active_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health",
+      "target": "src_api_routers_health_health",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health",
+      "target": "src_api_routers_health_ready",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health_rationale_1",
+      "target": "src_api_routers_health",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L72",
+      "weight": 1.0,
+      "context": "decorator",
+      "_origin": "ast",
+      "source": "src_api_routers_health_active_config",
+      "target": "src_api_routers_health_py_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L22",
+      "weight": 1.0,
+      "context": "decorator",
+      "_origin": "ast",
+      "source": "src_api_routers_health_health",
+      "target": "src_api_routers_health_py_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "context": "decorator",
+      "_origin": "ast",
+      "source": "src_api_routers_health_ready",
+      "target": "src_api_routers_health_py_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health_health",
+      "target": "src_api_routers_health_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health_health",
+      "target": "src_api_schemas_healthresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health_active_config",
+      "target": "src_api_routers_health_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health_ready",
+      "target": "src_api_routers_health_py_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health_ready",
+      "target": "src_api_schemas_readinesscheck"
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health_ready",
+      "target": "src_api_schemas_readinessresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/routers/health.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_routers_health_active_config",
+      "target": "src_api_schemas_configresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas",
+      "target": "src_api_schemas_chatrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas",
+      "target": "src_api_schemas_chatresetrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas",
+      "target": "src_api_schemas_chatresetresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas",
+      "target": "src_api_schemas_chatresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas",
+      "target": "src_api_schemas_configresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas",
+      "target": "src_api_schemas_healthresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L84",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas",
+      "target": "src_api_schemas_readinesscheck",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L90",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas",
+      "target": "src_api_schemas_readinessresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas_rationale_1",
+      "target": "src_api_schemas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils",
+      "target": "src_api_schemas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas_chatrequest",
+      "target": "src_api_schemas_py_basemodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas_rationale_26",
+      "target": "src_api_schemas_chatrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas_chatresetrequest",
+      "target": "src_api_schemas_py_basemodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas_chatresetresponse",
+      "target": "src_api_schemas_py_basemodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas_chatresponse",
+      "target": "src_api_schemas_py_basemodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas_configresponse",
+      "target": "src_api_schemas_py_basemodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas_healthresponse",
+      "target": "src_api_schemas_py_basemodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L84",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas_readinesscheck",
+      "target": "src_api_schemas_py_basemodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L90",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas_readinessresponse",
+      "target": "src_api_schemas_py_basemodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/schemas.py",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_schemas_rationale_64",
+      "target": "src_api_schemas_chatresetrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils",
+      "target": "src_api_utils_chat_result_to_response",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils",
+      "target": "src_api_utils_current_trace_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils",
+      "target": "src_api_utils_normalize_route",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils_rationale_1",
+      "target": "src_api_utils",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils_chat_result_to_response",
+      "target": "src_api_utils_current_trace_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/utils.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils_current_trace_id",
+      "target": "src_infrastructure_observability_get_langfuse"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils_chat_result_to_response",
+      "target": "src_api_utils_normalize_route",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils_normalize_route",
+      "target": "routeliteral",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils_normalize_route",
+      "target": "verdictliteral",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils_chat_result_to_response",
+      "target": "src_api_utils_py_chatresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/utils.py",
+      "source_location": "L42",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_api_utils_rationale_42",
+      "target": "src_api_utils_chat_result_to_response",
       "confidence_score": 1.0
     },
     {

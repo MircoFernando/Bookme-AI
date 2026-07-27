@@ -6,6 +6,7 @@
 # =============================================================================
 
 PYTHON ?= .venv/bin/python
+UVICORN ?= .venv/bin/uvicorn
 PY := PYTHONPATH=src $(PYTHON)
 
 .PHONY: help install config check-config run-api run-ui \
@@ -47,7 +48,7 @@ check-config:
 
 # ── Run (wired on later days) ────────────────────────────────────────────────────
 run-api:
-	cd src && PYTHONPATH=. uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+	cd src && PYTHONPATH=. ../$(UVICORN) api.main:app --reload --host 0.0.0.0 --port 8000
 
 run-ui:
 	$(PY) frontend/app.py

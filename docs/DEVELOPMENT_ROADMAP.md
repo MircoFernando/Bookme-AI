@@ -4,7 +4,7 @@
 **Baseline:** FastAPI + LangGraph + Gradio chat with hardcoded Convex HTTP tools  
 **Target architecture:** Week 13 (Nawaloka) reference project — `src/` layout, MCP stdio servers, intent-routed orchestrator, streaming API, deployment  
 
-**Last updated:** 2026-07-26  
+**Last updated:** 2026-07-27  
 
 ---
 
@@ -28,12 +28,13 @@ Phase 1  Infrastructure & project skeleton         ✅
 Phase 1b LangFuse prompts + observability plumbing   ✅
 Phase 2  Travel tool layer (Convex HTTP)             ✅
 Phase 3  MCP servers + client config                 ✅
-Phase 4  Guardrail + router + decision graph         ⏳
-Phase 5  Orchestrator (fan-out, merge, MCP adapters) ⏳
-Phase 6  FastAPI backend (Clerk, streaming, sessions)⏳
+Phase 3b Web search (Tavily) tool + MCP server         ✅
+Phase 4  Guardrail + router + decision graph         ✅
+Phase 5  Orchestrator (fan-out, merge, MCP adapters) ✅
+Phase 6  FastAPI backend (streaming, sessions)       🔄
 Phase 7  Frontend (Clerk web app + chat UX)          ⏳
 Phase 8  Deployment & documentation                  ⏳
-Phase 9  Stretch (memory, LangFuse traces, CI/Docker)⏳
+Phase 9  Stretch (LT memory, CI/Docker)              ⏳
 ```
 
 ---
@@ -79,7 +80,7 @@ Phase 9  Stretch (memory, LangFuse traces, CI/Docker)⏳
 1. **Provider-default OpenAI** (`gpt-4o-mini`) so the app runs with only `OPENAI_API_KEY`; Groq/OpenRouter optional via YAML + env for router speed and LLM fallbacks.
 2. **YAML for behaviour, `.env` for secrets** — no API keys in repo.
 3. **Python 3.11+ required** (`mcp`, `langchain-mcp-adapters`); project uses `.venv` with 3.11 (system Python 3.9 is insufficient).
-4. **In-memory `SessionStore` for MVP** — conversation scoped to `session_id`; no cross-day persistence until stretch memory work.
+4. **In-memory `SessionStore` for MVP** — keyed by **`(user_id, session_id)`**; window from `config/params.yaml` (`session.max_turns`, `session.history_window`).
 5. **Architecture north star:** Week 13 (guardrail ∥ router → orchestrator fan-out → merge → MCP tools).
 
 **Acceptance:** `PYTHONPATH=src` imports; session isolation test; config dump runs.
@@ -96,7 +97,7 @@ Phase 9  Stretch (memory, LangFuse traces, CI/Docker)⏳
 
 | Area | Files |
 |------|--------|
-| Prompt registry | `src/agents/prompts/agent_prompts.py` — 9 LangFuse names + local fallbacks + `build_*()` helpers |
+| Prompt registry | `src/agents/prompts/agent_prompts.py` — LangFuse names + local fallbacks (incl. `web_search_agent_system`) |
 | Prompt fetch | `fetch_prompt`, `prefetch_prompts`, `langfuse_prompts_enabled()` in `observability.py` |
 | Config | `observability.prompts_enabled`, `prompt_cache_ttl_seconds` in `params.yaml` |
 | Env | `LANGFUSE_PROMPTS=true` documented in `.env.example` |
@@ -107,7 +108,7 @@ Phase 9  Stretch (memory, LangFuse traces, CI/Docker)⏳
 2. **Local fallbacks always ship** — app works before prompts exist in LangFuse dashboard.
 3. **LangFuse Mustache `{{var}}` in cloud; Python `{var}` in fallbacks** — compiled via `fetch_prompt(..., **vars)`.
 4. **Instrument with `@observe` as we build** nodes (Phase 4–6); enable tracing for demo/viva screenshots.
-5. **Prefetch prompts in API lifespan** (planned Phase 6) to avoid first-request latency.
+5. **Prefetch prompts in API lifespan** — `api/main.py` calls `prefetch_prompts(ALL_LANGFUSE_PROMPT_NAMES)` at startup.
 
 **Prompt names to create in LangFuse:** see `LANGFUSE_PROMPT_NAMES` in `agent_prompts.py` (prefix `bookme-ai-*`).
 
@@ -152,90 +153,105 @@ Phase 9  Stretch (memory, LangFuse traces, CI/Docker)⏳
 |------|------|
 | `src/mcp_servers/hotel_server.py` | FastMCP `bookme-ai-hotels` — 3 tools → `HotelTool.dispatch` |
 | `src/mcp_servers/flight_server.py` | FastMCP `bookme-ai-flights` — 3 tools → `FlightTool.dispatch` |
+| `src/mcp_servers/web_search_server.py` | FastMCP `bookme-ai-web-search` — `search_web` → `WebSearchTool` (Tavily) |
 | `src/mcp_servers/mcp_config.py` | `build_mcp_server_config()` for `MultiServerMCPClient` (stdio, `cwd=src/`) |
-| `scripts/test_mcp_client.py` | Smoke: 6 tools, `list_hotels` / `list_flights` |
-| `Makefile` | `test-mcp`, `inspect-hotel`, `inspect-flight` |
+| `scripts/test_mcp_client.py` | Smoke: **7** tools |
+| `Makefile` | `test-mcp`, `inspect-hotel`, `inspect-flight`, `inspect-web-search` |
 
-**MCP tool names:** `list_hotels`, `search_hotels`, `book_hotel`, `list_flights`, `search_flights`, `book_flight`.
+**MCP tool names:** `list_hotels`, `search_hotels`, `book_hotel`, `list_flights`, `search_flights`, `book_flight`, **`search_web`**.
 
 **Decisions:**
 
 1. **Transport: stdio subprocesses** (Week 13 default) — simple to run locally and defend in viva; HTTP MCP optional later for remote deploy.
 2. **MCP servers are thin** — no HTTP, no routing; only `@mcp.tool()` → `dispatch`.
-3. **Two servers** (hotel + flight) — clear domain split; could merge later without changing tool names.
-4. **Decoupling proof:** change Convex URL in YAML → tools change; MCP tool schemas unchanged; Phase 5 adapters unchanged.
+3. **Three servers** (hotel + flight + web search) — domain split; orchestrator uses `build_agent_mcp()`.
+4. **Decoupling proof:** change Convex URL or Tavily env → tools change; MCP tool schemas unchanged; orchestrator adapters unchanged.
 
-**Verified:** `make test-mcp` passes.
-
----
-
-## Phase 4 — Guardrail + router + decision graph ⏳
-
-**Goal:** Parallel **guardrail** (fail-open) and **router** (multi-intent JSON) → **decide** node (`out_of_scope` | `proceed`).
-
-**Planned files:**
-
-- `src/agents/guardrail.py`
-- `src/agents/router.py` — `RouteDecision`, `MultiRouteDecision` (`hotel` | `flight` | `general_qa`)
-- `src/agents/decision_state.py` — **Week 13** minimal `DecisionState` (`message`, `router_context`, …)
-- `src/agents/decision_graph.py` — LangGraph on `DecisionState`: START → guardrail ∥ router → decide → END
-- `src/agents/decision_bridge.py` — `map_decision_to_agent_state()` → orchestrator `AgentState`
-- Prompts via `build_guardrail_system_prompt()`, `build_router_*()` from LangFuse/fallbacks
-- `@observe` on guardrail and router LLM calls
-
-**Architecture (Week 13):** two state schemas — classification subgraph vs orchestrator graph; chat API runs decision graph first, then maps into `AgentState` for Phase 5 fan-out.
-
-**Design notes (discussion log):** [DECISION_GRAPH_NOTES.md](./DECISION_GRAPH_NOTES.md) — parallel guardrail/router behavior, bridge vs Week 13 `chat.py`, CAG/cache timing, OOS “Who is the president?” walkthrough, latency vs cost, viva diffs.
-
-**Decisions (already agreed):**
-
-1. Guardrail **fails open** on LLM errors (Week 13).
-2. Router supports **multiple routes** in one user message (hotel + flight → two agents in Phase 5).
-3. Do **not** fabricate booking fields; router sets null → agent asks follow-up.
-
-**Acceptance:** Unit tests or script: out-of-scope message → `out_of_scope`; “hotels in X and flight A→B” → two route decisions.
+**Verified:** `make test-mcp` passes (7 tools).
 
 ---
 
-## Phase 5 — Orchestrator (fan-out, merge, MCP adapters) ⏳
+## Phase 3b — Web search (Tavily) ✅
 
-**Goal:** Assessment **E2** + complete **E1** wiring — agents call MCP, not `agents/tools.py`.
+**Goal:** Tourism / destination Q&A via MCP, routed as `web_search` agent.
 
-**Planned files:**
+**Deliverables:**
 
-- `src/agents/orchestrator.py` — recall (session context) → supervisor → conditional fan-out → `merge_responses` → END
-- Agent nodes: `hotel_agent`, `flight_agent`, `general_qa_agent`
-- `_MCPHotelToolAdapter` / `_MCPFlightToolAdapter` — `.dispatch(action, params)` → MCP `ainvoke` (Week 13 `_MCPCRMToolAdapter` pattern)
-- `build_agent_mcp()` — `MultiServerMCPClient` + adapters
+| File | Role |
+|------|------|
+| `src/agents/tools/web_search_tool.py` | Tavily API, `dispatch("search", {query})` |
+| `src/mcp_servers/web_search_server.py` | MCP wrapper |
+| Router + prompts | `web_search` route; `build_web_search_agent_system_prompt()` |
+| `scripts/test_orchestrator_web_search.py` | `make test-orchestrator-web-search` |
 
-**Decisions (planned):**
-
-1. **Single-route merge:** pass-through (no extra LLM). **Multi-route:** one synthesis LLM call (`build_merge_system_prompt()`).
-2. **`agent_outputs` reducer** already in `AgentState` (Phase 1).
-3. MCP tool failures surface as text in `tool_output`; graph continues (E3).
-
-**Acceptance:** CLI or script: multi-intent query returns combined answer; killing one MCP server degrades gracefully for that domain only.
+**Env:** `TAVILY_API_KEY` in `.env`; Tavily settings in `config/params.yaml` (`tavily.*`).
 
 ---
 
-## Phase 6 — FastAPI backend ⏳
+## Phase 4 — Guardrail + router + decision graph ✅
 
-**Goal:** Efficient async API, streaming, session identity, LangFuse prefetch.
+**Goal:** Parallel **guardrail** (fail-open) and **router** (multi-intent JSON) → **decide** → bridge to orchestrator.
 
-**Planned:**
+**Deliverables:**
 
-- `src/api/main.py` — lifespan: build orchestrator, MCP client, warmup router LLM, `prefetch_prompts(ALL_LANGFUSE_PROMPT_NAMES)`
-- `src/api/deps.py` — Clerk `authenticate_request` → `user_id` from JWT `sub`
-- `src/api/routers/chat.py` — `POST /chat`, `POST /chat/stream` (SSE + `emit` / activity labels)
-- `src/api/event_labels.py` — “Searching hotels…”, etc.
-- **Session model:** mint `session_id` per conversation (UUID); memory keyed by **`(user_id, session_id)`** (extend `SessionStore` or composite key)
-- Remove dependency on root `main.py` for production path
+- `src/agents/guardrail.py` — scope classifier; receives **`router_context`** (same ST memory as router); LangFuse system prompt via `build_guardrail_system_prompt()`
+- `src/agents/router.py` — routes: `hotel` \| `flight` \| `general_qa` \| **`web_search`**
+- `src/agents/decision_state.py`, `decision_graph.py`, `decision_bridge.py`
+- **`decide_node`:** OOS from guardrail **unless** router primary is `hotel` \| `flight` \| `web_search` (avoids false blocks on tourism/food queries)
+- `scripts/test_decision_graph.py` — `make test-decision`
 
-**Decisions (already agreed):**
+**Design notes:** [DECISION_GRAPH_NOTES.md](./DECISION_GRAPH_NOTES.md)
 
-1. **Clerk** for auth; **`user_id` from verified token**, never trust client body alone.
-2. **`session_id` ≠ Clerk `sid`** — chat thread IDs are app-owned UUIDs (ChatGPT-style threads planned).
-3. **Per-session ST memory** in Phase 6; **cross-day LT memory** = stretch (Redis/Supabase/LangGraph store — documented, not required for core).
+**Acceptance (verified via `make test-decision`):**
+
+1. Off-topic trivia → `verdict=out_of_scope`
+2. Hotel + flight in one message → `proceed`, ≥2 routes
+3. Router: tourism → `web_search`; chitchat → `general_qa`
+
+---
+
+## Phase 5 — Orchestrator (fan-out, merge, MCP adapters) ✅
+
+**Goal:** Assessment **E1/E2** — agents call MCP, not root `agents/tools.py`.
+
+**Deliverables:**
+
+- `src/agents/orchestrator.py` — recall → supervisor → parallel **`hotel_agent` \| `flight_agent` \| `general_qa_agent` \| `web_search_agent`** → merge → save_memory
+- `_MCP*ToolAdapter` + `build_agent_mcp()` — `MultiServerMCPClient`, 7 tools
+- `src/agents/chat_pipeline.py` — `run_chat_turn()`: decision graph → orchestrator or OOS; loads/saves `SessionStore`
+- Scripts: `make test-orchestrator`, `make test-chat-pipeline` (mock orch), `make test-session-store`
+
+**Decisions:**
+
+1. **Single-route merge:** pass-through; **multi-route:** merge LLM (`build_merge_system_prompt()`).
+2. **`agent_outputs` reducer** on `AgentState`.
+3. MCP failures → JSON error in `tool_output`; graph continues (E3).
+
+---
+
+## Phase 6 — FastAPI backend 🔄
+
+**Goal:** Async API, SSE streaming, session identity, LangFuse warmup.
+
+**Completed:**
+
+| Area | Files |
+|------|--------|
+| App | `src/api/main.py` — lifespan: `SessionStore`, `build_decision_graph()`, `await build_agent_mcp()`, prompt prefetch, router warmup |
+| Chat | `src/api/routers/chat.py` — `POST /chat`, `POST /chat/stream`, `POST /chat/reset` |
+| Health | `src/api/routers/health.py` — `/health`, `/ready`, `/config` |
+| Schemas / labels | `schemas.py`, `event_labels.py`, `utils.chat_result_to_response` |
+| Auth (dev) | `deps.py` — `AUTH_DISABLED=1` + `DEV_USER_ID`; Clerk path when disabled flag off |
+| Observability | LangFuse SDK **v4**: `langfuse_turn_attributes` + `update_current_span` (no `update_current_trace`) |
+
+**Remaining for Phase 6 “done”:**
+
+- Production **Clerk** enabled (`AUTH_DISABLED=0`, `clerk-backend-api`)
+- Optional: pytest for HTTP layer; log `memory_context` on trace metadata for debugging
+
+**Run:** `make run-api` (uses `.venv/bin/uvicorn`).
+
+**Session memory:** `config/params.yaml` → `session.max_turns` (storage cap), `session.history_window` (pairs injected into prompts each turn). In-memory only until Phase 9 Redis/LT memory.
 
 ---
 
@@ -291,11 +307,11 @@ Phase 9  Stretch (memory, LangFuse traces, CI/Docker)⏳
 | HTTP layer | Shared `http_client.py` | DRY for hotel+flight; explicit errors vs baseline `None` |
 | LLM provider | OpenAI default | Simplest setup; YAML switch to Groq/OpenRouter |
 | Prompts | LangFuse + local fallback | Edit without redeploy; works offline |
-| Tracing | LangFuse optional | `@observe` built-in; enable for demo |
-| Chat memory | In-memory `SessionStore` | Core deliverable; durable memory = stretch |
-| Auth (planned) | Clerk + composite session key | Stable `user_id`; app-owned `session_id` |
-| Identity vs thread | Do not use Clerk `sid` as chat `session_id` | Auth lifecycle ≠ conversation lifecycle |
-| Legacy root code | Keep until Phase 6 | Reference + fallback during rebuild |
+| Tracing | LangFuse SDK v4 (`@observe`, `propagate_attributes`, `update_current_span`) |
+| Chat memory | In-memory `SessionStore`; `(user_id, session_id)`; YAML window |
+| ST vs LangGraph checkpoint | Custom ST store (Week 13 style); no checkpointer in MVP |
+| Auth | Clerk in prod; `AUTH_DISABLED=1` for local API | JWT `sub` → `user_id`; app-owned `session_id` |
+| Legacy root code | Kept for reference; **`make run-api`** is production path |
 | Python version | 3.11+ | MCP package requirement |
 
 ---
@@ -304,29 +320,28 @@ Phase 9  Stretch (memory, LangFuse traces, CI/Docker)⏳
 
 ```text
 src/
-  infrastructure/     config, llm, log, observability, http_client, session_store
+  api/                  main, deps, routers/chat|health, schemas, event_labels
+  infrastructure/       config, llm, log, observability, http_client, session_store
   agents/
-    state.py              AgentState (orchestrator)
-    decision_state.py     DecisionState (subgraph)
-    decision_graph.py
-    decision_bridge.py
-    guardrail.py
-    router.py
-    prompts/              LangFuse-backed builders
-    tools/                HotelTool, FlightTool
-  mcp_servers/        hotel_server, flight_server, mcp_config
-  api/                (Phase 6)
+    chat_pipeline.py    run_chat_turn (API hot path)
+    orchestrator.py     MCP orchestrator + build_agent_mcp
+    state.py            AgentState
+    decision_*.py       Decision subgraph + bridge
+    guardrail.py, router.py
+    prompts/            LangFuse-backed builders
+    tools/              HotelTool, FlightTool, WebSearchTool
+  mcp_servers/          hotel, flight, web_search, mcp_config
 scripts/
-  test_mcp_client.py
-  test_decision_graph.py
+  test_mcp_client.py, test_decision_graph.py, test_orchestrator*.py
+  test_chat_pipeline.py, test_session_store.py
 config/
   models.yaml, params.yaml
 docs/
-  DEVELOPMENT_ROADMAP.md   ← phase log
-  DECISION_GRAPH_NOTES.md  ← architecture & Week 13 comparison notes
+  DEVELOPMENT_ROADMAP.md
+  DECISION_GRAPH_NOTES.md
 ```
 
-**Legacy (baseline, root):** `main.py`, `frontend.py`, `agents/*` — to be retired when `src/api` is live.
+**Legacy (root):** `main.py`, `frontend.py`, `agents/*` — starter demo only.
 
 ---
 
@@ -342,15 +357,19 @@ cp .env.example .env   # add OPENAI_API_KEY, optional LANGFUSE_*
 make config
 make check-config
 
-# MCP (Phase 3)
+# MCP (Phase 3–3b)
 make test-mcp
-make inspect-hotel
+make inspect-web-search
 
-# Decision graph (Phase 4)
+# Agents
 make test-decision
+make test-orchestrator
+make test-orchestrator-web-search
+make test-session-store
+make test-chat-pipeline
 
-# Later
-make run-api          # Phase 6
+# API
+make run-api
 ```
 
 ---
@@ -359,17 +378,17 @@ make run-api          # Phase 6
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| E1 MCP servers | 2–3, wired in 5 | ✅ servers; ⏳ agent wiring |
-| E2 Intent routing | 4–5 | ⏳ |
-| E3 Graceful failures | 2–3 (tools), 5 (agents) | ✅ partial |
-| FE streaming + activity | 6–7 | ⏳ |
+| E1 MCP servers | 2–3b, wired in 5 | ✅ |
+| E2 Intent routing | 4–5 | ✅ |
+| E3 Graceful failures | 2–3 (tools), 5 (agents) | ✅ |
+| FE streaming + activity | 6 (API SSE), 7 (UI) | 🔄 API ✅; UI ⏳ |
 | Deploy + docs | 8 | ⏳ |
-| Git branches / PRs | Ongoing | ✅ #1 merged; MCP on branch |
+| Git branches / PRs | Ongoing | ✅ #1 merged; feature work on branch |
 
 ---
 
 ## Next recommended step
 
-**Phase 4** on branch `feat/decision-graph`: implement guardrail, router, and decision LangGraph; use existing prompts and `@observe`.
+**Phase 7** — Clerk web app consuming `POST /chat/stream`, stable `session_id` per thread.
 
-When Phase 4 starts, update this file’s status table and add a “Completed” subsection with commit SHAs.
+Then **Phase 8** — deploy API + UI, `docs/MCP_SETUP.md`, refresh deployment URLs in README.

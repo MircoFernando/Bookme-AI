@@ -81,7 +81,10 @@ def make_guardrail_node(guardrail: Guardrail):
             }
         )
         try:
-            verdict: GuardrailVerdict = await guardrail.aclassify(state["message"])
+            verdict: GuardrailVerdict = await guardrail.aclassify(
+                state["message"],
+                state.get("router_context", "") or "",
+            )
         except Exception as exc:
             logger.warning("Guardrail node failed (defaulting in_scope): {}", exc)
             verdict = "in_scope"
@@ -144,7 +147,7 @@ def decide_node(
     state: DecisionState,
     config: Optional[RunnableConfig] = None,
 ) -> Dict[str, Any]:
-    """Gate on guardrail only; intent routing already in ``decision``."""
+    """Gate on guardrail; router can override a false-negative guardrail for tool routes."""
     _ = config
     guardrail_v = state.get("guardrail", "in_scope")
     decision = state.get("decision")
@@ -152,6 +155,14 @@ def decide_node(
     primary_route = primary.route if primary else "general_qa"
 
     if guardrail_v == "out_of_scope":
+        # Router already chose a travel tool path — prefer proceeding over a
+        # guardrail false negative (e.g. food in London classified as OOS).
+        if primary_route in ("hotel", "flight", "web_search"):
+            logger.info(
+                "Guardrail out_of_scope but router chose {}; proceeding",
+                primary_route,
+            )
+            return {"verdict": "proceed", "primary_route": primary_route}
         return {
             "verdict": "out_of_scope",
             "primary_route": primary_route,

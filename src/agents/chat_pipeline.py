@@ -16,7 +16,7 @@ from langchain_core.runnables import RunnableConfig
 from agents.decision_bridge import map_decision_to_agent_state
 from agents.decision_graph import EmitFn, build_decision_input
 from agents.orchestrator import AgentOrchestrator, _format_session_memory
-from infrastructure.observability import observe, update_current_trace
+from infrastructure.observability import langfuse_turn_attributes, observe, update_current_trace
 
 Verdict = Literal["proceed", "out_of_scope"]
 
@@ -99,12 +99,38 @@ async def run_chat_turn(
     if session_store and session_id:
         memory_context = _format_session_memory(session_store, user_id, session_id)
 
-    update_current_trace(
+    async with langfuse_turn_attributes(
         user_id=user_id or None,
         session_id=session_id or None,
         metadata={"phase": "chat_pipeline"},
-    )
+    ):
+        return await _run_chat_turn_body(
+            message=message,
+            user_id=user_id,
+            session_id=session_id,
+            memory_context=memory_context,
+            decision_graph=decision_graph,
+            orchestrator=orchestrator,
+            session_store=session_store,
+            emit_fn=emit_fn,
+            t_total=t_total,
+            timings=timings,
+        )
 
+
+async def _run_chat_turn_body(
+    *,
+    message: str,
+    user_id: str,
+    session_id: str,
+    memory_context: str,
+    decision_graph: Any,
+    orchestrator: AgentOrchestrator,
+    session_store: Any,
+    emit_fn: EmitFn,
+    t_total: float,
+    timings: Dict[str, int],
+) -> ChatResult:
     await emit_fn(
         {
             "type": "stage_start",

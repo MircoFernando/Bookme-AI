@@ -63,7 +63,7 @@ tavily:
   max_results: 5
   search_depth: basic
   include_answer: true
-  
+
 # ── MCP configuration ─────────────────────────────────────────────────────────
 mcp:
   # "stdio" launches each server as a subprocess (default, matches Week 13).
@@ -71,8 +71,8 @@ mcp:
 
 # ── Conversation memory (per-session, kills the global-history bug) ───────────
 session:
-  max_turns: 20           # rolling window kept per session_id
-  history_window: 3       # recent (user, assistant) pairs fed to the router
+  max_turns: 30           # rolling window kept per session_id
+  history_window: 10       # recent (user, assistant) pairs fed to the router
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 logging:

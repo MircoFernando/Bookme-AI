@@ -28,7 +28,8 @@ Optional:
 from __future__ import annotations
 
 import os
-from typing import Iterable, Optional
+from contextlib import asynccontextmanager
+from typing import AsyncIterator, Iterable, Optional
 
 from loguru import logger
 
@@ -62,9 +63,11 @@ def _langfuse_should_init() -> bool:
 try:
     from langfuse import observe as _lf_observe
     from langfuse import get_client as _get_lf_client
+    from langfuse import propagate_attributes as _propagate_attributes
 except Exception:
     _lf_observe = None
     _get_lf_client = None
+    _propagate_attributes = None
 
 
 _client = None
@@ -194,6 +197,45 @@ def prefetch_prompts(names: Iterable[str]) -> int:
     return warmed
 
 
+@asynccontextmanager
+async def langfuse_turn_attributes(
+    *,
+    user_id: Optional[str] = None,
+    session_id: Optional[str] = None,
+    metadata: Optional[dict] = None,
+    tags: Optional[list] = None,
+) -> AsyncIterator[None]:
+    """
+    Langfuse SDK v4: propagate user/session/tags to all child spans in a chat turn.
+
+    Wrap the body of ``run_chat_turn`` (inside ``@observe(name="chat_turn")``).
+    """
+    if (
+        not _tracing_enabled()
+        or _propagate_attributes is None
+        or _get_lf_client is None
+    ):
+        yield
+        return
+
+    prop_kwargs: dict = {}
+    if user_id:
+        prop_kwargs["user_id"] = user_id
+    if session_id:
+        prop_kwargs["session_id"] = session_id
+    if metadata:
+        prop_kwargs["metadata"] = metadata
+    if tags:
+        prop_kwargs["tags"] = tags
+
+    if not prop_kwargs:
+        yield
+        return
+
+    with _propagate_attributes(**prop_kwargs):
+        yield
+
+
 def update_current_trace(
     *,
     user_id: Optional[str] = None,
@@ -201,21 +243,24 @@ def update_current_trace(
     metadata: Optional[dict] = None,
     tags: Optional[list] = None,
 ) -> None:
-    """Tag the current trace with user/session info (no-op when tracing is off)."""
+    """
+    Enrich the active observation (Langfuse SDK v4).
+
+    ``user_id`` / ``session_id`` / initial ``tags`` should be set via
+    ``langfuse_turn_attributes`` for the whole turn so child spans inherit them.
+    This helper updates the current span metadata (and optional tags) mid-flight.
+    """
     if _get_lf_client is None or not _tracing_enabled():
         return
     try:
         client = _get_lf_client()
-        kwargs = {}
-        if user_id is not None:
-            kwargs["user_id"] = user_id
-        if session_id is not None:
-            kwargs["session_id"] = session_id
-        if metadata is not None:
-            kwargs["metadata"] = metadata
-        if tags is not None:
-            kwargs["tags"] = tags
-        client.update_current_trace(**kwargs)
+        span_meta: dict = {}
+        if metadata:
+            span_meta.update(metadata)
+        if tags:
+            span_meta["tags"] = tags
+        if span_meta:
+            client.update_current_span(metadata=span_meta)
     except Exception as exc:
         logger.debug("update_current_trace failed (non-critical): {}", exc)
 
@@ -261,6 +306,21 @@ def update_current_observation(
             client.update_current_span(**span)
     except Exception as exc:
         logger.debug("update_current_observation failed (non-critical): {}", exc)
+
+
+def get_current_trace_id() -> Optional[str]:
+    """OpenTelemetry / Langfuse trace id for the active context, if any."""
+    if _get_lf_client is None or not _tracing_enabled():
+        return None
+    try:
+        client = _get_lf_client()
+        fn = getattr(client, "get_current_trace_id", None)
+        if callable(fn):
+            tid = fn()
+            return str(tid) if tid else None
+    except Exception as exc:
+        logger.debug("get_current_trace_id failed (non-critical): {}", exc)
+    return None
 
 
 def flush() -> None:

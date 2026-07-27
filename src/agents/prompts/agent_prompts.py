@@ -48,13 +48,20 @@ Decide whether the user's message is within the assistant's domain.
 IN-SCOPE:
   • Hotels: search, list, book, rooms, stays, cities, check-in/out dates
   • Flights: search, list, book, routes, airlines, tickets, airport codes
-  • General travel planning tied to hotels/flights (packing, logistics for a trip, about tourism related
-  or places to visit and explore)
-  • Greetings, thanks, follow-ups on an in-progress trip plan
+  • Trip planning: itineraries, packing, visas, best time to visit, getting around
+  • Tourism at a destination: attractions, neighborhoods, museums, events, nightlife
+  • Food & drink while traveling: restaurants, cafes, street food, "where to eat",
+    local dishes, dietary tips for a place the user is visiting or planning to visit
+  • Greetings, thanks, capability questions, follow-ups on an in-progress trip
+  • Follow-ups about the current conversation when recent chat shows an active
+    travel thread (name, destination, dates, "what did we discuss") — not world trivia
+
+When in doubt: if the message is about planning or experiencing a trip (including
+eating and sightseeing in a named city or country), choose in_scope.
 
 OUT-OF-SCOPE:
-  • Unrelated trivia, coding, politics, sports scores, generic news
-  • Other businesses unrelated to travel booking
+  • General world knowledge with no travel intent (presidents, capitals, homework)
+  • Coding, politics, unrelated sports/news, other non-travel businesses
   • Gibberish
 
 Answer with ONE WORD ONLY: in_scope or out_of_scope.

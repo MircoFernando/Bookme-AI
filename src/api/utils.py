@@ -11,17 +11,9 @@ from api.schemas import ChatResponse, RouteLiteral, VerdictLiteral
 
 
 def current_trace_id() -> Optional[str]:
-    try:
-        from infrastructure.observability import get_langfuse
+    from infrastructure.observability import get_current_trace_id
 
-        client = get_langfuse()
-        if client is None:
-            return None
-        tracer = getattr(client, "tracer", None)
-        span = getattr(tracer, "current_span", None) if tracer else None
-        return getattr(span, "trace_id", None) if span else None
-    except Exception:
-        return None
+    return get_current_trace_id()
 
 
 def _normalize_route(

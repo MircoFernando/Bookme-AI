@@ -11,42 +11,13 @@ from typing import Any, Literal, Optional
 
 from loguru import logger
 
-from agents.prompts import get_out_of_scope_reply
+from agents.prompts import build_guardrail_system_prompt, get_out_of_scope_reply
 from infrastructure.llm import get_guardrail_llm
 from infrastructure.observability import observe, update_current_observation
 
 GuardrailVerdict = Literal["in_scope", "out_of_scope"]
 
 _default_guardrail: Optional["Guardrail"] = None
-
-
-_GUARDRAIL_SYSTEM = """\
-You are a scope filter for BookMe AI, a multi-agent travel planning assistant.
-
-Decide whether the user's message is within the assistant's domain.
-
-IN-SCOPE — the assistant should help with:
-  • Hotels: search, list, book, rooms, stays, cities, check-in/out dates
-  • Flights: search, list, book, routes, airlines, tickets, airport codes
-  • Trip planning tied to hotels or flights (itineraries, what to pack,
-    visa/logistics for a trip, best time to visit a destination)
-  • Weather or local info when clearly tied to planning a trip the user
-    is discussing (not standalone trivia)
-  • Greetings, thanks, small talk, follow-ups on an in-progress trip plan
-    (the router and agents handle these)
-
-OUT-OF-SCOPE — politely refuse:
-  • General world knowledge (presidents, capitals, sports, history,
-    celebrities, politics, science trivia)
-  • Coding help, math homework, jokes, riddles, role-play unrelated to travel
-  • Other businesses, products, or services unrelated to travel booking
-  • Generic news, stock prices, sports scores with no travel intent
-  • Gibberish or random non-questions
-  • Anything you cannot tie to hotels, flights, or travel planning
-
-Answer with ONE WORD ONLY: in_scope or out_of_scope.
-No explanation, no punctuation, no other tokens.
-"""
 
 
 # Few-shot examples baked into the user-prompt template — keeps small
@@ -57,8 +28,14 @@ Examples:
   USER: "Flights from Mumbai to Delhi tomorrow"     → in_scope
   USER: "Book hotel H-42 for Jane jane@example.com"  → in_scope
   USER: "What should I pack for Sri Lanka in monsoon?" → in_scope
+  USER: "Best food and restaurants in London?"        → in_scope
+  USER: "Where should I eat in Paris on a budget?"      → in_scope
+  USER: "Top things to do in Tokyo for 3 days"         → in_scope
+  USER: "Tourist attractions in England"               → in_scope
   USER: "Hey, I'm planning a trip"                  → in_scope
   USER: "Thanks, that helps"                         → in_scope
+  USER: "What is my name?" (recent chat: user said they are Mirco, planning London) → in_scope
+  USER: "What destination were we talking about?" (recent chat mentions London trip) → in_scope
   USER: "Who is the president of the USA?"           → out_of_scope
   USER: "What's the capital of France?"             → out_of_scope
   USER: "Write me a Python function"                → out_of_scope
@@ -66,9 +43,20 @@ Examples:
   USER: "asdfghjkl"                                 → out_of_scope
 """
 
+_MEMORY_CONTEXT_MAX = 2000
 
-def _build_user_prompt(message: str) -> str:
-    return f"{_GUARDRAIL_EXAMPLES}\n\nUSER: \"{(message or '').strip()}\"\n→"
+
+def _build_user_prompt(message: str, memory_context: str = "") -> str:
+    parts = [_GUARDRAIL_EXAMPLES]
+    ctx = (memory_context or "").strip()
+    if ctx:
+        if len(ctx) > _MEMORY_CONTEXT_MAX:
+            ctx = "…" + ctx[-_MEMORY_CONTEXT_MAX:]
+        parts.append("\nRecent conversation (use for follow-up scope only):\n")
+        parts.append(ctx)
+        parts.append("\n")
+    parts.append(f'USER: "{(message or "").strip()}"\n→')
+    return "".join(parts)
 
 
 class Guardrail:
@@ -78,15 +66,26 @@ class Guardrail:
         self.llm = llm
 
     @observe(name="guardrail", as_type="generation")
-    async def aclassify(self, message: str) -> GuardrailVerdict:
+    async def aclassify(
+        self,
+        message: str,
+        memory_context: str = "",
+    ) -> GuardrailVerdict:
         """Classify *message* as ``in_scope`` or ``out_of_scope``.
+
+        *memory_context* is the same short-term thread the router sees so
+        follow-ups ("what is my name?", "what city did I mention?") stay
+        in scope during an active travel conversation.
 
         Fails open: any LLM error returns ``in_scope`` so transient
         provider issues don't lock real users out of the assistant.
         """
         msgs = [
-            {"role": "system", "content": _GUARDRAIL_SYSTEM},
-            {"role": "user", "content": _build_user_prompt(message)},
+            {"role": "system", "content": build_guardrail_system_prompt()},
+            {
+                "role": "user",
+                "content": _build_user_prompt(message, memory_context),
+            },
         ]
         try:
             response = await self.llm.ainvoke(msgs)

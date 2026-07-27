@@ -23,14 +23,19 @@ BookMe AI uses **two logical stages**, not two interchangeable “routers”:
 User message
      │
      ▼
+chat_pipeline.run_chat_turn  (loads SessionStore → router_context)
+     │
+     ▼
 DecisionState  ── decision_graph (guardrail ∥ router → decide)
      │
      ▼
 decision_bridge.map_decision_to_agent_state()
      │
      ▼
-AgentState  ── orchestrator (Phase 5) → MCP → final_answer
+AgentState  ── orchestrator (MCP agents) → final_answer
 ```
+
+**Phase 6 API:** `src/api/routers/chat.py` calls `run_chat_turn`; SSE emits decision/orchestrator stages via `emit` in `RunnableConfig`.
 
 ---
 
@@ -61,10 +66,14 @@ START
   ├── router      (QueryRouter.aroute → MultiRouteDecision)
           │ fan-in (LangGraph waits for ALL incoming edges)
           ▼
-      decide        (verdict from guardrail only; final_answer if OOS)
+      decide        (guardrail OOS unless router chose hotel|flight|web_search; else proceed)
           ▼
          END
 ```
+
+**Guardrail inputs:** latest `message` + **`router_context`** (formatted `SessionStore` history, same as router).
+
+**Routes:** `hotel`, `flight`, `general_qa`, **`web_search`** (Tavily via MCP).
 
 **Files:**
 
@@ -245,36 +254,54 @@ Verified in Week 13:
 
 ---
 
-## 10. Phase 4 status & acceptance
+## 10. Phase 4–6 status & acceptance
 
-**Deliverables:**
+**Phase 4 — decision graph ✅**
 
-- `guardrail.py`, `router.py`, `decision_state.py`, `decision_graph.py`, `decision_bridge.py`
-- `scripts/test_decision_graph.py` — `make test-decision` (requires `OPENAI_API_KEY`)
+- Deliverables: `guardrail.py`, `router.py`, `decision_state.py`, `decision_graph.py`, `decision_bridge.py`
+- `make test-decision`
 
 **Acceptance:**
 
-1. “What is the capital of France?” → `verdict=out_of_scope`, `final_answer` set
-2. “Hotels in X and flight A→B” → `verdict=proceed`, ≥2 routes (`hotel`, `flight`)
+1. Off-topic → `verdict=out_of_scope`
+2. Hotel + flight in one message → `proceed`, ≥2 routes
+3. Tourism / food in a destination → router `web_search`; guardrail should not block when router selects a tool route (see `decide_node` override)
 
-**Remaining after Phase 4:**
+**Phase 5 — orchestrator ✅**
 
-- Phase 5: `orchestrator.py`, hotel/flight/general_qa agents, MCP adapters, merge
-- Phase 6: FastAPI chat (mirror Week 13: await graph, OOS return, parallel session recall + cancel on OOS)
+- `orchestrator.py`, `build_agent_mcp()`, four agent nodes + merge
+- `make test-orchestrator`, `make test-orchestrator-web-search`
+
+**Phase 6 — API 🔄**
+
+- `src/api/*`, `chat_pipeline.py`, `make run-api`
+- Remaining: production Clerk-only auth; optional HTTP tests
+
+**Session memory (not LangGraph checkpointer):**
+
+- `SessionStore` keyed by `(user_id, session_id)`
+- `session.history_window` in `params.yaml` = how many **(user, assistant) pairs** are injected as `router_context` each turn
+- `session.max_turns` = rolling storage cap (in-memory; lost on API restart)
 
 ---
 
-## 11. Repository map (Phase 4 agents)
+## 11. Repository map (agents + API)
 
 ```text
 src/agents/
+  chat_pipeline.py     run_chat_turn
   decision_state.py    DecisionState
   decision_graph.py    LangGraph compile + nodes
   decision_bridge.py   map_decision_to_agent_state()
   guardrail.py
-  router.py            QueryRouter + optional router_node(AgentState)
-  state.py             AgentState (orchestrator)
+  router.py            QueryRouter
+  orchestrator.py
+  state.py             AgentState
   prompts/agent_prompts.py
+src/api/
+  main.py, routers/chat.py, ...
+src/infrastructure/
+  session_store.py, observability.py
 ```
 
 ---
@@ -285,4 +312,4 @@ src/agents/
 
 ---
 
-*Last updated: 2026-07-26 — synced with implementation on branch feat/decision-graph / MCP work.*
+*Last updated: 2026-07-27 — Phases 4–5 complete; Phase 6 API + web_search + SessionStore documented.*
