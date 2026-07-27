@@ -21,7 +21,7 @@ pip install -r requirements.txt
 cp .env.example .env        # fill keys
 ```
 
-See `.env.example` for `AUTH_DISABLED`, Clerk, and LangFuse toggles.
+See `.env.example` and [docs/CLERK_SETUP.md](docs/CLERK_SETUP.md) for `AUTH_DISABLED`, Clerk, and LangFuse toggles.
 
 ## Run the API (recommended)
 
@@ -33,6 +33,16 @@ make run-api
 - Docs: http://127.0.0.1:8000/docs  
 
 Local dev uses **`AUTH_DISABLED=1`** by default; send `user_id` in the JSON body or set `DEV_USER_ID`.
+
+### React UI (recommended)
+
+```bash
+cd frontend && cp .env.example .env && npm install
+make run-api   # terminal 1
+make run-ui    # terminal 2 → http://127.0.0.1:5173
+```
+
+With **`VITE_AUTH_DISABLED=false`** (default in `frontend/.env.example`), sign in with Clerk. Run `make check-clerk` after setting API keys.
 
 ### Chat (non-streaming)
 

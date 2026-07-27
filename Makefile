@@ -9,7 +9,7 @@ PYTHON ?= .venv/bin/python
 UVICORN ?= .venv/bin/uvicorn
 PY := PYTHONPATH=src $(PYTHON)
 
-.PHONY: help install config check-config run-api run-ui \
+.PHONY: help install config check-config check-clerk run-api run-ui \
         inspect-hotel inspect-flight inspect-web-search test-mcp test-decision test-orchestrator test-orchestrator-web-search test-session-store test-chat-pipeline \
         seed-langfuse test clean
 
@@ -20,8 +20,9 @@ help:
 	@echo "  make install        Install Python dependencies"
 	@echo "  make config         Print active (non-secret) configuration"
 	@echo "  make check-config   Validate OPENAI + GOOGLE keys for configured roles"
+	@echo "  make check-clerk   Validate Clerk env when AUTH_DISABLED=0"
 	@echo "  make run-api        Run the FastAPI backend        (Day 5)"
-	@echo "  make run-ui         Run the Gradio frontend         (Day 6)"
+	@echo "  make run-ui         Run the React frontend (frontend/)"
 	@echo "  make inspect-hotel  Open MCP Inspector on hotel server"
 	@echo "  make inspect-flight Open MCP Inspector on flight server"
 	@echo "  make inspect-web-search Open MCP Inspector on web search server"
@@ -46,12 +47,15 @@ config:
 check-config:
 	@$(PY) -c "from infrastructure import config; config.validate(); print('Config OK — provider:', config.PROVIDER, '| chat model:', config.CHAT_MODEL)"
 
+check-clerk:
+	@PYTHONPATH=src $(PYTHON) scripts/check_clerk_env.py
+
 # ── Run (wired on later days) ────────────────────────────────────────────────────
 run-api:
 	cd src && PYTHONPATH=. ../$(UVICORN) api.main:app --reload --host 0.0.0.0 --port 8000
 
 run-ui:
-	$(PY) frontend/app.py
+	cd frontend && npm run dev
 
 # ── MCP inspection (Day 2) ────────────────────────────────────────────────────────
 inspect-hotel:
