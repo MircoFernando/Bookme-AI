@@ -16,9 +16,9 @@ BookMe uses **stateless JWT verification** on the API — no webhooks and no use
    - **Publishable key** → `VITE_CLERK_PUBLISHABLE_KEY` (frontend)
    - **Secret key** → `CLERK_SECRET_KEY` (API only; never in the frontend)
 3. **Configure → Paths / URLs** (names vary by Clerk version):
-   - Sign-in URL: `http://localhost:5173`
-   - After sign-in: `http://localhost:5173`
+   - Sign-in / after sign-in: `http://localhost:5173/` (landing page)
    - Allowed redirect / origin for dev: `http://localhost:5173`, `http://127.0.0.1:5173`
+   - The React app forces post-auth redirect to `/` (landing). Chat lives at `/app`.
 4. **User & authentication** — enable at least one method (Email, Google, etc.).
 
 ## 2. Environment

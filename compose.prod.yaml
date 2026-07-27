@@ -1,0 +1,31 @@
+# Production pull-only compose (booking-platform-api pattern).
+# On a host: set DOCKER_REGISTRY_USER + .env, then:
+#   docker compose -f compose.prod.yaml pull
+#   docker compose -f compose.prod.yaml up -d
+
+services:
+  api:
+    image: ${DOCKER_REGISTRY_USER}/bookme-ai-api:latest
+    container_name: bookme-ai-api
+    restart: always
+    init: true
+    env_file:
+      - .env
+    ports:
+      - "${API_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+
+  web:
+    image: ${DOCKER_REGISTRY_USER}/bookme-ai-web:latest
+    container_name: bookme-ai-web
+    restart: always
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      api:
+        condition: service_healthy

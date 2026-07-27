@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-/** BookMe travel UI — warm amber accent on dark slate (Week 13 layout). */
+/** BookMe landing + chat — indigo / cobalt on deep ink. */
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   darkMode: "class",
@@ -8,21 +8,21 @@ export default {
     extend: {
       colors: {
         bg: {
-          DEFAULT: "#0c0f14",
-          soft: "#121820",
-          card: "#171e28",
+          DEFAULT: "#050816",
+          soft: "#0a1024",
+          card: "#10182e",
         },
         border: {
-          DEFAULT: "#243044",
-          strong: "#334155",
+          DEFAULT: "#1e2a45",
+          strong: "#2d3b5c",
         },
         brand: {
-          DEFAULT: "#f59e0b",
-          50: "#fffbeb",
-          100: "#fef3c7",
-          400: "#fbbf24",
-          500: "#f59e0b",
-          600: "#d97706",
+          DEFAULT: "#6366f1",
+          50: "#eef2ff",
+          100: "#e0e7ff",
+          400: "#818cf8",
+          500: "#6366f1",
+          600: "#4f46e5",
         },
         success: "#10b981",
         warn: "#f59e0b",
@@ -30,9 +30,14 @@ export default {
       },
       fontFamily: {
         sans: [
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Inter",
+          '"DM Sans"',
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
+        display: [
+          "Syne",
+          '"DM Sans"',
           "ui-sans-serif",
           "system-ui",
           "sans-serif",

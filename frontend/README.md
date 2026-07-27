@@ -36,9 +36,10 @@ Open http://127.0.0.1:5173 — Vite proxies `/api/*` to `VITE_API_URL` (default 
 
 See [docs/CLERK_SETUP.md](../docs/CLERK_SETUP.md) for Dashboard steps and deploy URLs.
 
-## Structure (from Week 13 `ui/`)
+## Structure
 
+- `/` — marketing landing (Clerk Sign in / Get started → redirect back to `/`)
+- `/app` — chat assistant (requires sign-in when Clerk is enabled)
 - `src/api/client.ts` — `/chat`, `/chat/stream`, health
 - `src/hooks/useChatStream.ts` — SSE chain-of-thought
 - `src/hooks/useSessions.ts` — localStorage threads (no DB)
-- Same layout: header, sidebar, chat window, status bar

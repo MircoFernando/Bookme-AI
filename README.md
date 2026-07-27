@@ -291,6 +291,18 @@ npm install
 make run-ui    # Navigates to http://127.0.0.1:5173
 ```
 
+### 5. Docker (API + nginx UI)
+
+Copy `.env` to the project root with your API keys. For Clerk in the web image, set `VITE_CLERK_PUBLISHABLE_KEY` in `.env` (same file used by `docker compose` build args).
+
+```bash
+export DOCKER_REGISTRY_USER=your_dockerhub_username   # optional; defaults to bookme/*:local
+make docker-up       # UI at http://localhost:8080, API at :8000
+make docker-push     # after docker-up/build; pushes :latest to Docker Hub
+```
+
+Images: `docker/api/Dockerfile`, `docker/web/Dockerfile` (Week 13 multi-stage pattern). Production pull-only host file: `compose.prod.yaml`.
+
 ---
 
 ## ☁️ AWS Deployment
@@ -302,8 +314,9 @@ Deployment instructions for AWS (ECS Fargate / API Gateway) will be added in Pha
 
 ## 🔄 CI/CD Pipeline
 
-*This feature is currently **Under Development**.*
-Automated testing and container deployment pipelines will be detailed upon completion of Docker integration.
+On push to `main`, `.github/workflows/docker-publish.yml` builds and pushes `bookme-ai-api` and `bookme-ai-web` to Docker Hub (GHA cache + `:latest` and `:${{ github.sha }}` tags). Repository secrets: `DOCKER_USERNAME`, `DOCKER_TOKEN`, `VITE_CLERK_PUBLISHABLE_KEY`. Optional variable: `VITE_AUTH_DISABLED`.
+
+Remote deploy (SSH + `compose.prod.yaml` pull) follows the same pattern as the booking-platform-api project; wire that when you pick a host (Droplet, ECS, etc.).
 
 ---
 

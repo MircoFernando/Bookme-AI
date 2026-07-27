@@ -1,0 +1,57 @@
+# =============================================================================
+# BookMe AI — local / single-host deployment (Week 13 layout)
+#
+#   api   FastAPI + MCP stdio servers              :8000
+#   web   nginx + React SPA + /api reverse proxy    :8080 → 80
+#
+# External: Convex travel APIs, OpenAI, Tavily, Clerk, Langfuse — via .env
+#
+# Usage:
+#   export DOCKER_REGISTRY_USER=your_dockerhub_username   # optional tag prefix
+#   docker compose up --build
+#   open http://localhost:8080
+# =============================================================================
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+    image: ${DOCKER_REGISTRY_USER:-bookme}/bookme-ai-api:local
+    container_name: bookme-ai-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      # Same-origin UI via nginx — allow browser origin for Clerk / CORS if needed
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080}
+      CLERK_AUTHORIZED_PARTIES: ${CLERK_AUTHORIZED_PARTIES:-http://localhost:8080,http://127.0.0.1:8080}
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
+      args:
+        VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY:-}
+        VITE_AUTH_DISABLED: ${VITE_AUTH_DISABLED:-false}
+    image: ${DOCKER_REGISTRY_USER:-bookme}/bookme-ai-web:local
+    container_name: bookme-ai-web
+    ports:
+      - "8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/healthz"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
