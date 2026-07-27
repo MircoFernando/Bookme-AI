@@ -4,7 +4,7 @@
 **Baseline:** FastAPI + LangGraph + Gradio chat with hardcoded Convex HTTP tools  
 **Target architecture:** Week 13 (Nawaloka) reference project — `src/` layout, MCP stdio servers, intent-routed orchestrator, streaming API, deployment  
 
-**Last updated:** 2026-07-27  
+**Last updated:** 2026-07-28  
 
 ---
 
@@ -31,10 +31,11 @@ Phase 3  MCP servers + client config                 ✅
 Phase 3b Web search (Tavily) tool + MCP server         ✅
 Phase 4  Guardrail + router + decision graph         ✅
 Phase 5  Orchestrator (fan-out, merge, MCP adapters) ✅
-Phase 6  FastAPI backend (streaming, sessions)       🔄
+Phase 6  FastAPI backend (streaming, sessions)       ✅
 Phase 7  Frontend (Clerk web app + chat UX)          🔄
-Phase 8  Deployment & documentation                  ⏳
-Phase 9  Stretch (LT memory, CI/Docker)              ⏳
+Phase 8  Deployment & documentation                  🔄
+Phase 9  Stretch (LT memory, CI/Docker, cards)       🔄
+Phase 10 Final delivery — polish, deploy, articles   ⏳
 ```
 
 ---
@@ -229,11 +230,11 @@ Phase 9  Stretch (LT memory, CI/Docker)              ⏳
 
 ---
 
-## Phase 6 — FastAPI backend 🔄
+## Phase 6 — FastAPI backend ✅
 
 **Goal:** Async API, SSE streaming, session identity, LangFuse warmup.
 
-**Completed:**
+**Deliverables:**
 
 | Area | Files |
 |------|--------|
@@ -241,17 +242,20 @@ Phase 9  Stretch (LT memory, CI/Docker)              ⏳
 | Chat | `src/api/routers/chat.py` — `POST /chat`, `POST /chat/stream`, `POST /chat/reset` |
 | Health | `src/api/routers/health.py` — `/health`, `/ready`, `/config` |
 | Schemas / labels | `schemas.py`, `event_labels.py`, `utils.chat_result_to_response` |
-| Auth (dev) | `deps.py` — `AUTH_DISABLED=1` + `DEV_USER_ID`; Clerk path when disabled flag off |
-| Observability | LangFuse SDK **v4**: `langfuse_turn_attributes` + `update_current_span` (no `update_current_trace`) |
+| Auth | `deps.py` — `AUTH_DISABLED=1` + `DEV_USER_ID` for local; Clerk JWT when `AUTH_DISABLED=0` |
+| Observability | LangFuse SDK **v4**: `langfuse_turn_attributes` + `update_current_span` |
+| Pipeline | `agents/chat_pipeline.py` — decision graph → orchestrator; SSE `emit` for stages/tools |
 
-**Remaining for Phase 6 “done”:**
+**SSE behaviour (assessment note):** `/chat/stream` emits **stage/tool progress** then a **`final`** event with the full answer. LLM **token-by-token** streaming is not implemented yet (optional polish in Phase 10).
 
-- Production **Clerk** enabled (`AUTH_DISABLED=0`, `clerk-backend-api`)
-- Optional: pytest for HTTP layer; log `memory_context` on trace metadata for debugging
+**Production hardening (defer to Phase 8/10):**
+
+- Clerk enabled end-to-end on deployed URLs (`CLERK_AUTHORIZED_PARTIES`, `CORS_ORIGINS`)
+- Optional: pytest for HTTP layer; redact generic 500 messages in stream errors
 
 **Run:** `make run-api` (uses `.venv/bin/uvicorn`).
 
-**Session memory:** `config/params.yaml` → `session.max_turns` (storage cap), `session.history_window` (pairs injected into prompts each turn). In-memory only until Phase 9 Redis/LT memory.
+**Session memory:** `config/params.yaml` → `session.max_turns`, `session.history_window`. In-memory until Phase 9 Redis/LT memory.
 
 ---
 
@@ -271,36 +275,147 @@ Phase 9  Stretch (LT memory, CI/Docker)              ⏳
 
 **Run:** `make run-ui` (port 5173, proxies `/api` → backend).
 
+**Remaining (Phase 7 → folded into Phase 10 UI polish):**
+
+- Production Clerk smoke test against live API
+- Optional: hotel/flight **result cards** (stretch)
+- Optional: LLM token streaming on final answer (SRS wording)
+- Legacy **`frontend.py` (Gradio)** — minimal blocking client; **not** the submitted UI (`frontend/` React app). Upgrade or document as deprecated in README.
+
+---
+
+## Phase 8 — Deployment & documentation 🔄
+
+**Goal:** Public backend + frontend URLs; README, MCP guide, env handling; assessment submission links.
+
+**Completed / in repo:**
+
+| Area | Location |
+|------|----------|
+| API Docker image | `docker/api/Dockerfile` |
+| Prod compose (API only) | `compose.prod.api.yaml` — pull `bookme-ai-api:latest`, bind `127.0.0.1:8000` |
+| Local compose | `docker-compose.yml` |
+| CI deploy | `.github/workflows/docker-publish.yml` — build/push Hub → SSH deploy to droplet |
+| DO runbooks | [DEPLOY_DO_API.md](./DEPLOY_DO_API.md), [DEPLOY_DO_VERCEL.md](./DEPLOY_DO_VERCEL.md) |
+
+**Target topology (single droplet):**
+
+- **One DigitalOcean droplet** runs BookMe API via Docker Compose (same pattern as booking-platform-api on the same VM if desired).
+- **Caddy** (or existing reverse proxy) terminates HTTPS → `127.0.0.1:8000`.
+- **Frontend** on **Vercel** (separate host); `VITE_API_URL` points at the droplet HTTPS URL.
+- MCP stdio servers spawn **inside** the API container/process at lifespan — no separate MCP VM required.
+
 **Remaining:**
 
-- Production Clerk + deployed URLs in `CLERK_AUTHORIZED_PARTIES` / `CORS_ORIGINS`
-- Optional: restore Week 13 tool explorer against BookMe debug routes
+- [ ] Droplet `.env` populated (secrets only on server); first successful `docker compose -f compose.prod.api.yaml pull && up -d`
+- [ ] `/ready` returns MCP tools OK from production
+- [ ] Vercel project wired; CORS + Clerk authorized parties include production origins
+- [ ] **Live URLs** at top of root `README.md` (API + UI) for submission
+- [ ] `docs/MCP_SETUP.md` — Inspector, `make test-mcp`, stdio architecture, env vars
+- [ ] Short **user guide** (screenshots): chat, chain-of-thought, book flow, service-unavailable message
+- [ ] Fix or add missing [DEPLOY_RENDER_VERCEL.md](./DEPLOY_RENDER_VERCEL.md) (linked from README) or remove broken link
+- [ ] README banner: **`make run-api` / `src/api`** = production; root `main.py` = legacy baseline
 
 ---
 
-## Phase 8 — Deployment & documentation ⏳
+## Phase 9 — Stretch (optional, for top marks) 🔄
 
-**Goal:** Public backend + frontend URLs; README, MCP guide, env handling.
-
-**Planned:**
-
-- Docker / compose (stretch but recommended)
-- Deploy API (Render/Fly/Railway/HF Docker Space) + frontend (Vercel/HF)
-- `docs/MCP_SETUP.md` (Inspector, `make test-mcp`, architecture diagram)
-- Updated root `README.md` — setup, env, links to deployed apps
-- PR history visible on GitHub (incremental phases)
+| Item | Status | Notes |
+|------|--------|--------|
+| LangFuse tracing enabled | 🔄 | Plumbing done; capture viva screenshots when enabled |
+| Combined itinerary / merge | ✅ | Multi-route + merge LLM |
+| Web search MCP | ✅ | Phase 3b |
+| Memory / context | ✅ | `SessionStore` + prompt `memory_context` |
+| Docker + CI | ✅ | `docker-publish.yml`, prod compose |
+| Persistent memory (Redis/LT) | ⏳ | Phase 9+ if time |
+| Result cards in UI | ⏳ | Structured hotel/flight presentation |
+| pytest on push | ⏳ | HTTP/agent smoke in CI |
 
 ---
 
-## Phase 9 — Stretch (optional, for top marks) ⏳
+## Phase 10 — Final delivery sequence ⏳
 
-| Item | Notes |
+Ordered work to close the assessment and portfolio. Do these **in sequence** so deploy and docs reflect a stable codebase.
+
+### Step 1 — Polish the codebase
+
+**Goal:** One clear production path; no confusion at viva.
+
+| Task | Detail |
 |------|--------|
-| LangFuse tracing enabled | Screenshots of guardrail → router → tool spans |
-| Combined itinerary node | Richer multi-step hotel+flight plan |
-| Persistent memory | Redis ST and/or semantic LT by `user_id` |
-| Docker + CI | Reproducible builds, pytest on push |
-| Result cards in UI | Structured hotel/flight presentation |
+| Legacy boundary | Document root `main.py`, `agents/*`, `frontend.py` as **starter only**; never wire new features there |
+| MCP path | Confirm production always uses `build_agent_mcp()` in `src/api/main.py` |
+| Error surfaces | Ensure stream `{type: "error"}` and tool JSON errors become user-readable assistant text |
+| Scripts | All `make test-*` green before deploy |
+| Optional cleanup | Trim dead imports, align `.env.example` with droplet `.env` template in DEPLOY_DO_API |
+
+**Exit criteria:** Reviewer can clone → `make run-api` + `make run-ui` → successful hotel search without reading legacy tree.
+
+---
+
+### Step 2 — Deploy backend on a single droplet
+
+**Goal:** Public HTTPS API (assessment: hosted backend, MCP reachable at runtime).
+
+| Task | Detail |
+|------|--------|
+| Secrets | GitHub Actions: `DOCKER_*`, `DROPLET_HOST`, `SSH_PRIVATE_KEY` |
+| Server | `~/bookme-ai`, `compose.prod.api.yaml`, server-side `.env` |
+| Proxy | Caddy site block → API; TLS (custom domain or sslip.io per [DEPLOY_DO_API.md](./DEPLOY_DO_API.md)) |
+| Verify | `curl https://<api>/health`, `curl https://<api>/ready`, one `POST /chat` from local |
+| CI | Push to `main` triggers image publish + deploy |
+
+**Exit criteria:** `/ready` OK; chat works with production keys; no localhost-only backend for submission.
+
+---
+
+### Step 3 — Polish the UI
+
+**Goal:** Assessment FE core on the **React** app (`frontend/`).
+
+| Task | Detail |
+|------|--------|
+| Deploy | Vercel production; env: Clerk keys, `VITE_API_URL` → droplet API |
+| UX | Travel theme, mobile layout, chain-of-thought + loading states |
+| Errors | Friendly copy for 503/MCP/auth (already in `useChatStream`; verify against live API) |
+| Optional | Result cards, copy-plan button, quick replies |
+| Gradio | Either enhance `frontend.py` for course Gradio requirement **or** state in README that React is the submitted chat UI |
+
+**Exit criteria:** Shareable frontend URL; signed-in (or dev-bypass) stream chat against production API.
+
+---
+
+### Step 4 — Polish documentation
+
+**Goal:** Setup, MCP, deploy, and user paths are submission-ready.
+
+| Deliverable | Content |
+|-------------|---------|
+| Root `README.md` | Live links, quick start, architecture, assessment mapping |
+| `docs/MCP_SETUP.md` | Servers, tools, `make test-mcp`, Inspector, troubleshooting |
+| Deploy docs | DO droplet + Vercel cross-links; env tables |
+| User guide | `docs/USER_GUIDE.md` or README section with screenshots |
+| Roadmap | This file — phases marked ✅ when each step completes |
+
+**Exit criteria:** New developer can run MCP smoke test and find deployed apps without asking.
+
+---
+
+### Step 5 — Write articles about the project
+
+**Goal:** Public narrative for portfolio and viva prep (architecture decisions in prose).
+
+**Suggested topics (pick 2–4):**
+
+1. **MCP as the travel tool boundary** — stdio servers, adapters, swapping Convex without touching orchestrator nodes  
+2. **Two-graph design** — parallel guardrail/router decision graph vs orchestrator fan-out  
+3. **SSE chain-of-thought** — stage/tool events vs full answer; UX tradeoffs  
+4. **Deploying LangGraph + MCP on one droplet** — Docker, lifespan MCP spawn, Caddy  
+5. **From linear baseline to intent-routed agents** — what changed in BookMe AI vs starter repo  
+
+**Formats:** Dev.to / Medium / LinkedIn article, or repo `docs/articles/` as Markdown (link from README).
+
+**Exit criteria:** At least one published or repo-hosted article with diagrams and links to live demo + GitHub.
 
 ---
 
@@ -347,6 +462,10 @@ config/
 docs/
   DEVELOPMENT_ROADMAP.md
   DECISION_GRAPH_NOTES.md
+  DEPLOY_DO_API.md
+  DEPLOY_DO_VERCEL.md
+  MCP_SETUP.md          (Phase 8 — to add)
+  USER_GUIDE.md         (Phase 10 — optional)
 ```
 
 **Legacy (root):** `main.py`, `frontend.py`, `agents/*` — starter demo only.
@@ -376,8 +495,12 @@ make test-orchestrator-web-search
 make test-session-store
 make test-chat-pipeline
 
-# API
+# API + UI
 make run-api
+make run-ui
+
+# Deploy (see DEPLOY_DO_API.md)
+# GitHub Actions → Docker Hub → droplet compose.prod.api.yaml
 ```
 
 ---
@@ -386,17 +509,21 @@ make run-api
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| E1 MCP servers | 2–3b, wired in 5 | ✅ |
+| E1 MCP servers | 2–3b, wired in 5–6 | ✅ |
 | E2 Intent routing | 4–5 | ✅ |
 | E3 Graceful failures | 2–3 (tools), 5 (agents) | ✅ |
-| FE streaming + activity | 6 (API SSE), 7 (UI) | 🔄 API ✅; UI ⏳ |
-| Deploy + docs | 8 | ⏳ |
-| Git branches / PRs | Ongoing | ✅ #1 merged; feature work on branch |
+| FE streaming + activity | 6 (API SSE), 7 (UI) | 🔄 SSE stages + CoT UI ✅; token stream optional |
+| FE Gradio (SRS literal) | 0 baseline `frontend.py` | ⚠️ React is primary; Gradio minimal |
+| Deploy + docs | 8, 10 | 🔄 Docker/CI ✅; live URLs + MCP guide ⏳ |
+| Git branches / PRs | Ongoing | ✅ incremental history |
+| Stretch (memory, Docker, observability) | 9 | 🔄 largely done |
 
 ---
 
 ## Next recommended step
 
-**Phase 7 finish** — Clerk production keys, smoke-test `VITE_AUTH_DISABLED=false` against API with `AUTH_DISABLED=0`.
+Start **Phase 10, Step 1** (codebase polish), then **Step 2** (single-droplet backend deploy per [DEPLOY_DO_API.md](./DEPLOY_DO_API.md)).
 
-Then **Phase 8** — deploy API + UI, `docs/MCP_SETUP.md`, refresh deployment URLs in README.
+After API is live: **Step 3** (UI on Vercel) → **Step 4** (docs + MCP_SETUP + submission URLs) → **Step 5** (articles).
+
+Track completion by checking boxes in Phase 8 and Phase 10 sections above.
