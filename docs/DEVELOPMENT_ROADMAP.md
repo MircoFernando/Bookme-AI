@@ -32,7 +32,7 @@ Phase 3b Web search (Tavily) tool + MCP server         ✅
 Phase 4  Guardrail + router + decision graph         ✅
 Phase 5  Orchestrator (fan-out, merge, MCP adapters) ✅
 Phase 6  FastAPI backend (streaming, sessions)       🔄
-Phase 7  Frontend (Clerk web app + chat UX)          ⏳
+Phase 7  Frontend (Clerk web app + chat UX)          🔄
 Phase 8  Deployment & documentation                  ⏳
 Phase 9  Stretch (LT memory, CI/Docker)              ⏳
 ```
@@ -255,18 +255,26 @@ Phase 9  Stretch (LT memory, CI/Docker)              ⏳
 
 ---
 
-## Phase 7 — Frontend (Clerk web app + chat) ⏳
+## Phase 7 — Frontend (Clerk web app + chat) 🔄
 
 **Goal:** Sign-in required; streaming chat; travel-themed UX (assessment FE core).
 
-**Planned:**
+**Completed:**
 
-- Web app (not only Gradio) with Clerk session; attach Bearer token to API
-- Consume `/chat/stream` — tokens + activity stages
-- Stable `session_id` per thread (server-created or client UUID registered on first message)
-- Friendly errors when MCP/Convex fails (no stack traces)
+| Area | Location |
+|------|----------|
+| Week 13 UI port | `frontend/` — Vite + React + Tailwind (from `Week 13/ui/`) |
+| SSE chat | `useChatStream` → `POST /chat/stream` + chain-of-thought |
+| Sessions | `useSessions` — localStorage threads + API `(user_id, session_id)` memory |
+| Clerk | `@clerk/clerk-react`; Bearer via `getToken()` when `VITE_AUTH_DISABLED=false` |
+| Dev bypass | `VITE_AUTH_DISABLED=true` + API `AUTH_DISABLED=1` |
 
-**Decision:** Gradio may remain for quick demos; **primary submission UI** = Clerk web app aligned with your product plan.
+**Run:** `make run-ui` (port 5173, proxies `/api` → backend).
+
+**Remaining:**
+
+- Production Clerk + deployed URLs in `CLERK_AUTHORIZED_PARTIES` / `CORS_ORIGINS`
+- Optional: restore Week 13 tool explorer against BookMe debug routes
 
 ---
 
@@ -389,6 +397,6 @@ make run-api
 
 ## Next recommended step
 
-**Phase 7** — Clerk web app consuming `POST /chat/stream`, stable `session_id` per thread.
+**Phase 7 finish** — Clerk production keys, smoke-test `VITE_AUTH_DISABLED=false` against API with `AUTH_DISABLED=0`.
 
 Then **Phase 8** — deploy API + UI, `docs/MCP_SETUP.md`, refresh deployment URLs in README.

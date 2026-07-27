@@ -53,7 +53,14 @@ async def lifespan(app: FastAPI):
     if not is_auth_disabled() and not (os.getenv("CLERK_SECRET_KEY") or "").strip():
         raise RuntimeError(
             "CLERK_SECRET_KEY is required when AUTH_DISABLED is not set. "
-            "For local dev, set AUTH_DISABLED=1 in .env."
+            "For local dev, set AUTH_DISABLED=1 in .env. See docs/CLERK_SETUP.md."
+        )
+    if not is_auth_disabled() and not (
+        os.getenv("CLERK_AUTHORIZED_PARTIES") or ""
+    ).strip():
+        logger.warning(
+            "CLERK_AUTHORIZED_PARTIES is empty — set frontend origins (e.g. "
+            "http://localhost:5173). See docs/CLERK_SETUP.md."
         )
 
     await asyncio.to_thread(config.validate)
