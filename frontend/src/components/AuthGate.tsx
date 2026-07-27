@@ -7,8 +7,7 @@ interface DevGateProps {
 }
 
 /**
- * Identity gate — same layout as Week 13 PatientGate, Clerk SignIn in prod,
- * one-click dev continue when `VITE_AUTH_DISABLED=true`.
+ * Sign-in gate — BookMe branding; Clerk in prod, dev continue when auth disabled.
  */
 export function AuthGate({ onContinue }: DevGateProps) {
   const devMode = isApiAuthDisabled();
@@ -20,7 +19,9 @@ export function AuthGate({ onContinue }: DevGateProps) {
           <div className="mx-auto size-14 rounded-2xl bg-brand-500/15 border border-brand-500/40 flex items-center justify-center mb-3">
             <Plane size={26} className="text-brand-400" />
           </div>
-          <h1 className="text-xl font-semibold text-slate-100">BookMe AI</h1>
+          <h1 className="text-xl font-semibold text-slate-100 tracking-tight">
+            BookMe<span className="text-brand-400"> AI</span>
+          </h1>
           <p className="text-sm text-slate-400 mt-1">
             Flights, hotels, and travel planning — sign in to continue.
           </p>

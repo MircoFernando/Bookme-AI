@@ -10,6 +10,7 @@ UVICORN ?= .venv/bin/uvicorn
 PY := PYTHONPATH=src $(PYTHON)
 
 .PHONY: help install config check-config check-clerk run-api run-ui \
+        docker-build docker-up docker-down docker-push \
         inspect-hotel inspect-flight inspect-web-search test-mcp test-decision test-orchestrator test-orchestrator-web-search test-session-store test-chat-pipeline \
         seed-langfuse test clean
 
@@ -23,6 +24,9 @@ help:
 	@echo "  make check-clerk   Validate Clerk env when AUTH_DISABLED=0"
 	@echo "  make run-api        Run the FastAPI backend        (Day 5)"
 	@echo "  make run-ui         Run the React frontend (frontend/)"
+	@echo "  make docker-build   Build api + web images (docker compose build)"
+	@echo "  make docker-up      Run stack at http://localhost:8080"
+	@echo "  make docker-push    Tag & push images to Docker Hub (DOCKER_REGISTRY_USER)"
 	@echo "  make inspect-hotel  Open MCP Inspector on hotel server"
 	@echo "  make inspect-flight Open MCP Inspector on flight server"
 	@echo "  make inspect-web-search Open MCP Inspector on web search server"
@@ -56,6 +60,24 @@ run-api:
 
 run-ui:
 	cd frontend && npm run dev
+
+# ── Docker (Week 13 layout under docker/) ─────────────────────────────────────
+docker-build:
+	docker compose build
+
+docker-up:
+	docker compose up -d --build
+
+docker-down:
+	docker compose down
+
+docker-push:
+	@test -n "$(DOCKER_REGISTRY_USER)" || (echo "Set DOCKER_REGISTRY_USER (Docker Hub namespace)" && exit 1)
+	docker compose build
+	docker tag $(DOCKER_REGISTRY_USER)/bookme-ai-api:local $(DOCKER_REGISTRY_USER)/bookme-ai-api:latest
+	docker tag $(DOCKER_REGISTRY_USER)/bookme-ai-web:local $(DOCKER_REGISTRY_USER)/bookme-ai-web:latest
+	docker push $(DOCKER_REGISTRY_USER)/bookme-ai-api:latest
+	docker push $(DOCKER_REGISTRY_USER)/bookme-ai-web:latest
 
 # ── MCP inspection (Day 2) ────────────────────────────────────────────────────────
 inspect-hotel:

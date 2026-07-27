@@ -1,8 +1,7 @@
 /**
  * Thin fetch wrapper for the BookMe FastAPI backend.
  *
- * Dev: Vite proxies `/api/*` → `VITE_API_URL`. Production: same-origin or set
- * `VITE_API_URL` to your API host.
+ * Dev/Docker: `/api` (Vite or nginx proxy). Vercel+Render: set `VITE_API_URL` to the Render API origin (production builds only).
  */
 
 import { authHeaders, isApiAuthDisabled } from "@/api/auth";
@@ -15,7 +14,16 @@ import type {
   StreamEvent,
 } from "@/types";
 
-const BASE = "/api";
+/** Dev/Docker: `/api` (Vite or nginx proxy). Vercel+Render: absolute `VITE_API_URL`. */
+function resolveApiBase(): string {
+  const url = import.meta.env.VITE_API_URL?.trim();
+  if (import.meta.env.PROD && url && /^https?:\/\//i.test(url)) {
+    return url.replace(/\/$/, "");
+  }
+  return "/api";
+}
+
+const BASE = resolveApiBase();
 
 export class ApiError extends Error {
   constructor(

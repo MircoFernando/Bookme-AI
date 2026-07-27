@@ -11,7 +11,7 @@ interface Props {
 }
 
 const STATUS_META: Record<Props["status"], { label: string; color: string }> = {
-  ok: { label: "Healthy", color: "text-success" },
+  ok: { label: "API online", color: "text-success" },
   starting: { label: "Starting", color: "text-warn" },
   degraded: { label: "Degraded", color: "text-warn" },
   offline: { label: "Offline", color: "text-danger" },

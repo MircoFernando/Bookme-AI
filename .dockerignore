@@ -1,0 +1,50 @@
+# ── version control & editor ────────────────────────────────────────
+.git
+.gitignore
+.gitattributes
+.vscode
+.idea
+*.swp
+
+# ── agent / graph tooling (not needed in images) ────────────────────
+.claude
+.cursor
+graphify-out
+session-export-*
+
+# ── python build / venv / cache ─────────────────────────────────────
+.venv
+venv
+__pycache__
+*.py[cod]
+*.egg-info
+.mypy_cache
+.pytest_cache
+.ruff_cache
+.coverage
+htmlcov
+
+# ── frontend build artefacts (web image rebuilds in its stage) ──────
+frontend/node_modules
+frontend/dist
+frontend/.vite
+frontend/.env
+frontend/.env.local
+
+# ── secrets — never bake into images ───────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── large local data / scratch ─────────────────────────────────────
+data/
+notebooks/
+slides/
+docs/*.pdf
+docs/*.pptx
+*.log
+*.jsonl
+
+# ── OS junk ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

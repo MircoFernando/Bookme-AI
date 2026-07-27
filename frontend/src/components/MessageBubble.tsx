@@ -2,7 +2,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { motion } from "framer-motion";
 import clsx from "clsx";
-import { Bot, User } from "lucide-react";
+import { Plane, User } from "lucide-react";
 import type { UIMessage } from "@/types";
 import { ResponseMeta } from "./ResponseMeta";
 
@@ -27,7 +27,7 @@ export function MessageBubble({ message }: Props) {
             : "bg-bg-soft border-border text-slate-300",
         )}
       >
-        {isUser ? <User size={16} /> : <Bot size={16} />}
+        {isUser ? <User size={16} /> : <Plane size={16} />}
       </div>
       <div className={clsx("max-w-[85%] space-y-2", isUser && "items-end")}>
         <div

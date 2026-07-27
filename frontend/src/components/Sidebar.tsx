@@ -59,7 +59,7 @@ export function Sidebar({
           icon={<Wrench size={12} />}
           onClick={() => setTab("tools")}
         >
-          Tools
+          Agents
         </TabButton>
       </div>
 

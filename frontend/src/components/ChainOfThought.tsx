@@ -1,16 +1,16 @@
 import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 import {
-  Brain,
+  Building2,
   Check,
-  Database,
+  Compass,
   Globe,
-  HeartPulse,
   Loader2,
+  Plane,
   Route as RouteIcon,
+  Shield,
   Sparkles,
   Wrench,
-  Zap,
   type LucideIcon,
 } from "lucide-react";
 import type { ThoughtItem } from "@/hooks/useChatStream";
@@ -19,28 +19,20 @@ interface Props {
   items: ThoughtItem[];
 }
 
-/**
- * Live chain-of-thought timeline.
- *
- * Each item from ``useChatStream.thoughts`` becomes a row. Rows
- * animate in as events arrive and tick over from "running" (spinner)
- * to "done" (check + ms). The component disappears once the final
- * answer renders — at that point all events have completed.
- */
 export function ChainOfThought({ items }: Props) {
   if (items.length === 0) return null;
 
   return (
     <div className="flex gap-3">
       <div className="shrink-0 size-8 rounded-full flex items-center justify-center bg-bg-soft border border-border text-brand-400">
-        <Brain size={16} />
+        <Compass size={16} />
       </div>
       <motion.div
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         className="card px-3 py-3 text-sm space-y-1.5 flex-1 max-w-[85%]"
       >
-        <div className="text-xs text-slate-400 mb-1">Thinking…</div>
+        <div className="text-xs text-slate-400 mb-1">Planning your trip…</div>
         <AnimatePresence initial={false}>
           {items.map((item) => (
             <motion.div
@@ -59,11 +51,15 @@ export function ChainOfThought({ items }: Props) {
                 <div className="leading-snug">
                   <span className="text-slate-200">{item.label}</span>
                   {item.status === "done" && typeof item.ms === "number" && (
-                    <span className="text-[10px] text-slate-500 ml-2">{item.ms} ms</span>
+                    <span className="text-[10px] text-slate-500 ml-2">
+                      {item.ms} ms
+                    </span>
                   )}
                 </div>
                 {item.detail && item.status === "done" && (
-                  <div className="text-[11px] text-slate-500 truncate">{item.detail}</div>
+                  <div className="text-[11px] text-slate-500 truncate">
+                    {item.detail}
+                  </div>
                 )}
               </div>
             </motion.div>
@@ -74,14 +70,14 @@ export function ChainOfThought({ items }: Props) {
   );
 }
 
-
 function StatusBadge({ item }: { item: ThoughtItem }) {
   const Icon = pickIcon(item);
-  const colour = item.status === "done"
-    ? "bg-success/15 border-success/40 text-success"
-    : item.status === "error"
-      ? "bg-danger/15 border-danger/40 text-danger"
-      : "bg-brand-500/15 border-brand-500/40 text-brand-400";
+  const colour =
+    item.status === "done"
+      ? "bg-success/15 border-success/40 text-success"
+      : item.status === "error"
+        ? "bg-danger/15 border-danger/40 text-danger"
+        : "bg-brand-500/15 border-brand-500/40 text-brand-400";
 
   return (
     <div
@@ -90,30 +86,29 @@ function StatusBadge({ item }: { item: ThoughtItem }) {
         colour,
       )}
     >
-      {item.status === "running"
-        ? <Loader2 size={12} className="animate-spin" />
-        : item.status === "done"
-          ? <Check size={12} />
-          : <Icon size={12} />}
+      {item.status === "running" ? (
+        <Loader2 size={12} className="animate-spin" />
+      ) : item.status === "done" ? (
+        <Check size={12} />
+      ) : (
+        <Icon size={12} />
+      )}
     </div>
   );
 }
 
-
 function pickIcon(item: ThoughtItem): LucideIcon {
   if (item.type === "tool") {
-    if (item.matchKey === "stage:decision") return RouteIcon;
-  if (item.matchKey === "stage:orchestrator") return Wrench;
-  if (item.matchKey.startsWith("tool:hotel")) return Database;
-  if (item.matchKey.startsWith("tool:flight")) return Globe;
+    if (item.matchKey.startsWith("tool:hotel")) return Building2;
+    if (item.matchKey.startsWith("tool:flight")) return Plane;
+    if (item.matchKey.startsWith("tool:web")) return Globe;
     return Wrench;
   }
-  // stage: pick by stage id
-  if (item.matchKey === "stage:cache") return Zap;
-  if (item.matchKey === "stage:recall_st") return Brain;
-  if (item.matchKey === "stage:recall_lt") return Brain;
-  if (item.matchKey === "stage:patient") return HeartPulse;
+
+  if (item.matchKey === "stage:decision") return RouteIcon;
+  if (item.matchKey === "stage:guardrail") return Shield;
   if (item.matchKey === "stage:route") return RouteIcon;
-  if (item.matchKey === "stage:synth") return Sparkles;
-  return Sparkles;
+  if (item.matchKey === "stage:orchestrator") return Wrench;
+  if (item.matchKey === "stage:save") return Sparkles;
+  return Compass;
 }

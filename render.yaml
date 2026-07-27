@@ -1,0 +1,43 @@
+# BookMe AI — Render Blueprint (API only; UI on Vercel)
+# Dashboard: New → Blueprint → connect repo, or merge and use "Sync Blueprint".
+#
+# Free tier: service sleeps after ~15 min idle (cold start ~30–60s on first request).
+
+services:
+  - type: web
+    name: bookme-ai-api
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: docker/api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /ready
+    buildFilter:
+      paths:
+        - docker/api/**
+        - src/**
+        - config/**
+        - requirements.txt
+    envVars:
+      - key: AUTH_DISABLED
+        value: "0"
+      - key: LANGFUSE_PROMPTS
+        value: "false"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: CLERK_AUTHORIZED_PARTIES
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: LANGFUSE_PUBLIC_KEY
+        sync: false
+      - key: LANGFUSE_SECRET_KEY
+        sync: false
+      - key: LANGFUSE_BASE_URL
+        sync: false

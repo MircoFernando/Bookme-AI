@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 
+/** BookMe landing + chat — indigo / cobalt on deep ink. */
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   darkMode: "class",
@@ -7,29 +8,48 @@ export default {
     extend: {
       colors: {
         bg: {
-          DEFAULT: "#0b0f17",
-          soft: "#111827",
-          card: "#161f2e",
+          DEFAULT: "#050816",
+          soft: "#0a1024",
+          card: "#10182e",
         },
         border: {
-          DEFAULT: "#1f2937",
-          strong: "#374151",
+          DEFAULT: "#1e2a45",
+          strong: "#2d3b5c",
         },
         brand: {
-          DEFAULT: "#22d3ee",
-          50: "#ecfeff",
-          100: "#cffafe",
-          400: "#22d3ee",
-          500: "#06b6d4",
-          600: "#0891b2",
+          DEFAULT: "#6366f1",
+          50: "#eef2ff",
+          100: "#e0e7ff",
+          400: "#818cf8",
+          500: "#6366f1",
+          600: "#4f46e5",
         },
         success: "#10b981",
         warn: "#f59e0b",
         danger: "#ef4444",
       },
       fontFamily: {
-        sans: ["-apple-system", "BlinkMacSystemFont", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+        sans: [
+          '"DM Sans"',
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
+        display: [
+          "Syne",
+          '"DM Sans"',
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
+        mono: [
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Monaco",
+          "Consolas",
+          "monospace",
+        ],
       },
       animation: {
         "fade-in": "fadeIn 0.18s ease-out",

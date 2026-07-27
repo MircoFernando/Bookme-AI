@@ -3,7 +3,9 @@ import react from "@vitejs/plugin-react";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 var __dirname = path.dirname(fileURLToPath(import.meta.url));
-// Proxy /api → FastAPI backend. Avoids CORS noise during development and
+var srcDir = path.resolve(__dirname, "src");
+// Run dev from this folder: `cd frontend && npm run dev` (or `make run-ui`).
+// The `@/` alias maps to `src/` — e.g. `@/api/auth` → `src/api/auth.ts`.
 // lets production deploy the UI behind the same hostname as the API.
 export default defineConfig(function (_a) {
     var mode = _a.mode;
@@ -13,7 +15,7 @@ export default defineConfig(function (_a) {
         plugins: [react()],
         resolve: {
             alias: {
-                "@": path.resolve(__dirname, "./src"),
+                "@": srcDir,
             },
         },
         server: {

@@ -1,0 +1,81 @@
+name: Publish & Deploy Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  push_to_registry:
+    name: Build & Push API Image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push API
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/api/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/bookme-ai-api:latest
+            ${{ secrets.DOCKER_USERNAME }}/bookme-ai-api:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  push_web:
+    name: Build & Push Web Image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/web/Dockerfile
+          push: true
+          build-args: |
+            VITE_CLERK_PUBLISHABLE_KEY=${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+            VITE_AUTH_DISABLED=${{ vars.VITE_AUTH_DISABLED || 'false' }}
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/bookme-ai-web:latest
+            ${{ secrets.DOCKER_USERNAME }}/bookme-ai-web:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy API to DigitalOcean Droplet
+    runs-on: ubuntu-latest
+    needs: push_to_registry
+    steps:
+      - name: Execute remote SSH commands to deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/bookme-ai
+            git pull origin main
+            docker compose -f compose.prod.api.yaml pull
+            docker compose -f compose.prod.api.yaml up -d
+            docker image prune -f

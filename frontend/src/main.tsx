@@ -18,7 +18,12 @@ const root = (
     {authDisabled ? (
       <App authMode="dev" />
     ) : (
-      <ClerkProvider publishableKey={publishableKey!} afterSignOutUrl="/">
+      <ClerkProvider
+        publishableKey={publishableKey!}
+        afterSignOutUrl="/"
+        signInFallbackRedirectUrl="/"
+        signUpFallbackRedirectUrl="/"
+      >
         <App authMode="clerk" />
       </ClerkProvider>
     )}

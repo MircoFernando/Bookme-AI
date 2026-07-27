@@ -1,0 +1,28 @@
+# Production API only — DigitalOcean Droplet (+ Vercel for UI).
+# Vercel serves the React app; point VITE_API_URL at your public API URL (HTTPS).
+#
+# On the droplet:
+#   git clone … && cd bookme-ai
+#   cp .env.example .env   # fill secrets + CORS_ORIGINS / CLERK_AUTHORIZED_PARTIES
+#   export DOCKER_REGISTRY_USER=your_dockerhub_username
+#   docker compose -f compose.prod.api.yaml pull
+#   docker compose -f compose.prod.api.yaml up -d
+#
+# Put Caddy/nginx in front on :443 → localhost:${API_PORT:-8000} (see docs/DEPLOY_DO_VERCEL.md).
+
+services:
+  api:
+    image: ${DOCKER_REGISTRY_USER}/bookme-ai-api:latest
+    container_name: bookme-ai-api
+    restart: always
+    init: true
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
