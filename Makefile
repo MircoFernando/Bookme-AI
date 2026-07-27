@@ -9,7 +9,7 @@ PYTHON ?= .venv/bin/python
 UVICORN ?= .venv/bin/uvicorn
 PY := PYTHONPATH=src $(PYTHON)
 
-.PHONY: help install config check-config check-clerk run-api run-ui \
+.PHONY: help setup install install-ui config check-config check-clerk run-api run-ui \
         docker-build docker-up docker-down docker-push \
         inspect-hotel inspect-flight inspect-web-search test-mcp test-decision test-orchestrator test-orchestrator-web-search test-session-store test-chat-pipeline \
         seed-langfuse test clean
@@ -18,14 +18,19 @@ PY := PYTHONPATH=src $(PYTHON)
 help:
 	@echo "BookMe AI — available commands:"
 	@echo ""
-	@echo "  make install        Install Python dependencies"
+	@echo "Local development (from repo root):"
+	@echo "  make setup          One-time: .venv + pip + frontend npm install"
+	@echo "  make run-api        Terminal 1 — API  http://127.0.0.1:8000"
+	@echo "  make run-ui         Terminal 2 — UI   http://127.0.0.1:5173  (chat at /app)"
+	@echo "  make docker-up      Docker — UI http://localhost:8080, API :8000"
+	@echo ""
+	@echo "  make install        pip install -r requirements.txt (uses .venv if present)"
+	@echo "  make install-ui     npm install in frontend/"
 	@echo "  make config         Print active (non-secret) configuration"
 	@echo "  make check-config   Validate OPENAI + GOOGLE keys for configured roles"
 	@echo "  make check-clerk   Validate Clerk env when AUTH_DISABLED=0"
-	@echo "  make run-api        Run the FastAPI backend        (Day 5)"
-	@echo "  make run-ui         Run the React frontend (frontend/)"
 	@echo "  make docker-build   Build api + web images (docker compose build)"
-	@echo "  make docker-up      Run stack at http://localhost:8080"
+	@echo "  make docker-down    Stop docker compose stack"
 	@echo "  make docker-push    Tag & push images to Docker Hub (DOCKER_REGISTRY_USER)"
 	@echo "  make inspect-hotel  Open MCP Inspector on hotel server"
 	@echo "  make inspect-flight Open MCP Inspector on flight server"
@@ -41,8 +46,24 @@ help:
 	@echo "  make clean          Remove caches and __pycache__"
 
 # ── Setup ─────────────────────────────────────────────────────────────────────
+setup:
+	python3.11 -m venv .venv
+	.venv/bin/pip install -U pip
+	.venv/bin/pip install -r requirements.txt
+	cd frontend && npm install
+	@echo ""
+	@echo "Next steps:"
+	@echo "  cp .env.example .env          # fill OPENAI_API_KEY, TAVILY_API_KEY, etc."
+	@echo "  cp frontend/.env.example frontend/.env"
+	@echo "  For local dev without Clerk: AUTH_DISABLED=1 in .env, VITE_AUTH_DISABLED=true in frontend/.env"
+	@echo "  make run-api   # terminal 1"
+	@echo "  make run-ui    # terminal 2 → http://127.0.0.1:5173/app"
+
 install:
-	pip install -r requirements.txt
+	@if [ -x .venv/bin/pip ]; then .venv/bin/pip install -r requirements.txt; else pip install -r requirements.txt; fi
+
+install-ui:
+	cd frontend && npm install
 
 # ── Config ──────────────────────────────────────────────────────────────────────
 config:

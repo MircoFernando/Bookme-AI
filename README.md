@@ -248,60 +248,167 @@ BookMe AI/
 
 ## 🚀 Getting Started
 
+Run all `make` commands from the **repository root** (`BookMe AI/`).
+
 ### Prerequisites
 
-- Python 3.11+
-- Node.js (for the React frontend)
-- Convex backend configured (for Travel APIs)
+| Tool | Version |
+|------|---------|
+| Python | 3.11+ |
+| Node.js | 18+ (npm) |
+| Make | GNU Make or BSD make |
+| Docker | Optional — for `make docker-up` |
 
-### 1. Clone & Install Backend
+Hotel and flight tools call the Convex URLs in `config/params.yaml` (no separate Convex setup for local dev).
+
+---
+
+### Option A — Native dev (recommended)
+
+Best for day-to-day work: hot-reload API + Vite dev server.
+
+#### 1. One-time install
 
 ```bash
-python3.11 -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env        # fill keys
+git clone <your-repo-url> "BookMe AI"
+cd "BookMe AI"
+make setup
 ```
 
-### 2. Configure Environment
+`make setup` creates `.venv`, installs `requirements.txt`, and runs `npm install` in `frontend/`.
 
-Fill out `.env` with the following variables:
-- `OPENAI_API_KEY` (Required for router, guardrail, agents)
-- `GOOGLE_API_KEY` (Optional for merging model)
-- `TAVILY_API_KEY` (Required for Web Search MCP)
-- `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` (Optional, for observability)
+#### 2. Environment files
 
-*(See `docs/CLERK_SETUP.md` for `AUTH_DISABLED` toggles for local dev.)*
-
-### 3. Run the API
+**API** — copy and edit the repo root env:
 
 ```bash
+cp .env.example .env
+```
+
+Minimum keys for a working chat:
+
+| Variable | Required | Notes |
+|----------|----------|--------|
+| `OPENAI_API_KEY` | Yes | Router, guardrail, agents |
+| `TAVILY_API_KEY` | Yes | Web search MCP (`tourist spots`, etc.) |
+| `GOOGLE_API_KEY` | Recommended | Multi-agent merge model in `config/models.yaml` |
+
+**Frontend** — copy and edit:
+
+```bash
+cp frontend/.env.example frontend/.env
+```
+
+Keep `VITE_API_URL=http://127.0.0.1:8000` (Vite proxies browser requests from `/api/*` to this host).
+
+#### 3. Auth mode (pick one)
+
+**Local dev without Clerk** (fastest — no sign-in):
+
+Root `.env`:
+
+```bash
+AUTH_DISABLED=1
+# optional: DEV_USER_ID=dev-user
+```
+
+`frontend/.env`:
+
+```bash
+VITE_AUTH_DISABLED=true
+# optional: VITE_DEV_USER_ID=dev-user
+```
+
+**Production-style Clerk** (sign-in on localhost):
+
+Root `.env`: `AUTH_DISABLED=0`, `CLERK_SECRET_KEY=sk_test_…`, and origins including `http://localhost:5173` in `CLERK_AUTHORIZED_PARTIES` and `CORS_ORIGINS`.
+
+`frontend/.env`: `VITE_AUTH_DISABLED=false`, `VITE_CLERK_PUBLISHABLE_KEY=pk_test_…`.
+
+Full checklist: [docs/CLERK_SETUP.md](docs/CLERK_SETUP.md). After editing env, run `make check-clerk` when Clerk is enabled.
+
+#### 4. Run (two terminals)
+
+**Terminal 1 — API**
+
+```bash
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
 make run-api
 ```
-- API: http://127.0.0.1:8000
-- Docs: http://127.0.0.1:8000/docs
 
-### 4. Run the React UI
+- API: http://127.0.0.1:8000  
+- OpenAPI: http://127.0.0.1:8000/docs  
+- Readiness (MCP tools): http://127.0.0.1:8000/ready  
 
-In a separate terminal:
-```bash
-cd frontend
-cp .env.example .env
-npm install
-make run-ui    # Navigates to http://127.0.0.1:5173
-```
-
-### 5. Docker (API + nginx UI)
-
-Copy `.env` to the project root with your API keys. For Clerk in the web image, set `VITE_CLERK_PUBLISHABLE_KEY` in `.env` (same file used by `docker compose` build args).
+**Terminal 2 — UI**
 
 ```bash
-export DOCKER_REGISTRY_USER=your_dockerhub_username   # optional; defaults to bookme/*:local
-make docker-up       # UI at http://localhost:8080, API at :8000
-make docker-push     # after docker-up/build; pushes :latest to Docker Hub
+make run-ui
 ```
 
-Images: `docker/api/Dockerfile`, `docker/web/Dockerfile` (Week 13 multi-stage pattern). Production pull-only host file: `compose.prod.yaml`.
+- App: http://127.0.0.1:5173  
+- Chat: http://127.0.0.1:5173/app  
+
+#### 5. Smoke test
+
+```bash
+make check-config
+curl -fsS http://127.0.0.1:8000/health
+curl -N http://127.0.0.1:8000/chat/stream \
+  -H "Content-Type: application/json" \
+  -d '{"session_id":"demo-1","user_id":"dev-user","message":"tourist spots in London"}'
+```
+
+(With `AUTH_DISABLED=1`, `user_id` in the JSON body is used; with Clerk, use the signed-in UI instead.)
+
+---
+
+### Option B — Docker Compose (API + nginx UI)
+
+Single command stack; UI on port **8080** with `/api` proxied to the API container.
+
+#### 1. Root `.env`
+
+Same API keys as Option A. Docker build reads these from `.env`:
+
+- **No Clerk:** `AUTH_DISABLED=1` and `VITE_AUTH_DISABLED=true`
+- **With Clerk:** `AUTH_DISABLED=0`, `CLERK_SECRET_KEY`, and `VITE_CLERK_PUBLISHABLE_KEY=pk_test_…` (baked into the web image at build time)
+
+Optional image namespace:
+
+```bash
+export DOCKER_REGISTRY_USER=your_dockerhub_username   # default tag prefix: bookme/*
+```
+
+#### 2. Start stack
+
+```bash
+make docker-up
+```
+
+- UI: http://localhost:8080 (chat at `/app`)  
+- API (direct): http://localhost:8000  
+
+Stop: `make docker-down`.
+
+Images: `docker/api/Dockerfile`, `docker/web/Dockerfile`. Production pull-only: `compose.prod.yaml`.
+
+---
+
+### Makefile reference
+
+| Command | Purpose |
+|---------|---------|
+| `make setup` | One-time `.venv` + Python deps + `frontend` npm install |
+| `make install` | Re-install Python deps (uses `.venv/bin/pip` when present) |
+| `make install-ui` | `npm install` in `frontend/` only |
+| `make run-api` | FastAPI with reload on `:8000` |
+| `make run-ui` | Vite dev server on `:5173` |
+| `make docker-up` | `docker compose up -d --build` |
+| `make check-config` | Validate provider keys vs `config/models.yaml` |
+| `make check-clerk` | Validate Clerk env when `AUTH_DISABLED=0` |
+
+Run `make` or `make help` for tests, MCP inspectors, and LangFuse seeding.
 
 ---
 
