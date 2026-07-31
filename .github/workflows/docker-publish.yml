@@ -74,7 +74,7 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/bookme-ai
+            cd ~/Bookme-AI
             git pull origin main
             docker compose -f compose.prod.api.yaml pull
             docker compose -f compose.prod.api.yaml up -d
