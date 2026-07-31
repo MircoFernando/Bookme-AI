@@ -15,8 +15,9 @@ langchain-google-genai
 langgraph
 
 # ── MCP (Model Context Protocol) ────────────────────────────────────────────────
-mcp
-langchain-mcp-adapters
+# Pin together — langchain-mcp-adapters 0.3.x needs mcp >= 1.28 (RequestContext).
+mcp>=1.28.0,<2
+langchain-mcp-adapters>=0.3.0,<0.4
 
 # ── External service calls + resilience ─────────────────────────────────────────
 httpx
