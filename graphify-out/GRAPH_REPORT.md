@@ -1,16 +1,16 @@
-# Graph Report - Bookme AI  (2026-07-28)
+# Graph Report - Bookme AI  (2026-07-31)
 
 ## Corpus Check
-- 95 files · ~204,201 words
+- 100 files · ~212,668 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 856 nodes · 1424 edges · 53 communities (42 shown, 11 thin omitted)
-- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 126 edges (avg confidence: 0.73)
+- 921 nodes · 1526 edges · 55 communities (44 shown, 11 thin omitted)
+- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 131 edges (avg confidence: 0.73)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ace8879f`
+- Built from commit: `5b159fb7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -48,13 +48,14 @@
 - ChatWindow.tsx
 - ChatApp.tsx
 - main
-- decision_bridge.py
 - compilerOptions
 - vercel.json
 - auth.ts
 - AgentResponse
+- BookMe AI — React UI
 - middleware.py
 - useChatStream.ts
+- 4. Parallel guardrail + router — runtime behavior
 - package.json
 - scripts
 - shadcn
@@ -66,10 +67,10 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `AgentOrchestrator` - 33 edges
-2. `AgentState` - 30 edges
+2. `AgentState` - 31 edges
 3. `QueryRouter` - 23 edges
 4. `SessionStore` - 21 edges
-5. `BookMe AI — Development Roadmap & Phase Log` - 20 edges
+5. `BookMe AI — Development Roadmap & Phase Log` - 21 edges
 6. `compilerOptions` - 19 edges
 7. `observe()` - 19 edges
 8. `BookMe AI` - 18 edges
@@ -77,8 +78,6 @@
 10. `build_decision_graph()` - 14 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `main()` --calls--> `SessionStore`  [INFERRED]
-  scripts/test_session_store.py → src/infrastructure/session_store.py
 - `_RecordingOrchestrator` --uses--> `AgentOrchestrator`  [INFERRED]
   scripts/test_chat_pipeline.py → src/agents/orchestrator.py
 - `_RecordingOrchestrator` --uses--> `AgentState`  [INFERRED]
@@ -87,55 +86,57 @@
   scripts/test_chat_pipeline.py → src/agents/chat_pipeline.py
 - `main()` --calls--> `build_decision_graph()`  [INFERRED]
   scripts/test_chat_pipeline.py → src/agents/decision_graph.py
+- `_router_primary_route()` --calls--> `get_query_router()`  [INFERRED]
+  scripts/test_decision_graph.py → src/agents/router.py
 
 ## Import Cycles
 - None detected.
 
-## Communities (53 total, 11 thin omitted)
+## Communities (55 total, 11 thin omitted)
 
 ### Community 0 - "decision_graph.py"
 Cohesion: 0.06
-Nodes (36): AnyMessage, GuardrailVerdict, RunnableConfig, main(), _router_primary_route(), _run(), map_decision_to_agent_state(), Copy classification results into fields the orchestrator expects. (+28 more)
+Nodes (37): AnyMessage, GuardrailVerdict, main(), _router_primary_route(), _run(), main(), map_decision_to_agent_state(), Bridge decision subgraph output → orchestrator ``AgentState``.  The chat/API lay (+29 more)
 
 ### Community 1 - "router.py"
-Cohesion: 0.11
-Nodes (21): _fallback_multi(), get_query_router(), _last_user_text(), MultiRouteDecision, _normalize_action(), _normalize_params(), Any, QueryRouter (+13 more)
+Cohesion: 0.12
+Nodes (19): _fallback_multi(), get_query_router(), _last_user_text(), MultiRouteDecision, _normalize_action(), _normalize_params(), Any, QueryRouter (+11 more)
 
 ### Community 2 - "nodes.py"
 Cohesion: 0.09
 Nodes (40): GraphState, TypedDict, build_graph(), flight_node(), _format_flight(), _format_hotel(), generate_response(), hotel_node() (+32 more)
 
 ### Community 3 - "observability.py"
-Cohesion: 0.09
-Nodes (34): build_extractor_system_prompt(), build_flight_agent_system_prompt(), build_general_qa_system_prompt(), build_hotel_agent_system_prompt(), build_merge_system_prompt(), build_router_hard_rules_prompt(), build_router_prompt(), build_router_system_prompt() (+26 more)
+Cohesion: 0.08
+Nodes (39): RouteLiteral, ChatResult, _noop_emit(), Any, EmitFn, Single async entry for one chat turn: decision graph → orchestrator (or OOS shor, One user turn — maps cleanly to ``api.schemas.ChatResponse``., Run decision graph, then orchestrator unless ``verdict == out_of_scope``.      L (+31 more)
 
 ### Community 4 - "http_client.py"
 Cohesion: 0.31
 Nodes (9): book_hotel(), _get_hotel(), list_hotels(), tool, Hotel MCP server — exposes HotelTool over the Model Context Protocol.  Thin tran, List all available hotels from the travel service., Search hotels by city and optional check-in/check-out dates (YYYY-MM-DD).      A, Book a hotel room.      Args:         hotel_id: Hotel identifier from search/lis (+1 more)
 
 ### Community 5 - "SessionStore"
-Cohesion: 0.05
-Nodes (58): ConfigResponse, HealthResponse, ReadinessResponse, RouteLiteral, _clerk_user_id(), get_decision_graph(), get_orchestrator(), get_session_store() (+50 more)
+Cohesion: 0.06
+Nodes (51): ConfigResponse, HealthResponse, ReadinessResponse, _clerk_user_id(), get_decision_graph(), get_orchestrator(), get_session_store(), is_auth_disabled() (+43 more)
 
 ### Community 6 - "Decision graph & routing — architecture notes"
-Cohesion: 0.04
-Nodes (44): 10. Phase 4–6 status & acceptance, 11. Repository map (agents + API), 12. Questions for Week 13 / instructor (optional prompt), 1. Two-stage pipeline (mental model), 2. Week 13 architecture choice (two state types), 3. Decision graph topology (BookMe AI), 4.1 Both branches always start, 4.2 Fan-in before `decide` (+36 more)
+Cohesion: 0.08
+Nodes (26): Assessment mapping (SRS), BookMe AI — Development Roadmap & Phase Log, Commands cheat sheet, Decision log (consolidated), High-level phase map, How to read this document, Next recommended step, Phase 0 — Baseline starter ✅ (+18 more)
 
 ### Community 7 - "BookMe AI — Development Roadmap & Phase Log"
-Cohesion: 0.25
-Nodes (11): _format_session_memory(), _last_user_text(), _llm_content_to_str(), _parse_inventory(), Any, Normalize OpenAI/Gemini message content to plain text., _tool_status(), AgentState (+3 more)
+Cohesion: 0.06
+Nodes (50): main(), test_gemini_signature_only_block(), test_mixed_text_and_signature_blocks(), test_openai_style_text_blocks(), test_plain_string(), main(), Agent layer — LangGraph orchestration, routing, guardrail, and agent nodes.  Lay, AgentOrchestrator (+42 more)
 
 ### Community 8 - "config.py"
-Cohesion: 0.07
-Nodes (40): _compact_results(), _dumps(), Any, Web search tool — Tavily Search API (travel / tourism Q&A).  Business logic live, Sync entry for scripts/tests., Tavily-backed web search for destination and tourism questions., WebSearchTool, dump() (+32 more)
+Cohesion: 0.05
+Nodes (46): main(), _text(), _compact_results(), _dumps(), Any, Web search tool — Tavily Search API (travel / tourism Q&A).  Business logic live, Sync entry for scripts/tests., Tavily-backed web search for destination and tourism questions. (+38 more)
 
 ### Community 9 - "infrastructure/llm.py"
-Cohesion: 0.07
-Nodes (19): LogRecord, main(), Infrastructure layer — pure plumbing (config, logging, LLM clients, observabilit, Backward-compatible re-export — prefer ``from infrastructure.llm import ...``., _InterceptHandler, Centralised logging — powered by **loguru**.  Usage (any module)::      from log, Route stdlib ``logging`` records into loguru so third-party libs     (uvicorn, h, Configure loguru for the current process. Call once at each entry-point.      Ar (+11 more)
+Cohesion: 0.06
+Nodes (26): LogRecord, main(), Any, Minimal stand-in — records whether MCP path would run., _RecordingOrchestrator, main(), Infrastructure layer — pure plumbing (config, logging, LLM clients, observabilit, Backward-compatible re-export — prefer ``from infrastructure.llm import ...``. (+18 more)
 
 ### Community 11 - "Setup"
-Cohesion: 0.07
-Nodes (29): 1. Clone & Install Backend, 2. Configure Environment, 3. Run the API, 4. Run the React UI, 5. Docker (API + nginx UI), 🤖 Agent Pipeline, 📡 API Reference, Backend (+21 more)
+Cohesion: 0.06
+Nodes (34): 1. One-time install, 1. Root `.env`, 2. Environment files, 2. Start stack, 3. Auth mode (pick one), 4. Run (two terminals), 5. Smoke test, 🤖 Agent Pipeline (+26 more)
 
 ### Community 12 - "main.py"
 Cohesion: 0.09
@@ -154,28 +155,28 @@ Cohesion: 0.60
 Nodes (5): call_chat_api(), format_flights(), format_hotels(), main(), respond()
 
 ### Community 20 - "infrastructure/__init__.py"
-Cohesion: 0.12
-Nodes (14): main(), main(), _async_mcp_dispatch(), build_agent_mcp(), _mcp_result_to_str(), _MCPFlightToolAdapter, _MCPHotelToolAdapter, _MCPWebSearchToolAdapter (+6 more)
+Cohesion: 0.07
+Nodes (27): 1. Build your hostname from the droplet IP, 2.1 Install Docker, 2.2 Clone repo (path must match the workflow), 2.3 Configure environment, 2.4 Pull and start API (first deploy), 2.5 HTTPS (before browsers / Vercel), 2. Caddy on the same droplet (second block), 3. Same droplet checklist (no domain) (+19 more)
 
 ### Community 21 - "SessionStore"
-Cohesion: 0.14
-Nodes (10): main(), Minimal stand-in — records whether MCP path would run., _RecordingOrchestrator, build_orchestrator(), _DirectWebSearchToolAdapter, In-process ``WebSearchTool`` for ``build_orchestrator`` debug path., In-process ``HotelTool`` / ``FlightTool`` (debug without MCP subprocesses)., Number of active threads (debug/health). (+2 more)
+Cohesion: 0.18
+Nodes (17): build_extractor_system_prompt(), build_flight_agent_system_prompt(), build_general_qa_system_prompt(), build_guardrail_system_prompt(), build_hotel_agent_system_prompt(), build_merge_system_prompt(), build_router_hard_rules_prompt(), build_router_prompt() (+9 more)
 
 ### Community 23 - "flight_server.py"
 Cohesion: 0.08
 Nodes (25): compilerOptions, allowImportingTsExtensions, baseUrl, isolatedModules, jsx, lib, module, moduleDetection (+17 more)
 
 ### Community 24 - "types.ts"
-Cohesion: 0.12
-Nodes (20): BASE, systemApi, Props, STATUS_META, StatusBar(), ChatRequest, ChatResponse, ConfigResponse (+12 more)
+Cohesion: 0.10
+Nodes (23): BASE, systemApi, Props, STATUS_META, StatusBar(), ChatRequest, ChatResponse, ConfigResponse (+15 more)
 
 ### Community 25 - "AgentOrchestrator"
-Cohesion: 0.22
-Nodes (3): AgentOrchestrator, Supervisor–worker LangGraph with parallel hotel / flight / general_qa / web_sear, Invoke with a bridged ``AgentState`` patch (Phase 6 path).
+Cohesion: 0.15
+Nodes (13): 10. Phase 4–6 status & acceptance, 11. Repository map (agents + API), 1. Two-stage pipeline (mental model), 2. Two state types, 3. Decision graph topology (BookMe AI), 5. Router (BookMe AI domain), 6. Guardrail, 7. Bridge module (`decision_bridge.py`) (+5 more)
 
 ### Community 26 - "Clerk production auth (BookMe AI)"
-Cohesion: 0.07
-Nodes (23): 1. Clerk Dashboard, 2. Environment, 3. Verify, 4. Deploy (Phase 8), API (repo root `.env`), Chat returns 401 after sign-in, Clerk production auth (BookMe AI), `CLERK_SECRET_KEY is required` / API won't start (+15 more)
+Cohesion: 0.17
+Nodes (12): 1. Clerk Dashboard, 2. Environment, 3. Verify, 4. Deploy (Phase 8), API (repo root `.env`), Chat returns 401 after sign-in, Clerk production auth (BookMe AI), `CLERK_SECRET_KEY is required` / API won't start (+4 more)
 
 ### Community 27 - "devDependencies"
 Cohesion: 0.12
@@ -190,24 +191,20 @@ Cohesion: 0.19
 Nodes (10): Props, Sidebar(), Props, TravelToolsInfo(), loadSessions(), newSession(), saveSessions(), SessionMeta (+2 more)
 
 ### Community 30 - "chat_pipeline.py"
-Cohesion: 0.30
-Nodes (11): ChatResult, _noop_emit(), Any, EmitFn, Single async entry for one chat turn: decision graph → orchestrator (or OOS shor, One user turn — maps cleanly to ``api.schemas.ChatResponse``., Run decision graph, then orchestrator unless ``verdict == out_of_scope``.      L, _result_from_orchestrator_final() (+3 more)
+Cohesion: 0.20
+Nodes (10): 1. DigitalOcean — API on a Droplet, 2. Vercel — frontend (unchanged), 3. Verify, 4. DO App Platform (alternative), App deploy (pull image), CI/CD (booking-platform-api pattern), Deploy BookMe AI — DigitalOcean (API) + Vercel (frontend), One-time server setup (+2 more)
 
 ### Community 31 - "ChatWindow.tsx"
-Cohesion: 0.14
-Nodes (16): ChainOfThought(), pickIcon(), Props, StatusBadge(), ChatWindow(), Props, SAMPLE_PROMPTS, MessageBubble() (+8 more)
+Cohesion: 0.24
+Nodes (9): ChainOfThought(), pickIcon(), Props, StatusBadge(), ChatWindow(), Props, SAMPLE_PROMPTS, MessageBubble() (+1 more)
 
 ### Community 32 - "ChatApp.tsx"
 Cohesion: 0.17
 Nodes (10): setAuthTokenProvider(), App(), AuthMode, InputBox(), Props, useHealth(), AppShell(), AuthMode (+2 more)
 
 ### Community 33 - "main"
-Cohesion: 0.25
-Nodes (6): main(), _text(), MCP servers — standardised bridge between agents and Convex travel APIs.    hote, build_mcp_server_config(), MCP client configuration — stdio subprocess launch for BookMe AI.  Consumed by `, Dict suitable for ``MultiServerMCPClient(server_config)``.
-
-### Community 34 - "decision_bridge.py"
-Cohesion: 0.32
-Nodes (4): Bridge decision subgraph output → orchestrator ``AgentState`` (Week 13).  The ch, Decision subgraph state (Week 13 pattern).  Separate from ``AgentState``: the de, Agent layer — LangGraph orchestration, routing, guardrail, and agent nodes.  Wee, AgentState — the shared state for the BookMe AI LangGraph.  Every node reads fro
+Cohesion: 0.29
+Nodes (7): Props, Props, ResponseMeta(), ROUTE_ICONS, ROUTE_LABELS, Route, UIMessage
 
 ### Community 35 - "compilerOptions"
 Cohesion: 0.20
@@ -222,8 +219,12 @@ Cohesion: 0.31
 Nodes (7): authHeaders(), AuthTokenProvider, isApiAuthDisabled(), chatPayload(), request(), AuthGate(), DevGateProps
 
 ### Community 38 - "AgentResponse"
-Cohesion: 0.50
-Nodes (3): AgentResponse, Standalone turn: no decision graph (supervisor runs router)., One orchestrator turn — metadata for API / scripts.
+Cohesion: 0.29
+Nodes (7): Configuration, Disable token streaming, Event types, Frontend, Streaming — SSE progress + LLM token deltas, Viva talking points, Where tokens are streamed (backend)
+
+### Community 39 - "BookMe AI — React UI"
+Cohesion: 0.33
+Nodes (6): Auth modes, BookMe AI — React UI, Deploy (Vercel), One-time setup (from repo root), Run locally (two terminals, repo root), Structure
 
 ### Community 40 - "middleware.py"
 Cohesion: 0.29
@@ -232,6 +233,10 @@ Nodes (6): BaseHTTPMiddleware, install_middleware(), FastAPI, Request, HTTP midd
 ### Community 41 - "useChatStream.ts"
 Cohesion: 0.31
 Nodes (7): ApiError, chatApi, formatStageDetail(), friendlyError(), stageLabelFromId(), useChatStream(), UseChatStreamArgs
+
+### Community 42 - "4. Parallel guardrail + router — runtime behavior"
+Cohesion: 0.40
+Nodes (5): 4.1 Both branches always start, 4.2 Fan-in before `decide`, 4.3 Off-topic example: “Who is the president?”, 4.4 Two meanings of “instant return”, 4. Parallel guardrail + router — runtime behavior
 
 ### Community 43 - "package.json"
 Cohesion: 0.33
@@ -242,19 +247,19 @@ Cohesion: 0.40
 Nodes (5): scripts, build, dev, lint, preview
 
 ## Knowledge Gaps
-- **176 isolated node(s):** `npx`, `name`, `private`, `version`, `type` (+171 more)
+- **215 isolated node(s):** `npx`, `name`, `private`, `version`, `type` (+210 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `build_orchestrator()` connect `SessionStore` to `BookMe AI — Development Roadmap & Phase Log`, `config.py`, `flight_server.py`, `mcp_config.py`, `infrastructure/__init__.py`, `AgentOrchestrator`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
-- **Why does `AgentOrchestrator` connect `AgentOrchestrator` to `router.py`, `AgentResponse`, `BookMe AI — Development Roadmap & Phase Log`, `infrastructure/__init__.py`, `SessionStore`, `chat_pipeline.py`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
-- **Why does `SessionStore` connect `SessionStore` to `SessionStore`, `AgentResponse`, `infrastructure/llm.py`, `infrastructure/__init__.py`, `AgentOrchestrator`?**
-  _High betweenness centrality (0.028) - this node is a cross-community bridge._
+- **Why does `build_orchestrator()` connect `BookMe AI — Development Roadmap & Phase Log` to `config.py`, `infrastructure/llm.py`, `flight_server.py`, `mcp_config.py`?**
+  _High betweenness centrality (0.043) - this node is a cross-community bridge._
+- **Why does `AgentOrchestrator` connect `BookMe AI — Development Roadmap & Phase Log` to `infrastructure/llm.py`, `observability.py`, `router.py`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+- **Why does `SessionStore` connect `infrastructure/llm.py` to `SessionStore`, `BookMe AI — Development Roadmap & Phase Log`?**
+  _High betweenness centrality (0.025) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `AgentOrchestrator` (e.g. with `_RecordingOrchestrator` and `.__init__()`) actually correct?**
   _`AgentOrchestrator` has 6 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 10 inferred relationships involving `AgentState` (e.g. with `_RecordingOrchestrator` and `AgentOrchestrator`) actually correct?**

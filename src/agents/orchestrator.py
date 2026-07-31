@@ -78,6 +78,26 @@ class AgentResponse:
     latency_ms: int = 0
 
 
+def _text_from_content_block(block: Any) -> str:
+    """Extract user-visible text from one OpenAI/Gemini content block."""
+    if isinstance(block, str):
+        return block
+    if isinstance(block, dict):
+        text = block.get("text")
+        if text:
+            return str(text)
+        if block.get("type") == "text" and block.get("content"):
+            return str(block["content"])
+        return ""
+    text = getattr(block, "text", None)
+    if text:
+        return str(text)
+    content = getattr(block, "content", None)
+    if isinstance(content, str) and content:
+        return content
+    return ""
+
+
 def _llm_content_to_str(content: Any) -> str:
     """Normalize OpenAI/Gemini message content to plain text."""
     if content is None:
@@ -87,20 +107,16 @@ def _llm_content_to_str(content: Any) -> str:
     if isinstance(content, list):
         parts: List[str] = []
         for block in content:
-            if isinstance(block, str):
-                parts.append(block)
-            elif isinstance(block, dict):
-                text = block.get("text")
-                if text:
-                    parts.append(str(text))
-                elif block.get("type") == "text" and "content" in block:
-                    parts.append(str(block["content"]))
-            else:
-                text = getattr(block, "text", None)
-                if text:
-                    parts.append(str(text))
-        return "\n".join(parts) if parts else str(content)
-    return str(content)
+            text = _text_from_content_block(block)
+            if text:
+                parts.append(text)
+        return "\n".join(parts)
+    if isinstance(content, dict):
+        return _text_from_content_block(content)
+    text = getattr(content, "text", None)
+    if text:
+        return str(text)
+    return ""
 
 
 def _emit_from_config(config: Optional[RunnableConfig]) -> Optional[EmitFn]:
