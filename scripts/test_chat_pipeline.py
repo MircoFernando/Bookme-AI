@@ -28,7 +28,12 @@ class _RecordingOrchestrator:
             session_store=None,
         )
 
-    async def arun_state(self, state: AgentState) -> AgentState:
+    async def arun_state(
+        self,
+        state: AgentState,
+        *,
+        config: Any = None,
+    ) -> AgentState:
         self.calls += 1
         merged: dict[str, Any] = dict(state)
         merged["final_answer"] = "Mock orchestrator answer for testing."

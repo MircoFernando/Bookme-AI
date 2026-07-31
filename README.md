@@ -42,7 +42,7 @@ BookMe AI is an intelligent travel planning system built on a modern AI architec
 | **Multi-Agent Orchestrator** | LangGraph fan-out to specialized agents (Hotel, Flight, Web Search, General Q&A) to handle diverse user queries concurrently. |
 | **Guardrail System** | Parallel LangGraph sub-graph that runs scope-filtering and routing simultaneously, rejecting out-of-scope non-travel queries instantly. |
 | **Model Context Protocol (MCP)** | Standardized tool access via MCP stdio servers, decoupling LLM nodes from raw HTTP clients for external integrations (Convex, Tavily). |
-| **Streaming API** | Server-Sent Events (SSE) enabled FastAPI endpoint delivering real-time chain-of-thought and agent tool usage to the frontend. |
+| **Streaming API** | Server-Sent Events (SSE): chain-of-thought stages, MCP tool progress, and **LLM token deltas** on the final answer. See [docs/STREAMING.md](docs/STREAMING.md). |
 | **Multi-Provider LLMs** | Unified and configurable access to OpenAI and Google models via YAML settings, featuring fallback configurations. |
 | **Observability** | End-to-end tracing with LangFuse — prompt management, cost tracking, and detailed span analysis without needing a redeploy. |
 | **Secure Authentication** | Integration with Clerk for secure JWT-based API access (easily toggleable for local development). |

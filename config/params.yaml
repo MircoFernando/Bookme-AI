@@ -69,6 +69,12 @@ mcp:
   # "stdio" launches each server as a subprocess (default).
   transport: stdio
 
+# ── Chat API ──────────────────────────────────────────────────────────────────
+chat:
+  # When true, POST /chat/stream emits token_start / token_delta / token_end
+  # during agent synthesis (single-route) or merge (multi-route).
+  stream_tokens: true
+
 # ── Conversation memory (per-session, kills the global-history bug) ───────────
 session:
   max_turns: 30           # rolling window kept per session_id

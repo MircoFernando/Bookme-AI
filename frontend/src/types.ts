@@ -87,6 +87,19 @@ export interface ToolDoneEvent {
   summary?: string;
 }
 
+export interface TokenStartEvent {
+  type: "token_start";
+}
+
+export interface TokenDeltaEvent {
+  type: "token_delta";
+  delta: string;
+}
+
+export interface TokenEndEvent {
+  type: "token_end";
+}
+
 export interface FinalEvent {
   type: "final";
   answer: string;
@@ -111,6 +124,9 @@ export type StreamEvent =
   | StageDoneEvent
   | ToolInvokeEvent
   | ToolDoneEvent
+  | TokenStartEvent
+  | TokenDeltaEvent
+  | TokenEndEvent
   | FinalEvent
   | ErrorEvent;
 

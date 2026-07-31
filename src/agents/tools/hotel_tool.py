@@ -90,6 +90,8 @@ class HotelTool:
                 "guestEmail": "guest_email",
                 "checkInDate": "check_in_date",
                 "checkOutDate": "check_out_date",
+                "check_in": "check_in_date",
+                "check_out": "check_out_date",
                 "roomType": "room_type",
             }
             for src, dst in aliases.items():

@@ -19,9 +19,10 @@ from __future__ import annotations
 import json
 import time
 from dataclasses import asdict, dataclass, field
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Awaitable, Callable, Dict, List, Optional, Union
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
 from loguru import logger
 
@@ -34,7 +35,10 @@ from agents.prompts import (
 )
 from agents.router import QueryRouter, get_query_router
 from agents.state import AgentState
+from infrastructure import config as app_config
 from infrastructure.observability import observe
+
+EmitFn = Callable[[Dict[str, Any]], Awaitable[None]]
 
 
 # Router actions (search | list_all | book | general) → MCP / HotelTool.dispatch names
@@ -97,6 +101,53 @@ def _llm_content_to_str(content: Any) -> str:
                     parts.append(str(text))
         return "\n".join(parts) if parts else str(content)
     return str(content)
+
+
+def _emit_from_config(config: Optional[RunnableConfig]) -> Optional[EmitFn]:
+    if config and (cfg := config.get("configurable")):
+        fn = cfg.get("emit")
+        if fn is not None:
+            return fn
+    return None
+
+
+def _route_decision_count(state: AgentState) -> int:
+    return len(state.get("route_decisions") or [])
+
+
+async def _invoke_llm_text(llm: Any, messages: list) -> str:
+    response = await llm.ainvoke(messages)
+    return _llm_content_to_str(
+        response.content if hasattr(response, "content") else response
+    )
+
+
+async def _stream_llm_text(llm: Any, messages: list, emit: EmitFn) -> str:
+    await emit({"type": "token_start"})
+    parts: List[str] = []
+    async for chunk in llm.astream(messages):
+        delta = _llm_content_to_str(
+            chunk.content if hasattr(chunk, "content") else chunk
+        )
+        if not delta:
+            continue
+        parts.append(delta)
+        await emit({"type": "token_delta", "delta": delta})
+    text = "".join(parts)
+    await emit({"type": "token_end"})
+    return text
+
+
+async def _synthesize_llm_text(
+    llm: Any,
+    messages: list,
+    *,
+    emit: Optional[EmitFn],
+    stream: bool,
+) -> str:
+    if emit and stream and app_config.CHAT_STREAM_TOKENS:
+        return await _stream_llm_text(llm, messages, emit)
+    return await _invoke_llm_text(llm, messages)
 
 
 def _last_user_text(state: AgentState) -> str:
@@ -385,6 +436,7 @@ class AgentOrchestrator:
         state: AgentState,
         system_prompt: str,
         tool_output: str,
+        config: Optional[RunnableConfig] = None,
     ) -> str:
         user_message = _last_user_text(state)
         memory_context = state.get("memory_context") or ""
@@ -393,18 +445,25 @@ class AgentOrchestrator:
             f"=== MEMORY CONTEXT ===\n{memory_context}\n\n"
             f"=== TOOL OUTPUT ===\n{tool_output or '(no tool output)'}"
         )
-        response = await self.llm_chat.ainvoke(
-            [
-                SystemMessage(content=system_content),
-                HumanMessage(content=user_message),
-            ]
-        )
-        return _llm_content_to_str(
-            response.content if hasattr(response, "content") else response
+        messages = [
+            SystemMessage(content=system_content),
+            HumanMessage(content=user_message),
+        ]
+        emit = _emit_from_config(config)
+        stream = _route_decision_count(state) <= 1
+        return await _synthesize_llm_text(
+            self.llm_chat,
+            messages,
+            emit=emit,
+            stream=stream,
         )
 
     @observe(name="node_hotel_agent")
-    async def hotel_agent_node(self, state: AgentState) -> Dict[str, Any]:
+    async def hotel_agent_node(
+        self,
+        state: AgentState,
+        config: Optional[RunnableConfig] = None,
+    ) -> Dict[str, Any]:
         decision = self._decision_for_route(state, "hotel")
         action = decision.get("action") or "search"
         params = decision.get("params") or {}
@@ -412,7 +471,9 @@ class AgentOrchestrator:
 
         tool_output = await self._dispatch_hotel(action, params)
         system_prompt = build_hotel_agent_system_prompt(memory_context=memory_context)
-        answer = await self._generate_agent_response(state, system_prompt, tool_output)
+        answer = await self._generate_agent_response(
+            state, system_prompt, tool_output, config
+        )
         status = _tool_status(tool_output)
 
         patch: Dict[str, Any] = {
@@ -432,7 +493,11 @@ class AgentOrchestrator:
         return patch
 
     @observe(name="node_flight_agent")
-    async def flight_agent_node(self, state: AgentState) -> Dict[str, Any]:
+    async def flight_agent_node(
+        self,
+        state: AgentState,
+        config: Optional[RunnableConfig] = None,
+    ) -> Dict[str, Any]:
         decision = self._decision_for_route(state, "flight")
         action = decision.get("action") or "search"
         params = decision.get("params") or {}
@@ -440,7 +505,9 @@ class AgentOrchestrator:
 
         tool_output = await self._dispatch_flight(action, params)
         system_prompt = build_flight_agent_system_prompt(memory_context=memory_context)
-        answer = await self._generate_agent_response(state, system_prompt, tool_output)
+        answer = await self._generate_agent_response(
+            state, system_prompt, tool_output, config
+        )
         status = _tool_status(tool_output)
 
         patch: Dict[str, Any] = {
@@ -460,10 +527,16 @@ class AgentOrchestrator:
         return patch
 
     @observe(name="node_general_qa_agent")
-    async def general_qa_agent_node(self, state: AgentState) -> Dict[str, Any]:
+    async def general_qa_agent_node(
+        self,
+        state: AgentState,
+        config: Optional[RunnableConfig] = None,
+    ) -> Dict[str, Any]:
         memory_context = state.get("memory_context") or ""
         system_prompt = build_general_qa_system_prompt(memory_context=memory_context)
-        answer = await self._generate_agent_response(state, system_prompt, "")
+        answer = await self._generate_agent_response(
+            state, system_prompt, "", config
+        )
         return {
             "messages": [AIMessage(content=answer)],
             "agent_outputs": [
@@ -477,7 +550,11 @@ class AgentOrchestrator:
         }
 
     @observe(name="node_web_search_agent")
-    async def web_search_agent_node(self, state: AgentState) -> Dict[str, Any]:
+    async def web_search_agent_node(
+        self,
+        state: AgentState,
+        config: Optional[RunnableConfig] = None,
+    ) -> Dict[str, Any]:
         decision = self._decision_for_route(state, "web_search")
         action = decision.get("action") or "search"
         params = decision.get("params") or {}
@@ -490,7 +567,9 @@ class AgentOrchestrator:
         system_prompt = build_web_search_agent_system_prompt(
             memory_context=memory_context
         )
-        answer = await self._generate_agent_response(state, system_prompt, tool_output)
+        answer = await self._generate_agent_response(
+            state, system_prompt, tool_output, config
+        )
         status = _tool_status(tool_output)
 
         return {
@@ -506,7 +585,11 @@ class AgentOrchestrator:
         }
 
     @observe(name="node_merge_responses")
-    async def merge_responses_node(self, state: AgentState) -> Dict[str, Any]:
+    async def merge_responses_node(
+        self,
+        state: AgentState,
+        config: Optional[RunnableConfig] = None,
+    ) -> Dict[str, Any]:
         agent_outputs = state.get("agent_outputs") or []
         if len(agent_outputs) <= 1:
             if agent_outputs:
@@ -535,18 +618,26 @@ class AgentOrchestrator:
             SystemMessage(content=system_content),
             HumanMessage(content=user_message),
         ]
+        emit = _emit_from_config(config)
         try:
-            response = await self.llm_merge.ainvoke(messages)
+            merged = await _synthesize_llm_text(
+                self.llm_merge,
+                messages,
+                emit=emit,
+                stream=True,
+            )
         except Exception as exc:
             if self.llm_merge is self.llm_chat:
                 raise
             logger.warning(
                 "Merge LLM failed ({}); falling back to chat LLM.", exc
             )
-            response = await self.llm_chat.ainvoke(messages)
-        merged = _llm_content_to_str(
-            response.content if hasattr(response, "content") else response
-        )
+            merged = await _synthesize_llm_text(
+                self.llm_chat,
+                messages,
+                emit=emit,
+                stream=True,
+            )
         all_tool = "\n---\n".join(
             o.get("tool_output", "")
             for o in agent_outputs
@@ -598,11 +689,16 @@ class AgentOrchestrator:
         latency = int((time.perf_counter() - t0) * 1000)
         return self._to_agent_response(final_state, latency)
 
-    async def arun_state(self, state: AgentState) -> AgentState:
+    async def arun_state(
+        self,
+        state: AgentState,
+        *,
+        config: Optional[RunnableConfig] = None,
+    ) -> AgentState:
         """Invoke with a bridged ``AgentState`` patch (Phase 6 path)."""
         merged = dict(state)
         merged["agent_outputs"] = []
-        return await self.graph.ainvoke(merged)  # type: ignore[return-value]
+        return await self.graph.ainvoke(merged, config=config or {})  # type: ignore[return-value]
 
     def _to_agent_response(self, final_state: dict, latency_ms: int) -> AgentResponse:
         route_decisions = final_state.get("route_decisions") or []

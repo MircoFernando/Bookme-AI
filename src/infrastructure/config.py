@@ -196,6 +196,9 @@ MCP_TRANSPORT: str = _get_nested(_PARAMS, "mcp", "transport", default="stdio")
 SESSION_MAX_TURNS: int = _get_nested(_PARAMS, "session", "max_turns", default=20)
 SESSION_HISTORY_WINDOW: int = _get_nested(_PARAMS, "session", "history_window", default=3)
 
+# ── Chat streaming ────────────────────────────────────────────────────────────
+CHAT_STREAM_TOKENS: bool = _get_nested(_PARAMS, "chat", "stream_tokens", default=True)
+
 
 # ── Logging / observability ───────────────────────────────────────────────────
 LOG_LEVEL: str = _get_nested(_PARAMS, "logging", "level", default="INFO")

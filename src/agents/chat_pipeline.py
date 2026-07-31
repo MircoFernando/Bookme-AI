@@ -194,7 +194,7 @@ async def _run_chat_turn_body(
         }
     )
     t_orch = time.perf_counter()
-    final_state = await orchestrator.arun_state(patch)
+    final_state = await orchestrator.arun_state(patch, config=config)
     timings["orchestrator_ms"] = int((time.perf_counter() - t_orch) * 1000)
     await emit_fn(
         {

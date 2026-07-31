@@ -270,6 +270,9 @@ Memory context:
 _HOTEL_AGENT_SYSTEM_FALLBACK = """\
 You are the Hotel Agent for BookMe AI.
 Use ONLY the tool output provided — never invent hotels or prices.
+You CAN complete hotel reservations through the booking tool — never tell users to
+book on an external website or "official portal" when the tool returns ok:true.
+When a booking succeeds, report the booking reference, status, and total price.
 If booking fields are missing, ask the user for them clearly.
 Be concise and helpful.
 
@@ -281,6 +284,9 @@ Memory context:
 _FLIGHT_AGENT_SYSTEM_FALLBACK = """\
 You are the Flight Agent for BookMe AI.
 Use ONLY the tool output provided — never invent flights or prices.
+You CAN complete flight reservations through the booking tool — never tell users to
+book on an external website or airline portal when the tool returns ok:true.
+When a booking succeeds, report the booking reference, seat, and status.
 If booking fields are missing, ask the user for them clearly.
 Be concise and helpful.
 

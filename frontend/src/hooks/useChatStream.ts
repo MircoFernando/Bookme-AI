@@ -50,8 +50,31 @@ export function useChatStream({
       setLoading(true);
       setThoughts([]);
 
+      const streamingMsgIdRef = { current: null as string | null };
+
       const onEvent = (event: StreamEvent) => {
-        if (event.type === "stage_start") {
+        if (event.type === "token_start") {
+          const id = crypto.randomUUID();
+          streamingMsgIdRef.current = id;
+          setThoughts([]);
+          setMessages((prev) => [
+            ...prev,
+            {
+              id,
+              role: "assistant",
+              content: "",
+              ts: Date.now() / 1000,
+            },
+          ]);
+        } else if (event.type === "token_delta") {
+          const id = streamingMsgIdRef.current;
+          if (!id) return;
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === id ? { ...m, content: m.content + event.delta } : m,
+            ),
+          );
+        } else if (event.type === "stage_start") {
           const matchKey = `stage:${event.stage}`;
           setThoughts((prev) => [
             ...prev,
@@ -130,22 +153,34 @@ export function useChatStream({
           userId,
           onEvent,
         );
-        const botMsg: UIMessage = {
-          id: crypto.randomUUID(),
-          role: "assistant",
-          content: res.answer,
-          ts: Date.now() / 1000,
-          meta: {
-            route: res.route,
-            routes: res.routes,
-            verdict: res.verdict,
-            latency_ms: res.latency_ms,
-            trace_id: res.trace_id,
-            timings: res.timings,
-            session_id: res.session_id,
-          },
+        const meta = {
+          route: res.route,
+          routes: res.routes,
+          verdict: res.verdict,
+          latency_ms: res.latency_ms,
+          trace_id: res.trace_id,
+          timings: res.timings,
+          session_id: res.session_id,
         };
-        setMessages((prev) => [...prev, botMsg]);
+        if (streamingMsgIdRef.current) {
+          const id = streamingMsgIdRef.current;
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === id
+                ? { ...m, content: res.answer, meta }
+                : m,
+            ),
+          );
+        } else {
+          const botMsg: UIMessage = {
+            id: crypto.randomUUID(),
+            role: "assistant",
+            content: res.answer,
+            ts: Date.now() / 1000,
+            meta,
+          };
+          setMessages((prev) => [...prev, botMsg]);
+        }
         setThoughts([]);
       } catch (e) {
         const msg = e instanceof ApiError ? e.message : String(e);

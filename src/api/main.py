@@ -24,7 +24,8 @@ if _SRC not in sys.path:
     sys.path.insert(0, _SRC)
 
 _PROJECT_ROOT = os.path.dirname(_SRC)
-load_dotenv(dotenv_path=os.path.join(_PROJECT_ROOT, ".env"), override=False)
+# override=True so root .env wins over stale shell exports (e.g. AUTH_DISABLED=0).
+load_dotenv(dotenv_path=os.path.join(_PROJECT_ROOT, ".env"), override=True)
 
 from agents.decision_graph import build_decision_graph
 from agents.orchestrator import build_agent_mcp

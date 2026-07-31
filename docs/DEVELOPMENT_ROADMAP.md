@@ -246,7 +246,13 @@ Phase 10 Final delivery — polish, deploy, articles   ⏳
 | Observability | LangFuse SDK **v4**: `langfuse_turn_attributes` + `update_current_span` |
 | Pipeline | `agents/chat_pipeline.py` — decision graph → orchestrator; SSE `emit` for stages/tools |
 
-**SSE behaviour (assessment note):** `/chat/stream` emits **stage/tool progress** then a **`final`** event with the full answer. LLM **token-by-token** streaming is not implemented yet (optional polish in Phase 10).
+**SSE behaviour:** `/chat/stream` emits **stage/tool progress**, then **LLM token deltas** (`token_start` / `token_delta` / `token_end`) during the user-visible synthesis step, then **`final`** with metadata. See [STREAMING.md](./STREAMING.md).
+
+**Token streaming rules:**
+
+- Single route → stream from the active agent node (`_generate_agent_response`).
+- Multi route → agents synthesize with `ainvoke`; only **merge** streams tokens.
+- Toggle: `config/params.yaml` → `chat.stream_tokens` (`CHAT_STREAM_TOKENS`).
 
 **Production hardening (defer to Phase 8/10):**
 
@@ -279,7 +285,7 @@ Phase 10 Final delivery — polish, deploy, articles   ⏳
 
 - Production Clerk smoke test against live API
 - Optional: hotel/flight **result cards** (stretch)
-- Optional: LLM token streaming on final answer (SRS wording)
+- Optional: LLM token streaming on final answer (SRS wording) — **done** ([STREAMING.md](./STREAMING.md))
 - Legacy **`frontend.py` (Gradio)** — minimal blocking client; **not** the submitted UI (`frontend/` React app). Upgrade or document as deprecated in README.
 
 ---
@@ -462,6 +468,7 @@ config/
 docs/
   DEVELOPMENT_ROADMAP.md
   DECISION_GRAPH_NOTES.md
+  STREAMING.md          # SSE + token streaming
   DEPLOY_DO_API.md
   DEPLOY_DO_VERCEL.md
   MCP_SETUP.md          (Phase 8 — to add)
@@ -512,7 +519,7 @@ make run-ui
 | E1 MCP servers | 2–3b, wired in 5–6 | ✅ |
 | E2 Intent routing | 4–5 | ✅ |
 | E3 Graceful failures | 2–3 (tools), 5 (agents) | ✅ |
-| FE streaming + activity | 6 (API SSE), 7 (UI) | 🔄 SSE stages + CoT UI ✅; token stream optional |
+| FE streaming + activity | 6 (API SSE), 7 (UI) | ✅ stages + CoT + token deltas |
 | FE Gradio (SRS literal) | 0 baseline `frontend.py` | ⚠️ React is primary; Gradio minimal |
 | Deploy + docs | 8, 10 | 🔄 Docker/CI ✅; live URLs + MCP guide ⏳ |
 | Git branches / PRs | Ongoing | ✅ incremental history |
