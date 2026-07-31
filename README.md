@@ -26,7 +26,7 @@ BookMe AI is an intelligent travel planning system built on a modern AI architec
 - [Tech Stack](#-tech-stack)
 - [Project Structure](#-project-structure)
 - [Getting Started](#-getting-started)
-- [AWS Deployment](#-aws-deployment)
+- [Deployment](#-deployment)
 - [CI/CD Pipeline](#-cicd-pipeline)
 - [Configuration](#-configuration)
 - [API Reference](#-api-reference)
@@ -135,7 +135,7 @@ graph LR
 |---|---|---|
 | **Gate (Decision Graph)** | Scope & Intent | Evaluates `in_scope` vs `out_of_scope`. If valid, routes to appropriate actions (`hotel`, `flight`, `web_search`, `general_qa`). Guardrail and routing happen in parallel for zero added latency. |
 | **Orchestrator** | Agent Execution | Takes the routed decisions and fans out to specialized MCP-backed agents. Combines their results using a merge model. |
-| **Agents** | Tool usage | The Hotel agent fetches accommodations, the Flight agent books flights, and the Web Search agent handles live queries (e.g., tourist spots). |
+| **Agents** | Tool usage | Hotel and Flight agents search **and book** via Convex MCP tools; Web Search handles live destination queries (e.g., tourist spots). |
 
 ---
 
@@ -238,6 +238,10 @@ BookMe AI/
 ├── config/                       # ⚙️ Configuration files
 │   ├── params.yaml               #    System parameters (context, API URLs)
 │   └── models.yaml               #    LLM configurations
+│
+├── compose.prod.api.yaml         # 🐳 Production API only (DO droplet + Vercel UI)
+├── compose.prod.yaml             #    Production API + nginx UI (single VM)
+├── docker-compose.yml            #    Local dev stack (`make docker-up`)
 │
 ├── docs/                         # 📚 Architecture and setup documentation
 ├── Makefile                      # 🛠️ Task runner (tests, run commands)
@@ -414,18 +418,120 @@ Run `make` or `make help` for tests, MCP inspectors, and LangFuse seeding.
 
 ## ☁️ Deployment
 
-| API | UI | Doc |
-|-----|-----|-----|
-| Render (free tier) | Vercel | [DEPLOY_RENDER_VERCEL.md](docs/DEPLOY_RENDER_VERCEL.md) |
-| **DigitalOcean** Droplet | Vercel | [DEPLOY_DO_VERCEL.md](docs/DEPLOY_DO_VERCEL.md) — **API first:** [DEPLOY_DO_API.md](docs/DEPLOY_DO_API.md) |
+Production uses a **split stack**: the React UI on **Vercel**, the FastAPI + MCP backend on a **DigitalOcean Droplet** (Docker). This matches the booking-platform-api pattern (Docker Hub image → SSH pull on the server).
 
-Docker Compose locally or full stack on one VM: `make docker-up`, `compose.prod.yaml`. API-only on a droplet: `compose.prod.api.yaml`.
+### Architecture
+
+| Layer | Platform | How it runs |
+|-------|----------|-------------|
+| **Frontend** | [Vercel](https://vercel.com) | Root directory `frontend/`; connects to API via `VITE_API_URL` |
+| **API + MCP** | DigitalOcean Droplet | `compose.prod.api.yaml` — API on `127.0.0.1:8000` only |
+| **HTTPS** | Caddy (on droplet) | Reverse proxy `:443` → localhost (custom domain or [sslip.io](https://sslip.io)) |
+| **Images** | Docker Hub | `DOCKER_USERNAME/bookme-ai-api:latest` built by GitHub Actions |
+
+```text
+Browser (https://your-app.vercel.app)
+    → VITE_API_URL (https://api.example.com or https://IP-DASHED.sslip.io)
+        → Caddy :443
+            → bookme-ai-api container :8000
+                → MCP stdio (hotel / flight / web search)
+```
+
+Vercel does **not** run the API. The droplet does **not** serve the React app when using Vercel (no `web` container in prod).
+
+### Same droplet as booking-platform-api
+
+BookMe can share one VM with booking-platform-api. Typical layout:
+
+| App | Directory | Compose file | Internal port |
+|-----|-----------|--------------|---------------|
+| booking-platform-api | `~/booking-platform-api` | `compose.prod.yaml` | `:3000` |
+| BookMe AI | `~/Bookme-AI` | `compose.prod.api.yaml` | `127.0.0.1:8000` |
+
+Add a **second Caddy site block** for BookMe; do not remove booking’s block. See [docs/DEPLOY_DO_API.md](docs/DEPLOY_DO_API.md).
+
+### Environment variables (production)
+
+**Vercel** (frontend — rebuild required after changes):
+
+| Variable | Example |
+|----------|---------|
+| `VITE_API_URL` | `https://178-128-17-103.sslip.io` (HTTPS API URL, no trailing slash) |
+| `VITE_CLERK_PUBLISHABLE_KEY` | `pk_live_…` |
+| `VITE_AUTH_DISABLED` | `false` |
+
+**Droplet** (`~/Bookme-AI/.env` — restart container after edits):
+
+| Variable | Example |
+|----------|---------|
+| `OPENAI_API_KEY`, `TAVILY_API_KEY`, `GOOGLE_API_KEY` | LLM + merge + web search |
+| `DOCKER_REGISTRY_USER` | Same as GitHub `DOCKER_USERNAME` |
+| `CLERK_SECRET_KEY` | Clerk secret key |
+| `CORS_ORIGINS` | `https://your-app.vercel.app` (**frontend** origin, not the API URL) |
+| `CLERK_AUTHORIZED_PARTIES` | Same Vercel URL(s) as `CORS_ORIGINS` |
+| `AUTH_DISABLED` | `0` in production |
+
+Also allow the Vercel origin in the **Clerk Dashboard**. Full checklist: [docs/CLERK_SETUP.md](docs/CLERK_SETUP.md).
+
+### One-time droplet setup
+
+```bash
+git clone https://github.com/YOUR_USER/Bookme-AI.git ~/Bookme-AI
+cd ~/Bookme-AI
+cp .env.example .env   # fill keys + CORS / Clerk origins
+export DOCKER_REGISTRY_USER=your_dockerhub_username
+docker compose -f compose.prod.api.yaml pull
+docker compose -f compose.prod.api.yaml up -d
+curl -sS http://127.0.0.1:8000/health
+```
+
+Install **Caddy** for TLS, bind API to localhost only (`compose.prod.api.yaml` already does), open firewall **22 / 80 / 443**. Without HTTPS, a Vercel app cannot call the API (mixed content).
+
+**No domain?** Use sslip.io: IP `178.128.17.103` → `https://178-128-17-103.sslip.io`. Details: [docs/DEPLOY_DO_API.md](docs/DEPLOY_DO_API.md#no-custom-domain-https-without-buying-a-domain).
+
+### Local / single-VM alternatives
+
+| Goal | Command / file |
+|------|----------------|
+| Dev (hot reload) | `make run-api` + `make run-ui` — [Getting Started](#-getting-started) |
+| Local Docker (API + nginx UI) | `make docker-up` → `compose.prod.yaml` / `docker-compose.yml` |
+| Manual image push | `make docker-push` (sets Hub tags from `DOCKER_REGISTRY_USER`) |
+
+### Detailed guides
+
+| Doc | When to use |
+|-----|-------------|
+| [docs/DEPLOY_DO_API.md](docs/DEPLOY_DO_API.md) | First API deploy on DO, Caddy, sslip.io, GitHub secrets, troubleshooting |
+| [docs/DEPLOY_DO_VERCEL.md](docs/DEPLOY_DO_VERCEL.md) | Wire Vercel frontend to the droplet API |
+| [docs/STREAMING.md](docs/STREAMING.md) | SSE / chain-of-thought in production |
 
 ---
 
 ## 🔄 CI/CD Pipeline
 
-Optional: `.github/workflows/docker-publish.yml` pushes the API image to Docker Hub and auto-deploys to a DigitalOcean droplet (see [docs/DEPLOY_DO_API.md](docs/DEPLOY_DO_API.md)). **Vercel** deploys the frontend separately from Git.
+Workflow: [`.github/workflows/docker-publish.yml`](.github/workflows/docker-publish.yml) — runs on **push to `main`** or **manual dispatch**.
+
+| Job | What it does |
+|-----|----------------|
+| `push_to_registry` | Build `docker/api/Dockerfile` → push `bookme-ai-api:latest` and `:sha` to Docker Hub |
+| `push_web` | Build `docker/web/Dockerfile` → push `bookme-ai-web:latest` (optional; prod UI is on Vercel) |
+| `deploy` | SSH to droplet → `git pull` → `compose.prod.api.yaml pull` → `up -d` → `docker image prune -f` |
+
+**GitHub Actions secrets** (BookMe repo → Settings → Secrets):
+
+| Secret | Purpose |
+|--------|---------|
+| `DOCKER_USERNAME` | Docker Hub user |
+| `DOCKER_TOKEN` | Hub access token |
+| `DROPLET_HOST` | Droplet public IP |
+| `SSH_PRIVATE_KEY` | Private key whose `.pub` is in droplet `authorized_keys` |
+| `VITE_CLERK_PUBLISHABLE_KEY` | Optional — baked into `push_web` image only |
+
+Deploy script path on the server: **`~/Bookme-AI`** (must match clone location).
+
+**Vercel** deploys the frontend separately (connect Git repo, root `frontend/`). After changing `VITE_API_URL`, trigger a Vercel redeploy.
+
+**Storage note:** each run tags `bookme-ai-api:${{ github.sha }}` on Hub; droplet `image prune -f` removes dangling layers only. Prune old Hub tags or use `docker image prune -af` on the droplet occasionally if disk is tight.
 
 ---
 
@@ -439,8 +545,12 @@ Runtime behavior is easily controlled via YAML:
 - Observability and prompt cache TTL settings.
 
 ### `config/models.yaml`
-- Maps roles (router, guardrail, chat) to specific LLM models (e.g., `gpt-4o-mini`).
+- Maps roles (router, guardrail, chat, **merge**) to LLM models — e.g. OpenAI `gpt-4o-mini` for agents, Google Gemini for multi-route merge.
 - Temperature and fallback controls.
+
+### Root `.env` (secrets)
+- API keys, Clerk, `CORS_ORIGINS`, `DOCKER_REGISTRY_USER` — see `.env.example`.
+- Production droplet uses the same variables via `compose.prod.api.yaml` `env_file: .env`.
 
 ---
 
