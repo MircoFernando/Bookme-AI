@@ -5,18 +5,16 @@ import {
   UserButton,
   useAuth,
 } from "@clerk/clerk-react";
-import { Plane } from "lucide-react";
 import { motion } from "framer-motion";
+import { BookMeLogo } from "@/components/BookMeLogo";
 
 function BrandMark({ compact = false }: { compact?: boolean }) {
   return (
     <Link to="/" className="group flex items-center gap-2.5 min-w-0">
-      <span className="relative flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500/30 to-blue-600/40 border border-white/10 shadow-[0_0_24px_-8px_rgba(99,102,241,0.7)]">
-        <Plane
-          size={16}
-          className="text-blue-100 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-        />
-      </span>
+      <BookMeLogo
+        size="sm"
+        className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-105"
+      />
       <span
         className={`font-display tracking-tight text-white ${
           compact ? "text-lg" : "text-xl"

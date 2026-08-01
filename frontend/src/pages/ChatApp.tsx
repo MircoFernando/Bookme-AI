@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Plane } from "lucide-react";
 import { useAuth, useUser, UserButton, SignInButton } from "@clerk/clerk-react";
+import { BookMeLogo } from "@/components/BookMeLogo";
 import { setAuthTokenProvider } from "@/api/auth";
 import { ChatWindow } from "@/components/ChatWindow";
 import { InputBox } from "@/components/InputBox";
@@ -65,9 +65,7 @@ function ChatAuthRequired() {
   return (
     <div className="h-full flex items-center justify-center px-4 bg-bg">
       <div className="w-full max-w-md text-center space-y-5">
-        <div className="mx-auto size-14 rounded-2xl bg-violet-500/15 border border-violet-400/30 flex items-center justify-center">
-          <Plane size={26} className="text-blue-300" />
-        </div>
+        <BookMeLogo size="lg" className="mx-auto" />
         <div>
           <h1 className="font-display text-2xl text-white tracking-tight">
             Sign in to use the assistant
@@ -129,10 +127,10 @@ function AppShell({
       <header className="shrink-0 h-14 border-b border-border flex items-center gap-3 px-4 bg-bg-soft">
         <Link
           to="/"
-          className="size-8 rounded-lg bg-violet-500/15 border border-violet-400/35 flex items-center justify-center hover:bg-violet-500/25 transition-colors"
+          className="flex items-center justify-center rounded-lg hover:opacity-80 transition-opacity"
           title="Home"
         >
-          <Plane size={16} className="text-blue-300" />
+          <BookMeLogo size="xs" />
         </Link>
         <div className="flex-1 min-w-0">
           <h1 className="text-sm font-semibold text-slate-100 truncate tracking-tight font-display">

@@ -1,6 +1,6 @@
-import { Plane } from "lucide-react";
 import { SignIn, SignedOut } from "@clerk/clerk-react";
 import { isApiAuthDisabled } from "@/api/auth";
+import { BookMeLogo } from "@/components/BookMeLogo";
 
 interface DevGateProps {
   onContinue: () => void;
@@ -16,9 +16,7 @@ export function AuthGate({ onContinue }: DevGateProps) {
     <div className="h-full flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="mx-auto size-14 rounded-2xl bg-brand-500/15 border border-brand-500/40 flex items-center justify-center mb-3">
-            <Plane size={26} className="text-brand-400" />
-          </div>
+          <BookMeLogo size="lg" className="mx-auto mb-3" />
           <h1 className="text-xl font-semibold text-slate-100 tracking-tight">
             BookMe<span className="text-brand-400"> AI</span>
           </h1>

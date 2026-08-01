@@ -14,6 +14,7 @@ import {
   Sparkles,
   Workflow,
 } from "lucide-react";
+import { BookMeLogo } from "@/components/BookMeLogo";
 import { AnimatedGradientBackground } from "@/components/ui/animated-gradient-background";
 import { AuroraField } from "@/components/landing/AuroraField";
 import { LandingNav } from "@/components/landing/LandingNav";
@@ -166,6 +167,19 @@ export default function LandingPage({ authMode }: { authMode: AuthMode }) {
             }}
             className="max-w-2xl"
           >
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 18 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+                },
+              }}
+              className="mb-6"
+            >
+              <BookMeLogo size="hero" />
+            </motion.div>
             <motion.p
               variants={{
                 hidden: { opacity: 0, y: 18 },

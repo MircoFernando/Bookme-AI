@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { MapPin, Plane } from "lucide-react";
+import { MapPin } from "lucide-react";
+import { BookMeLogo } from "@/components/BookMeLogo";
 import type { UIMessage } from "@/types";
 import type { ThoughtItem } from "@/hooks/useChatStream";
 import { ChainOfThought } from "./ChainOfThought";
@@ -67,9 +68,7 @@ function EmptyState({
 }) {
   return (
     <div className="max-w-2xl mx-auto text-center py-12 space-y-6 animate-fade-in">
-      <div className="inline-flex items-center justify-center size-14 rounded-2xl bg-brand-500/10 border border-brand-500/30">
-        <Plane className="text-brand-400" size={26} />
-      </div>
+      <BookMeLogo size="lg" className="mx-auto" />
       <div>
         <h2 className="text-xl font-semibold text-slate-100 tracking-tight">
           BookMe<span className="text-brand-400"> AI</span>
