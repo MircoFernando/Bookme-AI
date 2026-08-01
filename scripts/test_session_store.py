@@ -35,6 +35,14 @@ def main() -> int:
     store.reset("user-a", shared_session)
     assert store.recent_pairs("user-a", shared_session) == []
     assert store.recent_pairs("user-b", shared_session) == pairs_b
+    assert store.get_flight_inventory("user-a", shared_session) == []
+
+    store.merge_flight_inventory(
+        "user-a",
+        "sess-2",
+        [{"_id": "kid1", "flightNumber": "XY1", "airline": "Test Air"}],
+    )
+    assert "flight_id=kid1" in store.format_flight_inventory_for_memory("user-a", "sess-2")
 
     print("SessionStore composite-key checks passed.")
     return 0

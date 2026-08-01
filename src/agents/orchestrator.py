@@ -33,7 +33,7 @@ from agents.prompts import (
     build_merge_system_prompt,
     build_web_search_agent_system_prompt,
 )
-from agents.router import QueryRouter, get_query_router
+from agents.tools.flight_tool import _looks_like_convex_id, resolve_flight_id
 from agents.state import AgentState
 from infrastructure import config as app_config
 from infrastructure.observability import observe
@@ -188,12 +188,23 @@ def _format_session_memory(
         logger.warning("Session recall failed: {}", exc)
         return ""
     if not pairs:
-        return ""
-    lines: List[str] = []
-    for user_msg, assistant_msg in pairs:
-        lines.append(f"User: {user_msg}")
-        lines.append(f"Assistant: {assistant_msg}")
-    return "\n".join(lines)
+        lines: List[str] = []
+    else:
+        lines = []
+        for user_msg, assistant_msg in pairs:
+            lines.append(f"User: {user_msg}")
+            lines.append(f"Assistant: {assistant_msg}")
+    try:
+        catalog = session_store.format_flight_inventory_for_memory(
+            user_id, session_id
+        )
+        if catalog:
+            if lines:
+                lines.append("")
+            lines.append(catalog)
+    except Exception as exc:
+        logger.debug("Flight inventory recall failed: {}", exc)
+    return "\n".join(lines) if lines else ""
 
 
 def _mcp_result_to_str(raw: Any) -> str:
@@ -227,11 +238,58 @@ def _parse_inventory(tool_output: str, key: str) -> List[dict]:
         return []
     if not isinstance(payload, dict) or not payload.get("ok"):
         return []
+    items = payload.get(key, [])
+    if isinstance(items, list) and items:
+        return items
     data = payload.get("data")
     if isinstance(data, dict):
-        items = data.get(key, [])
-        return items if isinstance(items, list) else []
+        nested = data.get(key, [])
+        return nested if isinstance(nested, list) else []
     return []
+
+
+def _persist_flight_inventory(
+    session_store: Any,
+    user_id: str,
+    session_id: str,
+    flights: List[dict],
+) -> None:
+    if not session_store or not session_id or not flights:
+        return
+    try:
+        session_store.merge_flight_inventory(user_id, session_id, flights)
+    except Exception as exc:
+        logger.warning("Flight inventory persist failed: {}", exc)
+
+
+def _prepare_flight_book_params(
+    state: AgentState,
+    params: dict,
+    *,
+    session_store: Any,
+) -> dict:
+    """Map flight numbers / airline labels to Convex ids before MCP book."""
+    prepared = dict(params or {})
+    token = prepared.get("flight_id")
+    if not token or _looks_like_convex_id(str(token)):
+        return prepared
+
+    inventory: List[dict] = []
+    user_id = state.get("user_id") or ""
+    session_id = state.get("session_id") or ""
+    if session_store and session_id:
+        inventory = session_store.get_flight_inventory(user_id, session_id)
+
+    resolved, _err = resolve_flight_id(
+        str(token),
+        origin=prepared.get("origin"),
+        destination=prepared.get("destination"),
+        date=prepared.get("flight_date") or prepared.get("date"),
+        candidate_flights=inventory or None,
+    )
+    if resolved:
+        prepared["flight_id"] = resolved
+    return prepared
 
 
 class AgentOrchestrator:
@@ -517,6 +575,10 @@ class AgentOrchestrator:
         decision = self._decision_for_route(state, "flight")
         action = decision.get("action") or "search"
         params = decision.get("params") or {}
+        if action == "book":
+            params = _prepare_flight_book_params(
+                state, params, session_store=self.session_store
+            )
         memory_context = state.get("memory_context") or ""
 
         tool_output = await self._dispatch_flight(action, params)
@@ -540,6 +602,12 @@ class AgentOrchestrator:
         flights = _parse_inventory(tool_output, "flights")
         if flights:
             patch["flight_results"] = flights
+            _persist_flight_inventory(
+                self.session_store,
+                state.get("user_id") or "",
+                state.get("session_id") or "",
+                flights,
+            )
         return patch
 
     @observe(name="node_general_qa_agent")

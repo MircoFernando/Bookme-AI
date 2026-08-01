@@ -110,8 +110,8 @@
     "semantic_hash": ""
   },
   "src/agents/tools/flight_tool.py": {
-    "mtime": 1785055043.594652,
-    "ast_hash": "d0e9431d87de3c7a794f541a7e1a6813",
+    "mtime": 1785603735.2644966,
+    "ast_hash": "3b560232fa41c91cdefe435673e09060",
     "semantic_hash": ""
   },
   "src/agents/tools/hotel_tool.py": {
@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "src/infrastructure/session_store.py": {
-    "mtime": 1785185161.149107,
-    "ast_hash": "0697e677ec646dd69b8b3e792062b0a1",
+    "mtime": 1785603711.336862,
+    "ast_hash": "f3b6cf690e85d435a16b171c17de53f2",
     "semantic_hash": ""
   },
   "src/mcp_servers/__init__.py": {
@@ -175,8 +175,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785496211.3644845,
-    "ast_hash": "a071cca51fbb6b565daffbb4e4f79c88",
+    "mtime": 1785501543.1416402,
+    "ast_hash": "ac725033ffc6b913ed2aad09b0e3dcf3",
     "semantic_hash": ""
   },
   "config/models.yaml": {
@@ -210,8 +210,8 @@
     "semantic_hash": ""
   },
   "src/agents/orchestrator.py": {
-    "mtime": 1785500981.825021,
-    "ast_hash": "aee0d3b2ea24a843b53aba14060cebb3",
+    "mtime": 1785603735.8486903,
+    "ast_hash": "eba7796728956fdfe8911b6aa76674bb",
     "semantic_hash": ""
   },
   "src/infrastructure/llm/__init__.py": {
@@ -225,8 +225,8 @@
     "semantic_hash": ""
   },
   "scripts/test_session_store.py": {
-    "mtime": 1785165226.0843384,
-    "ast_hash": "441805fe8844f639965c8d59218d36cf",
+    "mtime": 1785603746.8978384,
+    "ast_hash": "9ec82f2220e398aeabbcbda982c9982e",
     "semantic_hash": ""
   },
   "scripts/test_chat_pipeline.py": {
@@ -335,8 +335,8 @@
     "semantic_hash": ""
   },
   "frontend/src/components/AuthGate.tsx": {
-    "mtime": 1785184038.5558052,
-    "ast_hash": "7a64e7912e9bc019f0511022eb4e4edf",
+    "mtime": 1785601417.6940107,
+    "ast_hash": "d179002026691b3101f78e36e8526a38",
     "semantic_hash": ""
   },
   "frontend/src/components/ChainOfThought.tsx": {
@@ -345,8 +345,8 @@
     "semantic_hash": ""
   },
   "frontend/src/components/ChatWindow.tsx": {
-    "mtime": 1785184038.5565016,
-    "ast_hash": "174f48ee00e973ace0a5da0f08fc8797",
+    "mtime": 1785601418.8148353,
+    "ast_hash": "480f05775d63b28eb44cff09ecb254da",
     "semantic_hash": ""
   },
   "frontend/src/components/InputBox.tsx": {
@@ -355,8 +355,8 @@
     "semantic_hash": ""
   },
   "frontend/src/components/MessageBubble.tsx": {
-    "mtime": 1785184038.5568058,
-    "ast_hash": "958c912f5d2d23223ff40f94686ea575",
+    "mtime": 1785601419.6583834,
+    "ast_hash": "04dc2263eb534f131b3d9a4bf858c711",
     "semantic_hash": ""
   },
   "frontend/src/components/ResponseMeta.tsx": {
@@ -385,8 +385,8 @@
     "semantic_hash": ""
   },
   "frontend/src/components/landing/LandingNav.tsx": {
-    "mtime": 1785184038.5575938,
-    "ast_hash": "ada523be4b87ad5cab3a0f152b3bfa95",
+    "mtime": 1785601417.3603163,
+    "ast_hash": "725f2b882536b9688bc5890ece323b0b",
     "semantic_hash": ""
   },
   "frontend/src/components/landing/Reveal.tsx": {
@@ -420,13 +420,13 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/ChatApp.tsx": {
-    "mtime": 1785184038.5590522,
-    "ast_hash": "bdb3b3428f2f9e2aacf5829c7db4a2cb",
+    "mtime": 1785601418.3689253,
+    "ast_hash": "5ca98bdbcf7c81a41face086f5a8bd56",
     "semantic_hash": ""
   },
   "frontend/src/pages/LandingPage.tsx": {
-    "mtime": 1785184038.559222,
-    "ast_hash": "7769a1c848350ce0e85c2c89729a9abd",
+    "mtime": 1785601419.8339329,
+    "ast_hash": "3bd557922eff1de9d9a1a4d40fd41a59",
     "semantic_hash": ""
   },
   "frontend/src/types.ts": {
@@ -480,8 +480,8 @@
     "semantic_hash": ""
   },
   "frontend/index.html": {
-    "mtime": 1785184038.5404377,
-    "ast_hash": "7fa9024b9bd59ed306455f08c1e35acd",
+    "mtime": 1785601420.135801,
+    "ast_hash": "9f943d593240a0064d5f297e3cd077f4",
     "semantic_hash": ""
   },
   "frontend/public/images/hero-dusk.jpg": {
@@ -552,6 +552,21 @@
   "docs/STREAMING.md": {
     "mtime": 1785496211.3644643,
     "ast_hash": "df06d2d517c3fdfc60cf1f7f67d2aea2",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/BookMeLogo.tsx": {
+    "mtime": 1785601417.3662755,
+    "ast_hash": "b2c8140006ab678cc059eb63456b3245",
+    "semantic_hash": ""
+  },
+  "scripts/test_flight_book_resolve.py": {
+    "mtime": 1785603745.121271,
+    "ast_hash": "d47825c9c717e73d8f9d860debbcc1d6",
+    "semantic_hash": ""
+  },
+  "frontend/public/images/bookme-ai-logo.png": {
+    "mtime": 1785601362.5194407,
+    "ast_hash": "52e1bc640737ce72b52a8f16ec983ebd",
     "semantic_hash": ""
   }
 }

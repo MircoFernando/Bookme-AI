@@ -44,6 +44,8 @@
   "42": "4. Parallel guardrail + router — runtime behavior",
   "43": "package.json",
   "44": "scripts",
+  "45": "build_agent_mcp",
+  "46": "orchestrator.py",
   "47": "shadcn",
   "48": "vite-env.d.ts",
   "49": "vite.config.ts",
@@ -53,5 +55,10 @@
   "53": "check_clerk_env.py",
   "54": "postcss.config.js",
   "55": "tailwind.config.ts",
-  "56": "vite.config.js"
+  "56": "vite.config.js",
+  "57": "infrastructure/__init__.py",
+  "58": "_RecordingOrchestrator",
+  "59": "_llm_content_to_str",
+  "60": "BookMeLogo.tsx",
+  "61": "AgentResponse"
 }

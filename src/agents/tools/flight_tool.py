@@ -36,6 +36,80 @@ def _normalize_airport(value: str) -> str:
     return v
 
 
+def _normalize_flight_number(value: str) -> str:
+    return (value or "").strip().upper().replace(" ", "")
+
+
+def _looks_like_convex_id(value: str) -> bool:
+    """True for Convex document ids (not display flight numbers like CA2194)."""
+    v = (value or "").strip()
+    return (
+        len(v) >= 16
+        and v.isalnum()
+        and v[0].isalpha()
+        and v.islower()
+    )
+
+
+def _flights_matching_number(flights: list, flight_number: str) -> list:
+    needle = _normalize_flight_number(flight_number)
+    if not needle:
+        return []
+    return [
+        f
+        for f in flights
+        if isinstance(f, dict)
+        and _normalize_flight_number(str(f.get("flightNumber", ""))) == needle
+    ]
+
+
+def _flights_matching_label(flights: list, label: str) -> list:
+    """Match flight number or airline name substring (session inventory only)."""
+    needle = (label or "").strip().lower()
+    if not needle:
+        return []
+    matches: list = []
+    for f in flights:
+        if not isinstance(f, dict):
+            continue
+        fn = _normalize_flight_number(str(f.get("flightNumber", ""))).lower()
+        airline = str(f.get("airline", "")).lower()
+        if needle == fn or (len(needle) >= 4 and needle in airline):
+            matches.append(f)
+    return matches
+
+
+def _dedupe_flights(flights: list) -> list:
+    seen: set[str] = set()
+    out: list = []
+    for f in flights:
+        if not isinstance(f, dict):
+            continue
+        fid = f.get("_id")
+        if fid and fid not in seen:
+            seen.add(fid)
+            out.append(f)
+    return out
+
+
+def resolve_flight_id(
+    flight_id: str,
+    *,
+    origin: Optional[str] = None,
+    destination: Optional[str] = None,
+    date: Optional[str] = None,
+    candidate_flights: Optional[list] = None,
+) -> tuple[Optional[str], Optional[str]]:
+    """Resolve a Convex ``flight_id`` or display flight number / airline label."""
+    return FlightTool()._resolve_flight_id(
+        flight_id,
+        origin=origin,
+        destination=destination,
+        date=date,
+        candidate_flights=candidate_flights,
+    )
+
+
 class FlightTool:
     """Flight service actions routed by ``dispatch``."""
 
@@ -87,10 +161,14 @@ class FlightTool:
                 "flightId": "flight_id",
                 "passengerName": "passenger_name",
                 "passengerEmail": "passenger_email",
+                "flightNumber": "flight_id",
+                "flight_number": "flight_id",
             }
             for src, dst in aliases.items():
                 if src in p and dst not in p:
                     p[dst] = p.pop(src)
+            if "flight_date" in p and "date" not in p:
+                p["date"] = p.pop("flight_date")
         if action == "search_flights":
             if "flight_date" in p and "date" not in p:
                 p["date"] = p.pop("flight_date")
@@ -134,11 +212,86 @@ class FlightTool:
             "destination": query["destination"],
         })
 
+    def _collect_flights_for_resolve(
+        self,
+        *,
+        origin: Optional[str],
+        destination: Optional[str],
+        date: Optional[str],
+        candidate_flights: Optional[list],
+    ) -> list:
+        pools: list = []
+        if candidate_flights:
+            pools.extend(candidate_flights)
+        if origin and destination:
+            raw = self.search_flights(origin, destination, date)
+            try:
+                payload = json.loads(raw)
+            except (json.JSONDecodeError, TypeError):
+                payload = {}
+            if payload.get("ok"):
+                pools.extend(payload.get("flights") or [])
+        if not pools:
+            raw = self.list_flights()
+            try:
+                payload = json.loads(raw)
+            except (json.JSONDecodeError, TypeError):
+                payload = {}
+            if payload.get("ok"):
+                pools.extend(payload.get("flights") or [])
+        return _dedupe_flights(pools)
+
+    def _resolve_flight_id(
+        self,
+        flight_id: str,
+        *,
+        origin: Optional[str] = None,
+        destination: Optional[str] = None,
+        date: Optional[str] = None,
+        candidate_flights: Optional[list] = None,
+    ) -> tuple[Optional[str], Optional[str]]:
+        token = (flight_id or "").strip()
+        if not token:
+            return None, "flight_id is required"
+        if _looks_like_convex_id(token):
+            return token, None
+
+        pools = self._collect_flights_for_resolve(
+            origin=origin,
+            destination=destination,
+            date=date,
+            candidate_flights=candidate_flights,
+        )
+
+        matches = _flights_matching_number(pools, token)
+        if not matches and candidate_flights:
+            matches = _flights_matching_label(candidate_flights, token)
+
+        if len(matches) == 1:
+            return str(matches[0]["_id"]), None
+        if len(matches) > 1:
+            opts = ", ".join(
+                f"{m.get('flightNumber')} (flight_id={m.get('_id')})"
+                for m in matches[:5]
+            )
+            return None, (
+                f"Multiple flights match '{token}': {opts}. "
+                "Specify flight_id from the search results."
+            )
+        return None, (
+            f"No flight found matching '{token}'. "
+            "Search again or pass the Convex flight_id from results."
+        )
+
     def book_flight(
         self,
         flight_id: Optional[str] = None,
         passenger_name: Optional[str] = None,
         passenger_email: Optional[str] = None,
+        origin: Optional[str] = None,
+        destination: Optional[str] = None,
+        date: Optional[str] = None,
+        candidate_flights: Optional[list] = None,
     ) -> str:
         missing = [
             name
@@ -156,12 +309,29 @@ class FlightTool:
                 "code": "VALIDATION",
             })
 
+        resolved_id, resolve_err = self._resolve_flight_id(
+            str(flight_id),
+            origin=origin,
+            destination=destination,
+            date=date,
+            candidate_flights=candidate_flights,
+        )
+        if resolve_err or not resolved_id:
+            return _dumps({
+                "ok": False,
+                "error": resolve_err or "Could not resolve flight_id",
+                "code": "VALIDATION",
+            })
+
         payload = {
-            "flightId": flight_id,
+            "flightId": resolved_id,
             "passengerName": passenger_name,
             "passengerEmail": passenger_email,
         }
         envelope = post_json(f"{FLIGHTS_BASE_URL}/book", payload)
         if not envelope.get("ok"):
             return _dumps(envelope)
-        return _dumps({"ok": True, "booking": envelope.get("data")})
+        data = envelope.get("data")
+        if isinstance(data, dict):
+            data = {**data, "resolved_flight_id": resolved_id}
+        return _dumps({"ok": True, "booking": data})
