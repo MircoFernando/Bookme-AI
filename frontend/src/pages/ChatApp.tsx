@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Menu } from "lucide-react";
 import { useAuth, useUser, UserButton, SignInButton } from "@clerk/clerk-react";
 import { BookMeLogo } from "@/components/BookMeLogo";
 import { setAuthTokenProvider } from "@/api/auth";
@@ -113,6 +114,16 @@ function AppShell({
   const activeSession = sessions.sessions.find(
     (s) => s.session_id === sessions.activeId,
   );
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const onChange = () => {
+      if (mq.matches) setSidebarOpen(false);
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   if (!sessions.loaded || !sessions.activeId) {
     return (
@@ -124,10 +135,18 @@ function AppShell({
 
   return (
     <div className="h-full flex flex-col bg-bg">
-      <header className="shrink-0 h-14 border-b border-border flex items-center gap-3 px-4 bg-bg-soft">
+      <header className="shrink-0 h-14 border-b border-border flex items-center gap-2 sm:gap-3 px-3 sm:px-4 bg-bg-soft">
+        <button
+          type="button"
+          className="md:hidden btn-ghost p-2 -ml-1 shrink-0"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Open menu"
+        >
+          <Menu size={20} />
+        </button>
         <Link
           to="/"
-          className="flex items-center justify-center rounded-lg hover:opacity-80 transition-opacity"
+          className="flex items-center justify-center rounded-lg hover:opacity-80 transition-opacity shrink-0"
           title="Home"
         >
           <BookMeLogo size="xs" />
@@ -153,7 +172,15 @@ function AppShell({
         />
       </header>
 
-      <div className="flex-1 flex min-h-0">
+      <div className="flex-1 flex min-h-0 relative">
+        {sidebarOpen && (
+          <button
+            type="button"
+            className="fixed inset-0 z-30 bg-black/50 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close menu"
+          />
+        )}
         <Sidebar
           sessions={sessions.sessions}
           activeId={sessions.activeId}
@@ -163,6 +190,8 @@ function AppShell({
           displayName={displayName}
           userId={userId}
           activeSessionId={sessions.activeId}
+          mobileOpen={sidebarOpen}
+          onMobileClose={() => setSidebarOpen(false)}
         />
 
         <main className="flex-1 flex flex-col min-w-0">
@@ -174,7 +203,7 @@ function AppShell({
             error={chat.error}
             onTrySample={chat.send}
           />
-          <div className="shrink-0 border-t border-border p-3 bg-bg-soft">
+          <div className="shrink-0 border-t border-border p-2 sm:p-3 bg-bg-soft">
             <div className="max-w-3xl mx-auto">
               <InputBox
                 disabled={chat.loading || health.status === "offline"}
@@ -186,12 +215,12 @@ function AppShell({
                     : `Plan a trip, ${displayName.split(" ")[0]}…`
                 }
               />
-              <div className="flex items-center justify-between text-[10px] text-slate-500 mt-2 px-1">
-                <span>
+              <div className="hidden sm:flex items-center justify-between text-[10px] text-slate-500 mt-2 px-1">
+                <span className="truncate">
                   session=
                   <code className="text-slate-300">{sessions.activeId}</code>
                 </span>
-                <span>
+                <span className="shrink-0">
                   <kbd className="kbd">Enter</kbd> send ·{" "}
                   <kbd className="kbd">Shift+Enter</kbd> newline
                 </span>

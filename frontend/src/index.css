@@ -5,6 +5,7 @@
 @layer base {
   html, body, #root {
     height: 100%;
+    overflow-x: hidden;
   }
   body {
     font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;

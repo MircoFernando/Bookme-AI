@@ -66,13 +66,13 @@ function ClerkAuthActions() {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 shrink-0">
       <SignInButton
         mode="modal"
         forceRedirectUrl="/"
         fallbackRedirectUrl="/"
       >
-        <button type="button" className="landing-btn-ghost">
+        <button type="button" className="landing-btn-ghost text-xs sm:text-sm px-3 sm:px-4">
           Sign in
         </button>
       </SignInButton>
@@ -81,7 +81,7 @@ function ClerkAuthActions() {
         forceRedirectUrl="/"
         fallbackRedirectUrl="/"
       >
-        <button type="button" className="landing-btn-primary">
+        <button type="button" className="landing-btn-primary text-xs sm:text-sm px-3 sm:px-4">
           Get started
         </button>
       </SignUpButton>
@@ -98,8 +98,8 @@ export function LandingNav({ authMode }: { authMode: "dev" | "clerk" }) {
       className="fixed inset-x-0 top-0 z-50"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-4">
-        <nav className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-[#070b18]/70 px-4 py-3 backdrop-blur-xl shadow-[0_8px_40px_-20px_rgba(37,99,235,0.45)]">
-          <BrandMark />
+        <nav className="flex items-center justify-between gap-2 sm:gap-4 rounded-2xl border border-white/10 bg-[#070b18]/70 px-3 sm:px-4 py-3 backdrop-blur-xl shadow-[0_8px_40px_-20px_rgba(37,99,235,0.45)]">
+          <BrandMark compact />
           <div className="hidden sm:flex items-center gap-6 text-sm text-slate-300">
             <a href="#how" className="hover:text-white transition-colors">
               How it works

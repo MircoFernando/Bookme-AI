@@ -13,6 +13,8 @@ interface Props {
   displayName: string;
   userId: string;
   activeSessionId: string;
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
 export function Sidebar({
@@ -24,11 +26,22 @@ export function Sidebar({
   displayName,
   userId,
   activeSessionId,
+  mobileOpen = false,
+  onMobileClose,
 }: Props) {
   const [tab, setTab] = useState<"sessions" | "tools">("sessions");
 
+  const closeMobile = () => onMobileClose?.();
+
   return (
-    <aside className="w-72 shrink-0 border-r border-border bg-bg-soft flex flex-col">
+    <aside
+      className={clsx(
+        "w-72 shrink-0 border-r border-border bg-bg-soft flex flex-col",
+        "fixed top-14 bottom-0 left-0 z-40 transition-transform duration-200 ease-out",
+        "md:static md:translate-x-0 md:z-auto",
+        mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
+      )}
+    >
       <div className="p-3 border-b border-border">
         <div className="card p-2.5 flex items-center gap-2.5">
           <div className="size-9 rounded-full bg-brand-500/15 border border-brand-500/40 flex items-center justify-center text-brand-400">
@@ -66,7 +79,14 @@ export function Sidebar({
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
         {tab === "sessions" ? (
           <>
-            <button type="button" className="btn-primary w-full" onClick={onCreate}>
+            <button
+              type="button"
+              className="btn-primary w-full"
+              onClick={() => {
+                onCreate();
+                closeMobile();
+              }}
+            >
               <Plus size={14} /> New conversation
             </button>
             {sessions.map((s) => (
@@ -78,7 +98,10 @@ export function Sidebar({
                     ? "bg-bg-card border-brand-500/40"
                     : "border-transparent hover:bg-bg-card/60",
                 )}
-                onClick={() => onSelect(s.session_id)}
+                onClick={() => {
+                  onSelect(s.session_id);
+                  closeMobile();
+                }}
               >
                 <MessageSquare size={13} className="shrink-0 text-slate-500" />
                 <div className="flex-1 min-w-0">

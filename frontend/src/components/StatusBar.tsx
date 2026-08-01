@@ -51,7 +51,7 @@ export function StatusBar({ status, readiness, config }: Props) {
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            className="absolute right-0 top-full mt-2 w-80 card p-3 z-20 space-y-3 text-xs"
+            className="absolute right-0 top-full mt-2 w-[min(20rem,calc(100vw-2rem))] card p-3 z-20 space-y-3 text-xs"
           >
             <div>
               <div className="text-slate-400 mb-1 flex items-center gap-1">

@@ -37,7 +37,7 @@ export function MessageBubble({ message }: Props) {
       <div className={clsx("max-w-[85%] space-y-2", isUser && "items-end")}>
         <div
           className={clsx(
-            "rounded-2xl px-4 py-2.5 text-sm leading-relaxed prose prose-sm prose-invert max-w-none",
+            "rounded-2xl px-3 sm:px-4 py-2.5 text-sm leading-relaxed prose prose-sm prose-invert max-w-none overflow-x-auto",
             isUser
               ? "bg-brand-500 text-slate-900 rounded-tr-sm prose-a:text-slate-800"
               : "bg-bg-card border border-border text-slate-100 rounded-tl-sm",
