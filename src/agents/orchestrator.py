@@ -33,6 +33,7 @@ from agents.prompts import (
     build_merge_system_prompt,
     build_web_search_agent_system_prompt,
 )
+from agents.router import QueryRouter, get_query_router
 from agents.tools.flight_tool import _looks_like_convex_id, resolve_flight_id
 from agents.state import AgentState
 from infrastructure import config as app_config
