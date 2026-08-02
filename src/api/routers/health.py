@@ -55,6 +55,16 @@ async def ready(request: Request) -> ReadinessResponse:
             detail=f"{count} tools loaded" if ok else f"expected ≥7, got {count}",
         )
 
+    async def check_tavily() -> ReadinessCheck:
+        from infrastructure.config import get_tavily_api_key
+
+        key = get_tavily_api_key()
+        return ReadinessCheck(
+            name="tavily_api_key",
+            ok=bool(key),
+            detail="configured" if key else "TAVILY_API_KEY missing in API env",
+        )
+
     async def check_session_store() -> ReadinessCheck:
         store = getattr(request.app.state, "session_store", None)
         if store is None:
@@ -65,7 +75,9 @@ async def ready(request: Request) -> ReadinessResponse:
         except Exception as exc:
             return ReadinessCheck(name="session_store", ok=False, detail=str(exc)[:200])
 
-    checks = await asyncio.gather(check_config(), check_mcp(), check_session_store())
+    checks = await asyncio.gather(
+        check_config(), check_mcp(), check_tavily(), check_session_store()
+    )
     return ReadinessResponse(ready=all(c.ok for c in checks), checks=list(checks))
 
 

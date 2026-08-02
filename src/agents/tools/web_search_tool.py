@@ -61,6 +61,10 @@ class WebSearchTool:
 
         api_key = get_tavily_api_key()
         if not api_key:
+            logger.warning(
+                "TAVILY_API_KEY is not set in this process — "
+                "MCP stdio children need env forwarded via mcp_config.mcp_subprocess_env()"
+            )
             return _dumps(
                 {
                     "ok": False,
@@ -95,6 +99,11 @@ class WebSearchTool:
             return _dumps({"ok": False, "error": str(exc), "code": "INTERNAL"})
 
         if response.status_code >= 400:
+            logger.warning(
+                "Tavily HTTP {}: {}",
+                response.status_code,
+                response.text[:200],
+            )
             return _dumps(
                 {
                     "ok": False,
